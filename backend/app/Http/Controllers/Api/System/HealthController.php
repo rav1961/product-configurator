@@ -12,8 +12,7 @@ final class HealthController extends Controller
 {
     public function __invoke(
         GetHealthStatusAction $action,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         return response()->json([
             'data' => $action->execute()->toArray(),
         ]);

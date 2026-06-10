@@ -8,14 +8,14 @@ use Tests\TestCase;
 
 final class HealthTest extends TestCase
 {
-    public function itHealthEndpointReturnsApplicationStatus(): void
+    public function test_health_endpoint_returns_application_status(): void
     {
         $response = $this->getJson('/api/health');
 
         $response
             ->assertOk()
             ->assertJsonPath('data.status', 'ok')
-            ->assertJsonPath('meta.app', config('app.name'))
+            ->assertJsonPath('data.app', config('app.name'))
             ->assertJsonStructure([
                 'data' => [
                     'status',

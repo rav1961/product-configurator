@@ -66,6 +66,17 @@
         "refactor": [
             "vendor/bin/rector process"
         ],
+        "check": [
+            "@php artisan config:clear --ansi",
+            "@php artisan test --ansi",
+            "vendor/bin/phpstan analyse --memory-limit=1G",
+            "vendor/bin/pint --test",
+            "vendor/bin/rector process --dry-run"
+        ],
+        "fix": [
+            "vendor/bin/pint",
+            "vendor/bin/rector process"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",

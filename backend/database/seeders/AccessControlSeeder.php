@@ -11,7 +11,7 @@ use RuntimeException;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
-class AccessControlSeeders extends Seeder
+class AccessControlSeeder extends Seeder
 {
     public function run(): void
     {
@@ -19,8 +19,16 @@ class AccessControlSeeders extends Seeder
 
         $adminRole = Role::findOrCreate('admin', 'web');
 
-        $adminEmail = env('ADMIN_EMAIL', 'admin@example.com');
-        $adminPassword = env('ADMIN_PASSWORD', 'password');
+        $adminEmail = config('admin.email');
+        $adminPassword = config('admin.password');
+
+        if (! is_string($adminEmail) || $adminEmail === '') {
+            throw new RuntimeException('Admin email must be configured.');
+        }
+
+        if (! is_string($adminPassword) || $adminPassword === '') {
+            throw new RuntimeException('Admin password must be configured.');
+        }
 
         if (app()->isProduction() && $adminPassword === 'password') {
             throw new RuntimeException('Admin password must be changed in production.');
@@ -29,7 +37,7 @@ class AccessControlSeeders extends Seeder
         $admin = User::query()->updateOrCreate(
             ['email' => $adminEmail],
             [
-                'name' => env('ADMIN_NAME', 'Admin'),
+                'name' => config('admin.name', 'Admin'),
                 'email_verified_at' => now(),
                 'password' => Hash::make($adminPassword),
             ],

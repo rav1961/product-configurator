@@ -57,6 +57,14 @@
             "@php artisan config:clear --ansi",
             "@php artisan test"
         ],
+        "test:unit": [
+            "@php artisan config:clear --ansi",
+            "@php artisan test --testsuite=Unit --ansi"
+        ],
+        "test:feature": [
+            "@php artisan config:clear --ansi",
+            "@php artisan test --testsuite=Feature --ansi"
+        ],
         "format": [
             "vendor/bin/pint"
         ],
@@ -66,12 +74,19 @@
         "refactor": [
             "vendor/bin/rector process"
         ],
-        "check": [
+        "check:commit": [
+            "vendor/bin/pint --test",
+            "@test:unit"
+        ],
+        "check:push": [
             "@php artisan config:clear --ansi",
             "@php artisan test --ansi",
             "vendor/bin/phpstan analyse --memory-limit=1G",
             "vendor/bin/pint --test",
             "vendor/bin/rector process --dry-run"
+        ],
+        "check": [
+            "@check:push"
         ],
         "fix": [
             "vendor/bin/pint",

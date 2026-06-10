@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ROOT_DIR="$(git rev-parse --show-toplevel)"
+
+cd "$ROOT_DIR"
+
+echo "Running pre-commit backend checks..."
+
+if ! docker compose ps php --status running >/dev/null 2>&1; then
+    echo "PHP container is not running."
+    echo "Start it with: docker compose up -d php"
+    exit 1
+fi
+
+docker compose exec -T php composer check:commit
+
+echo "Backend quality gates passed."

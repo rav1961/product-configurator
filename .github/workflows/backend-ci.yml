@@ -1,0 +1,88 @@
+name: Backend CI
+
+on:
+  pull_request:
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-ci.yml"
+  push:
+    branches:
+      - master
+      - dev
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-ci.yml"
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: backend
+
+jobs:
+  quality:
+    name: Tests and Static Analysis
+    runs-on: ubuntu-latest
+
+    env:
+      APP_ENV: testing
+      APP_DEBUG: true
+      APP_KEY: base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+      APP_URL: http://localhost
+
+      DB_CONNECTION: sqlite
+      DB_DATABASE: ":memory:"
+
+      CACHE_STORE: array
+      SESSION_DRIVER: array
+      QUEUE_CONNECTION: sync
+      MAIL_MAILER: array
+
+      BCRYPT_ROUNDS: 4
+
+      ADMIN_NAME: Admin
+      ADMIN_EMAIL: admin@example.com
+      ADMIN_PASSWORD: password
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: bcmath, ctype, curl, dom, exif, fileinfo, gd, intl, mbstring, openssl, pdo, pdo_sqlite, tokenizer, xml, zip
+          coverage: none
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: backend/vendor
+          key: composer-${{ runner.os }}-${{ hashFiles('backend/composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress --no-scripts
+
+      - name: Discover Laravel packages
+        run: php artisan package:discover --ansi
+
+      - name: Run migrations
+        run: php artisan migrate --force --ansi
+
+      - name: Run tests
+        run: php artisan test --ansi
+
+      - name: Run Larastan
+        run: vendor/bin/phpstan analyse --memory-limit=1G
+
+      - name: Check code style
+        run: vendor/bin/pint --test
+
+      - name: Check Rector
+        run: vendor/bin/rector process --dry-run

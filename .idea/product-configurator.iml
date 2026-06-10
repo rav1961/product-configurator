@@ -8,7 +8,6 @@
       <sourceFolder url="file://$MODULE_DIR$/backend/tests" isTestSource="true" packagePrefix="Tests\" />
       <sourceFolder url="file://$MODULE_DIR$/frontend/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/backend/bootstrap/cache" />
-      <excludeFolder url="file://$MODULE_DIR$/backend/storage" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/blade-ui-kit/blade-heroicons" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/blade-ui-kit/blade-icons" />
@@ -174,6 +173,8 @@
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/voku/portable-ascii" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/webmozart/assert" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/storage/app" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/storage/framework" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

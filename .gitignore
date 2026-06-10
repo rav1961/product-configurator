@@ -1,1 +1,29 @@
-/docs
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea
+.vscode
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Docker
+/docker/data
+
+# Testing
+coverage
+.phpunit.result.cache
+
+# Static Analysis
+/backend/.phpstan.cache
+
+# Misc
+*.swp
+*.swo

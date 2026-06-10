@@ -34,8 +34,8 @@ RUN docker-php-ext-install \
     opcache \
     gd
 
-RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug
+RUN pecl install redis xdebug \
+    && docker-php-ext-enable redis xdebug
 
 COPY docker/php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/php.ini

@@ -35,6 +35,7 @@ services:
     container_name: configurator-node
     working_dir: /var/www/frontend
     volumes:
+      - ./backend:/var/www/backend
       - ./frontend:/var/www/frontend
     tty: true
 

@@ -22,3 +22,13 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Generated package assets
+/public/css/filament
+/public/js/filament
+/public/fonts/filament
+
+# Local env files
+.env.*
+!.env.example
+

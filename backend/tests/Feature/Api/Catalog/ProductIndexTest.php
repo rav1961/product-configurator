@@ -63,4 +63,56 @@ final class ProductIndexTest extends TestCase
             ->assertJsonPath('meta.per_page', 2)
             ->assertJsonPath('meta.total', 3);
     }
+
+    public function test_it_validates_per_page_minimum_value(): void
+    {
+        $this->getJson('/api/catalog/products?per_page=-1')
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['per_page']);
+    }
+
+    public function test_it_valid_per_page_maximum_value(): void
+    {
+        $this->getJson('/api/catalog/products?per_page=101')
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['per_page']);
+    }
+
+    public function test_it_excludes_products_from_inactive_categories(): void
+    {
+        $activeCategory = Category::factory()->create([
+            'name' => 'Active Category',
+            'is_active' => true,
+        ]);
+
+        $inactiveCategory = Category::factory()->create([
+            'name' => 'Inactive Category',
+            'is_active' => false,
+        ]);
+
+        $visibleProduct = Product::factory()
+            ->for($activeCategory)
+            ->active()
+            ->create([
+                'name' => 'Visible Product',
+                'slug' => 'visible-product',
+            ]);
+
+        Product::factory()
+            ->for($inactiveCategory)
+            ->active()
+            ->create([
+                'name' => 'Hidden Product',
+                'slug' => 'hidden-product',
+            ]);
+
+        $response = $this->getJson('/api/catalog/products');
+
+        $response
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.publicId', $visibleProduct->public_id)
+            ->assertJsonPath('data.0.name', 'Visible Product')
+            ->assertJsonPath('meta.total', 1);
+    }
 }

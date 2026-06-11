@@ -7,23 +7,18 @@ namespace App\Http\Controllers\Api\Catalog;
 use App\Actions\Catalog\ListActiveProductsAction;
 use App\Data\Catalog\ProductListItemData;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Catalog\ProductIndexRequest;
 use App\Models\Catalog\Product;
 use App\Support\Http\ApiResponse;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 final class ProductIndexController extends Controller
 {
     public function __invoke(
-        Request $request,
+        ProductIndexRequest $request,
         ListActiveProductsAction $action,
     ): JsonResponse {
-        $perPage = min(
-            $request->integer('per_page', ListActiveProductsAction::DEFAULT_PER_PAGE),
-            ListActiveProductsAction::MAX_PER_PAGE,
-        );
-
-        $products = $action->execute($perPage);
+        $products = $action->execute($request->perPage());
 
         return ApiResponse::paginated(
             $products,

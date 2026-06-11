@@ -20,6 +20,9 @@ final class ListActiveProductsAction
         return Product::query()
             ->with('category')
             ->where('status', ProductStatus::ACTIVE->value)
+            ->whereHas('category', static function ($query): void {
+                $query->where('is_active', true);
+            })
             ->orderBy('category_id')
             ->orderBy('position')
             ->orderBy('name')

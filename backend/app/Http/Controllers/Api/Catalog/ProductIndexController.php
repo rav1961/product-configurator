@@ -18,7 +18,10 @@ final class ProductIndexController extends Controller
         ProductIndexRequest $request,
         ListActiveProductsAction $action,
     ): JsonResponse {
-        $products = $action->execute($request->perPage());
+        $products = $action->execute(
+            perPage: $request->perPage(),
+
+        );
 
         return ApiResponse::paginated(
             $products,

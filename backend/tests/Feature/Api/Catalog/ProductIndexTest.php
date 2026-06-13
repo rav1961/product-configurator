@@ -115,4 +115,73 @@ final class ProductIndexTest extends TestCase
             ->assertJsonPath('data.0.name', 'Visible Product')
             ->assertJsonPath('meta.total', 1);
     }
+
+    public function test_it_filters_products_by_name_query(): void
+    {
+        $category = Category::factory()->create();
+        $matchingProduct = Product::factory()
+            ->for($category)
+            ->active()
+            ->create([
+                'name' => 'Premium Oak Door',
+                'slug' => 'premium-oak-door',
+                'sku' => 'DOOR-001',
+            ]);
+        Product::factory()
+            ->for($category)
+            ->active()
+            ->create([
+                'name' => 'Basic Steel Gate',
+                'slug' => 'basic-steel-gate',
+                'sku' => 'GATE-002',
+            ]);
+        $response = $this->getJson('/api/catalog/products?q=oak');
+        $response
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.publicId', $matchingProduct->public_id)
+            ->assertJsonPath('meta.total', 1);
+    }
+
+    public function test_it_filters_products_by_sku_query_case_insensitive(): void
+    {
+        $category = Category::factory()->create();
+        $matchingProduct = Product::factory()
+            ->for($category)
+            ->active()
+            ->create([
+                'name' => 'Window Elite',
+                'slug' => 'window-elite',
+                'sku' => 'WIN-ELITE-900',
+            ]);
+        Product::factory()
+            ->for($category)
+            ->active()
+            ->create([
+                'name' => 'Window Basic',
+                'slug' => 'window-basic',
+                'sku' => 'WIN-BASIC-100',
+            ]);
+        $response = $this->getJson('/api/catalog/products?q=win-elite');
+        $response
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.publicId', $matchingProduct->public_id)
+            ->assertJsonPath('meta.total', 1);
+    }
+
+    public function test_it_returns_empty_data_for_unknown_query(): void
+    {
+        $category = Category::factory()->create();
+        Product::factory()
+            ->for($category)
+            ->active()
+            ->count(2)
+            ->create();
+        $response = $this->getJson('/api/catalog/products?q=not-existing-query');
+        $response
+            ->assertOk()
+            ->assertJsonCount(0, 'data')
+            ->assertJsonPath('meta.total', 0);
+    }
 }

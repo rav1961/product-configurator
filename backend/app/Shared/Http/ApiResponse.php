@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Support\Http;
+namespace App\Shared\Http;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;

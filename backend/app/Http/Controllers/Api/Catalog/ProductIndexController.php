@@ -9,7 +9,7 @@ use App\Data\Catalog\ProductListItemData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Catalog\ProductIndexRequest;
 use App\Models\Catalog\Product;
-use App\Support\Http\ApiResponse;
+use App\Shared\Http\ApiResponse;
 use Illuminate\Http\JsonResponse;
 
 final class ProductIndexController extends Controller
@@ -20,7 +20,7 @@ final class ProductIndexController extends Controller
     ): JsonResponse {
         $products = $action->execute(
             perPage: $request->perPage(),
-
+            queryText: $request->queryText(),
         );
 
         return ApiResponse::paginated(

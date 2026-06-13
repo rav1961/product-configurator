@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Api\Catalog;
 
-use App\Actions\Catalog\ListActiveProductsAction;
+use App\Data\Catalog\ProductIndexFilters;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
@@ -25,7 +25,7 @@ final class ProductIndexRequest extends FormRequest
                 'sometimes',
                 'integer',
                 'min:1',
-                'max:'.ListActiveProductsAction::MAX_PER_PAGE,
+                'max:'.ProductIndexFilters::MAX_PER_PAGE,
             ],
             'q' => [
                 'sometimes',
@@ -36,15 +36,23 @@ final class ProductIndexRequest extends FormRequest
         ];
     }
 
-    public function perPage(): int
+    public function filters(): ProductIndexFilters
     {
-        return $this->integer(
-            'per_page',
-            ListActiveProductsAction::DEFAULT_PER_PAGE
+        return new ProductIndexFilters(
+            perPage: $this->perPage(),
+            queryText: $this->queryText(),
         );
     }
 
-    public function queryText(): ?string
+    private function perPage(): int
+    {
+        return $this->integer(
+            'per_page',
+            ProductIndexFilters::DEFAULT_PER_PAGE
+        );
+    }
+
+    private function queryText(): ?string
     {
         $value = $this->string('q')->toString();
         $value = trim($value);

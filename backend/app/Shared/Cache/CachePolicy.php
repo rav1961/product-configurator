@@ -4,22 +4,21 @@ declare(strict_types=1);
 
 namespace App\Shared\Cache;
 
-use Random\RandomException;
+use App\Enums\Cache\CachePolicyName;
 
 final readonly class CachePolicy
 {
     public function __construct(
-        public string $name,
+        public CachePolicyName $name,
         public bool $enabled,
         public string $store,
         public int $ttlSeconds,
         public int $jitterSeconds,
+        public string $version,
         public array $tags,
+        public bool $requiresTaggableStore,
     ) {}
 
-    /**
-     * @throws RandomException
-     */
     public function ttlWithJitter(): int
     {
         if ($this->ttlSeconds <= 0) {

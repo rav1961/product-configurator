@@ -11,6 +11,15 @@ use Illuminate\Support\Collection;
 final class ApiResponse
 {
     /**
+     * @param  array<string, mixed>  $payload
+     */
+    public static function payload(
+        array $payload
+    ): JsonResponse {
+        return response()->json($payload);
+    }
+
+    /**
      * @param  Collection<int, mixed>  $data
      */
     public static function collection(

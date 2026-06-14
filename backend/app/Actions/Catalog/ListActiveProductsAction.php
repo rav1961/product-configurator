@@ -32,6 +32,9 @@ final readonly class ListActiveProductsAction
                 ->orderBy('name');
         }
 
-        return $query->paginate($filters->perPage);
+        return $query->paginate(
+            perPage: $filters->perPage,
+            page: $filters->page
+        );
     }
 }

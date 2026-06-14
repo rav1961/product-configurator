@@ -21,6 +21,11 @@ final class ProductIndexRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'page' => [
+                'sometimes',
+                'integer',
+                'min:1',
+            ],
             'per_page' => [
                 'sometimes',
                 'integer',
@@ -39,9 +44,15 @@ final class ProductIndexRequest extends FormRequest
     public function filters(): ProductIndexFilters
     {
         return new ProductIndexFilters(
+            page: $this->page(),
             perPage: $this->perPage(),
             queryText: $this->queryText(),
         );
+    }
+
+    private function page(): int
+    {
+        return (int) $this->input('page', ProductIndexFilters::DEFAULT_PAGE);
     }
 
     private function perPage(): int

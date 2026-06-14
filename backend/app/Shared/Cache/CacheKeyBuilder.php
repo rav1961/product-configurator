@@ -14,12 +14,13 @@ final class CacheKeyBuilder
      *
      * @throws JsonException
      */
-    public function make(string $namespace, array $values = []): string
+    public function make(CachePolicy $policy, array $values = []): string
     {
         ksort($values);
 
         return implode(':', [
-            $this->normalizeSegment($namespace),
+            $this->normalizeSegment($policy->name->value),
+            $this->normalizeSegment($policy->version),
             $this->hashValues($values),
         ]);
     }

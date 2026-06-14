@@ -25,7 +25,7 @@ return [
     | each backend supported by Laravel. You're also free to add more.
     |
     | Drivers: "sync", "database", "beanstalkd", "sqs", "redis",
-    |          "deferred", "background", "failover", "null"
+    |          "rabbitmq", "deferred", "background", "failover", "null"
     |
     */
 
@@ -71,6 +71,33 @@ return [
             'retry_after' => (int) env('REDIS_QUEUE_RETRY_AFTER', 90),
             'block_for' => null,
             'after_commit' => false,
+        ],
+
+        'rabbitmq' => [
+            'driver' => 'rabbitmq',
+            'queue' => env('RABBITMQ_QUEUE', 'default'),
+            'after_commit' => (bool) env('RABBITMQ_AFTER_COMMIT', true),
+            'hosts' => [
+                [
+                    'host' => env('RABBITMQ_HOST', '127.0.0.1'),
+                    'port' => (int) env('RABBITMQ_PORT', 5672),
+                    'user' => env('RABBITMQ_USER', 'guest'),
+                    'password' => env('RABBITMQ_PASSWORD', 'guest'),
+                    'vhost' => env('RABBITMQ_VHOST', '/'),
+                ],
+            ],
+            'options' => [
+                'heartbeat' => (int) env('RABBITMQ_HEARTBEAT', 60),
+                'connection_timeout' => (float) env('RABBITMQ_CONNECTION_TIMEOUT', 3.0),
+                'read_timeout' => (float) env('RABBITMQ_READ_TIMEOUT', 3.0),
+                'write_timeout' => (float) env('RABBITMQ_WRITE_TIMEOUT', 3.0),
+                'queue' => [
+                    'exchange' => env('RABBITMQ_EXCHANGE', ''),
+                    'exchange_type' => env('RABBITMQ_EXCHANGE_TYPE', 'direct'),
+                    'exchange_routing_key' => env('RABBITMQ_EXCHANGE_ROUTING_KEY', '%s'),
+                    'quorum' => (bool) env('RABBITMQ_QUEUE_QUORUM', false),
+                ],
+            ],
         ],
 
         'deferred' => [

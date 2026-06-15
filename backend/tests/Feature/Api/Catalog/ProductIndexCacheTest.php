@@ -44,14 +44,15 @@ final class ProductIndexCacheTest extends TestCase
             ->assertOk()
             ->assertJsonPath('meta.total', 1);
 
-        Product::factory()
+        Product::withoutEvents(fn (): Product => Product::factory()
             ->for($category)
             ->active()
             ->create([
                 'name' => 'Fresh Door',
                 'slug' => 'fresh-door',
                 'position' => 2,
-            ]);
+            ])
+        );
 
         $this->getJson('/api/catalog/products')
             ->assertOk()
@@ -90,5 +91,62 @@ final class ProductIndexCacheTest extends TestCase
             ->assertOk()
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.name', 'Steel Gate');
+    }
+
+    public function test_it_invalidates_product_index_cache_when_product_changes(): void
+    {
+        $category = Category::factory()->create();
+
+        $product = Product::factory()
+            ->for($category)
+            ->active()
+            ->create([
+                'name' => 'Cached Door',
+                'slug' => 'cached-door',
+                'position' => 1,
+            ]);
+
+        $this->getJson('/api/catalog/products')
+            ->assertOk()
+            ->assertJsonPath('data.0.name', 'Cached Door')
+            ->assertJsonPath('meta.total', 1);
+
+        $product->update([
+            'name' => 'Updated Door',
+        ]);
+
+        $this->getJson('/api/catalog/products')
+            ->assertOk()
+            ->assertJsonPath('data.0.name', 'Updated Door')
+            ->assertJsonPath('meta.total', 1);
+    }
+
+    public function test_it_invalidates_product_index_cache_when_category_visibility_changes(): void
+    {
+        $category = Category::factory()->create([
+            'is_active' => true,
+        ]);
+
+        Product::factory()
+            ->for($category)
+            ->active()
+            ->create([
+                'name' => 'Visible Door',
+                'slug' => 'visible-door',
+            ]);
+
+        $this->getJson('/api/catalog/products')
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('meta.total', 1);
+
+        $category->update([
+            'is_active' => false,
+        ]);
+
+        $this->getJson('/api/catalog/products')
+            ->assertOk()
+            ->assertJsonCount(0, 'data')
+            ->assertJsonPath('meta.total', 0);
     }
 }

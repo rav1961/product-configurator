@@ -55,11 +55,15 @@ final class TaggedCache
         try {
             $repository = Cache::store($policy->store);
 
-            if (! $this->supportsTags($repository)) {
+            if ($this->supportsTags($repository)) {
+                $repository->tags($policy->tags)->flush();
+
                 return;
             }
 
-            $repository->tags($policy->tags)->flush();
+            if (! $policy->requiresTaggableStore) {
+                $repository->flush();
+            }
         } catch (Throwable) {
         }
     }

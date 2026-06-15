@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models\Catalog;
 
 use App\Enums\Catalog\ProductStatus;
+use App\Events\Catalog\CatalogChanged;
 use App\Models\Concerns\HasPublicId;
 use Database\Factories\Catalog\ProductFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -31,6 +32,23 @@ final class Product extends Model
         'status',
         'position',
     ];
+
+    protected static function booted(): void
+    {
+        self::saved(static function (self $product): void {
+            CatalogChanged::dispatch(
+                source: 'catalog.product.saved',
+                publicId: $product->public_id,
+            );
+        });
+
+        self::deleted(static function (self $product): void {
+            CatalogChanged::dispatch(
+                source: 'catalog.product.deleted',
+                publicId: $product->public_id,
+            );
+        });
+    }
 
     protected function casts(): array
     {

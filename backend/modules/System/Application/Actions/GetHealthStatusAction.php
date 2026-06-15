@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\System;
+namespace Modules\System\Application\Actions;
 
-use App\Data\System\HealthStatusData;
+use Modules\System\Application\DTO\HealthStatusData;
 
 final class GetHealthStatusAction
 {

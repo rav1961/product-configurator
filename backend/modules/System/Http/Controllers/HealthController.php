@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Api\System;
+namespace Modules\System\Http\Controllers;
 
-use App\Actions\System\GetHealthStatusAction;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
+use Modules\Shared\Http\Controllers\ApiController;
+use Modules\System\Application\Actions\GetHealthStatusAction;
 
-final class HealthController extends Controller
+final class HealthController extends ApiController
 {
     public function __invoke(
         GetHealthStatusAction $action,

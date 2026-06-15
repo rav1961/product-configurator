@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Api\System;
+namespace Modules\System\Tests\Feature;
 
 use Tests\TestCase;
 

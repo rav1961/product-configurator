@@ -57,6 +57,8 @@ All steps, attributes and rules configurable from admin panel.
 * Modular Monolith (Laravel)
 * Modules in `backend/modules/{Module}`
 * PSR-4 `Modules\` namespace
-* Per-module ServiceProvider extending shared `ModuleServiceProvider`
-* Shared kernel module for cross-cutting concerns
+* Layers: Domain / Application / Infrastructure / Presentation
+* Per-module ServiceProvider (`Infrastructure/Providers`) extending shared `ModuleServiceProvider`
+* Shared kernel: `Domain/Concerns`, `Infrastructure/Providers`, `Presentation/Http`
+* Factory wiring by convention via `HasModuleFactory` behavior (no global resolver)
 * Inter-module communication via Actions / DTOs / Events

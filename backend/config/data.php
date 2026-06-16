@@ -101,7 +101,7 @@ return [
      * this key can be set globally here for all data objects. You can pass in
      * `null` if you want to disable wrapping.
      */
-    'wrap' => null,
+    'wrap' => 'data',
 
     /*
      * Adds a specific caster to the Symphony VarDumper component which hides
@@ -124,7 +124,10 @@ return [
      */
     'structure_caching' => [
         'enabled' => true,
-        'directories' => [app_path('Data')],
+        'directories' => [
+            app_path('Data'),
+            base_path('modules'),
+        ],
         'cache' => [
             'store' => env('CACHE_STORE', env('CACHE_DRIVER', 'file')),
             'prefix' => 'laravel-data',

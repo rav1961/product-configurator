@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Modules\Catalog\Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Modules\Catalog\Domain\Enums\ProductStatus;
 use Modules\Catalog\Domain\Models\Category;
 use Modules\Catalog\Domain\Models\Product;
@@ -43,8 +44,8 @@ final class CatalogModelsTest extends TestCase
         $category = Category::factory()->create();
         $product = Product::factory()->create();
 
-        $this->assertNotNull($category->public_id);
-        $this->assertNotNull($product->public_id);
+        $this->assertTrue(Str::isUlid($category->public_id));
+        $this->assertTrue(Str::isUlid($product->public_id));
         $this->assertNotSame((string) $category->id, $category->public_id);
         $this->assertNotSame((string) $product->id, $product->public_id);
     }

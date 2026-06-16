@@ -16,6 +16,9 @@ trait HasModuleFactory
     /** @use HasFactory<TFactory> */
     use HasFactory;
 
+    /**
+     * @return TFactory
+     */
     protected static function newFactory(): Factory
     {
         $module = Str::of(static::class)

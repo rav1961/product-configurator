@@ -13,6 +13,9 @@ use Spatie\LaravelData\PaginatedDataCollection;
 
 final class ProductListController extends ApiController
 {
+    /**
+     * @return PaginatedDataCollection<int, ProductData>
+     */
     public function __invoke(
         ProductIndexRequest $request,
         ListProductsAction $action,

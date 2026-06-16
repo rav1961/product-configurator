@@ -28,4 +28,17 @@ final class CategoryApiTest extends TestCase
                 ],
             ]);
     }
+
+    public function test_index_sorts_by_position_then_name(): void
+    {
+        Category::factory()->create(['name' => 'Zulu', 'position' => 30]);
+        Category::factory()->create(['name' => 'Beta', 'position' => 10]);
+        Category::factory()->create(['name' => 'Alpha', 'position' => 10]);
+
+        $this->getJson('/api/categories')
+            ->assertOk()
+            ->assertJsonPath('data.0.name', 'Alpha')
+            ->assertJsonPath('data.1.name', 'Beta')
+            ->assertJsonPath('data.2.name', 'Zulu');
+    }
 }

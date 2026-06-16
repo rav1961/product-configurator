@@ -19,7 +19,6 @@ use Modules\Shared\Domain\Concerns\HasPublicId;
  * @property string $name
  * @property string $slug
  * @property string|null $sku
- * @property string|null $short_description
  * @property string|null $description
  * @property ProductStatus $status
  * @property int $position
@@ -53,6 +52,9 @@ final class Product extends Model
         ];
     }
 
+    /**
+     * @return BelongsTo<Category, $this>
+     */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
@@ -60,7 +62,7 @@ final class Product extends Model
 
     public function isActive(): bool
     {
-        return $this->getRawOriginal('status') === ProductStatus::Active->value;
+        return $this->status === ProductStatus::Active;
     }
 
     /**

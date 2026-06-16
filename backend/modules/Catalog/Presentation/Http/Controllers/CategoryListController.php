@@ -12,6 +12,9 @@ use Spatie\LaravelData\DataCollection;
 
 final class CategoryListController extends ApiController
 {
+    /**
+     * @return DataCollection<int, CategoryData>
+     */
     public function __invoke(ListCategoriesAction $action): DataCollection
     {
         $categories = $action->execute()->map(
@@ -21,6 +24,6 @@ final class CategoryListController extends ApiController
         return CategoryData::collect(
             $categories,
             DataCollection::class,
-        )->wrap('data');
+        );
     }
 }

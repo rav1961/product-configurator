@@ -9,6 +9,9 @@ use Modules\Catalog\Domain\Models\Category;
 
 final class ListCategoriesAction
 {
+    /**
+     * @return Collection<int, Category>
+     */
     public function execute(): Collection
     {
         return Category::query()

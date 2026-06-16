@@ -18,4 +18,17 @@ final class ApiErrorResponseTest extends TestCase
                 'message' => 'Unauthenticated',
             ]);
     }
+
+    public function test_validation_errors_return_json_envelope(): void
+    {
+        $response = $this->getJson('/api/products?per_page=0');
+        $response
+            ->assertUnprocessable()
+            ->assertJsonStructure([
+                'message',
+                'errors' => [
+                    'per_page',
+                ],
+            ]);
+    }
 }

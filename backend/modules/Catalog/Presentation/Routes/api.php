@@ -13,5 +13,5 @@ Route::get('/categories', CategoryListController::class)
 Route::get('/products', ProductListController::class)
     ->name('api.products.list');
 
-Route::get('/products/{id}', ProductShowController::class)
+Route::get('/products/{productId}', ProductShowController::class)
     ->name('api.products.show');

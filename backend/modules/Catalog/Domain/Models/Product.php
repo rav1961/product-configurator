@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Modules\Catalog\Domain\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Catalog\Domain\Enums\ProductStatus;
@@ -11,6 +12,19 @@ use Modules\Catalog\Infrastructure\Persistence\Factories\ProductFactory;
 use Modules\Shared\Domain\Concerns\HasModuleFactory;
 use Modules\Shared\Domain\Concerns\HasPublicId;
 
+/**
+ * @property int $id
+ * @property string $public_id
+ * @property int|null $category_id
+ * @property string $name
+ * @property string $slug
+ * @property string|null $sku
+ * @property string|null $short_description
+ * @property string|null $description
+ * @property ProductStatus $status
+ * @property int $position
+ * @property-read Category|null $category
+ */
 final class Product extends Model
 {
     /** @use HasModuleFactory<ProductFactory> */
@@ -26,7 +40,7 @@ final class Product extends Model
         'name',
         'slug',
         'sku',
-        'short_description',
+        'description',
         'status',
         'position',
     ];
@@ -47,5 +61,14 @@ final class Product extends Model
     public function isActive(): bool
     {
         return $this->getRawOriginal('status') === ProductStatus::Active->value;
+    }
+
+    /**
+     * @param  Builder<Product>  $query
+     * @return Builder<Product>
+     */
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('status', ProductStatus::Active->value);
     }
 }

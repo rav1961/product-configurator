@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->string('sku')->nullable()->unique();
-            $table->text('short_description')->nullable();
+            $table->text('description')->nullable();
             $table->string('status')->default('draft');
             $table->unsignedInteger('position')->default(0);
             $table->timestamps();

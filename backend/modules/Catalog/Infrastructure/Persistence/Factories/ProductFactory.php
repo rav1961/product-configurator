@@ -32,7 +32,7 @@ final class ProductFactory extends Factory
             'name' => Str::title($name),
             'slug' => Str::slug($name),
             'sku' => strtoupper(fake()->unique()->bothify('PRD-####')),
-            'short_description' => fake()->optional()->sentence(),
+            'description' => fake()->optional()->sentence(),
             'status' => ProductStatus::Draft,
             'position' => fake()->numberBetween(0, 100),
         ];

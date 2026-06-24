@@ -24,8 +24,30 @@
 
 ## Auth
 
-* Sanctum
+* Laravel Fortify (registration, login, logout, password reset, email verification, profile/password update)
+* Sanctum SPA session
 * HttpOnly Cookies
+* Guard: web
+* Fortify action contracts bound in `UsersServiceProvider`
+
+## Authorization
+
+* spatie/laravel-permission
+* Roles: admin, manager, sales, customer
+* Default role on registration: customer
+* Filament panel access: admin, manager, sales
+* Permissions: role-based now; granular per-module permissions added as modules are built
+
+## Validation
+
+* FormRequest for our own endpoints
+* Validator-in-Action for Fortify-managed flows (shared `PasswordValidationRules`)
+
+## Persistence Conventions
+
+* Public identifiers: ULID via `HasPublicId` (`public_id`); numeric ids never exposed
+* Module factories via `HasModuleFactory` convention
+* Module-owned seeders/factories; `DatabaseSeeder` only orchestrates
 
 ## Frontend
 

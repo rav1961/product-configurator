@@ -69,3 +69,13 @@ The assistant may ask clarification questions before implementation.
 The assistant should never assume business rules without confirmation.
 
 The assistant should explain tradeoffs when multiple solutions are possible.
+
+## Definition of Done (per module slice)
+
+A slice is done only when:
+
+* Domain, Application, Infrastructure and Presentation layers are implemented per architecture rules.
+* The module self-registers via its ServiceProvider (added to `bootstrap/providers.php`).
+* Validation follows the backend rules (FormRequest for own endpoints vs Fortify-action validation).
+* Feature and Unit tests cover the happy path and key failure cases.
+* `composer check` passes (Pint, PHPStan, Rector, tests).

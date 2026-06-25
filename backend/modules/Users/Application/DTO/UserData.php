@@ -9,6 +9,9 @@ use Spatie\LaravelData\Data;
 
 final class UserData extends Data
 {
+    /**
+     * @param  array<int, string>  $roles
+     */
     public function __construct(
         public string $id,
         public string $name,

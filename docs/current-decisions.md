@@ -24,11 +24,11 @@
 
 ## Auth
 
-* Laravel Fortify (registration, login, logout, password reset, email verification, profile/password update)
-* Sanctum SPA session
+* Sanctum SPA session (no Fortify)
 * HttpOnly Cookies
 * Guard: web
-* Fortify action contracts bound in `UsersServiceProvider`
+* Own thin controllers + FormRequest + Actions + DTOs in the `Users` module (register, login, logout, me)
+* Native framework primitives: `Auth::attempt`, session regeneration, `RateLimiter`, Password broker, email verification
 
 ## Authorization
 
@@ -40,14 +40,15 @@
 
 ## Validation
 
-* FormRequest for our own endpoints
-* Validator-in-Action for Fortify-managed flows (shared `PasswordValidationRules`)
+* FormRequest for every endpoint (validation lives in the request, never in the Action)
+* Actions receive typed DTOs (e.g. `RegisterData`), never raw arrays
 
 ## Persistence Conventions
 
 * Public identifiers: ULID via `HasPublicId` (`public_id`); numeric ids never exposed
 * Module factories via `HasModuleFactory` convention
 * Module-owned seeders/factories; `DatabaseSeeder` only orchestrates
+* Module-owned migrations for domain tables (e.g. Users owns `users`, `password_reset_tokens`); only `sessions`, `cache`, `jobs` + package migrations stay in `database/migrations`
 
 ## Frontend
 

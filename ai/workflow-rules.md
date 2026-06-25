@@ -76,6 +76,6 @@ A slice is done only when:
 
 * Domain, Application, Infrastructure and Presentation layers are implemented per architecture rules.
 * The module self-registers via its ServiceProvider (added to `bootstrap/providers.php`).
-* Validation follows the backend rules (FormRequest for own endpoints vs Fortify-action validation).
+* Validation follows the backend rules (FormRequest for every endpoint; Actions take typed DTOs).
 * Feature and Unit tests cover the happy path and key failure cases.
 * `composer check` passes (Pint, PHPStan, Rector, tests).

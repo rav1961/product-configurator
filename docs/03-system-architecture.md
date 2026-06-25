@@ -39,4 +39,8 @@ Conventions:
 - Factories are resolved by convention through the `HasModuleFactory` behavior:
   `Domain\Models\{Model}` -> `Infrastructure\Persistence\Factories\{Model}Factory`.
 - Inter-module communication via Actions / DTOs / Events only.
-- Framework infrastructure (auth scaffolding, cache, jobs, permissions, media) stays in `app/` and `database/migrations`.
+- Each module owns the migrations for its domain tables in `Infrastructure/Persistence/Migrations`
+  (e.g. the `Users` module owns `users` and `password_reset_tokens`).
+- Only framework runtime tables that belong to no bounded context stay in `database/migrations`
+  (`sessions`, `cache`, `jobs`), along with third-party package migrations (spatie/permission, activitylog).
+- Other framework scaffolding (auth/media configuration) stays in `app/` and `config/`.

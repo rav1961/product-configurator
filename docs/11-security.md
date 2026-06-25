@@ -4,11 +4,12 @@ Sanctum, HttpOnly Cookies, Spatie Permission, Audit Log.
 
 ## Authentication
 
-- Laravel Fortify (registration, login, logout, password reset, email verification,
-  profile/password update). Fortify `views` disabled (JSON only).
-- Laravel Sanctum SPA session authentication with HttpOnly cookies; guard `web`.
+- Laravel Sanctum SPA session authentication with HttpOnly cookies; guard `web`. No Fortify.
+- Auth flows are our own thin invokable controllers + `FormRequest` + Actions + DTOs, living in
+  the `Users` module (`register`, `login`, `logout`, `me`). They use the framework natively
+  (`Auth::attempt`, session regeneration, `RateLimiter`, Password broker, email verification).
+- Login throttling (per email + IP) lives in `LoginRequest` (Breeze-style), firing `Lockout`.
 - CSRF handshake via `/sanctum/csrf-cookie` before mutating requests from the SPA.
-- Fortify action contracts are bound to module Actions in `UsersServiceProvider`.
 
 ## Authorization (RBAC)
 

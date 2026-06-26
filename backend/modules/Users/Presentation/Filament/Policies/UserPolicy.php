@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Modules\Users\Presentation\Filament\Polices;
+namespace Modules\Users\Presentation\Filament\Policies;
 
 use Modules\Users\Domain\Enums\Role;
 use Modules\Users\Domain\Models\User;

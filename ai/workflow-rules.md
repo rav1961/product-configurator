@@ -79,3 +79,37 @@ A slice is done only when:
 * Validation follows the backend rules (FormRequest for every endpoint; Actions take typed DTOs).
 * Feature and Unit tests cover the happy path and key failure cases.
 * `composer check` passes (Pint, PHPStan, Rector, tests).
+
+## Working With the Assistant (delivery model)
+
+* Work is delivered in small reviewable batches ("porcja"): plan -> approval -> code.
+* Never auto-edit project files; provide complete, copy-paste-ready code unless a patch/diff
+  (or documentation work) is explicitly delegated.
+* For non-trivial tasks first state: assumptions, plan, impacted files, risks.
+
+## Quality Gates (authoritative)
+
+* `composer check` (== `check:push`): `artisan test` + PHPStan level 6 (Larastan) +
+  `pint --test` + `rector --dry-run`.
+* `composer check:commit`: `pint --test` + Unit tests.
+* `composer fix`: Pint + Rector.
+* A slice is not done until `composer check` is green.
+
+## Testing
+
+* Runner: PHPUnit via `php artisan test` (suites `Unit`, `Feature`).
+* Tests live in `modules/{Module}/Tests/{Unit,Feature}` (module-owned).
+
+## HTTP Responses (status conventions)
+
+* Return a DTO when the default status fits (GET -> 200, POST -> 201) — e.g. `RegisterController`,
+  `ProfileController`.
+* To override the status, declare the method return type `Symfony\Component\HttpFoundation\Response`
+  and chain `->toResponse($request)->setStatusCode(...)` — e.g. `LoginController` (POST -> 200).
+  Rationale: `Responsable::toResponse()` is typed as `Symfony Response`, so PHPStan rejects a
+  narrowed `JsonResponse` return.
+
+## Filament Conventions
+
+* A module registers its Filament Resources and Policies from its `ModuleServiceProvider`.
+* Policies live in `Presentation/Filament/Policies`.

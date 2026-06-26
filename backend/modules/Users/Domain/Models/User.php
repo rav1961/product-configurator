@@ -73,4 +73,28 @@ final class User extends Authenticatable implements FilamentUser, MustVerifyEmai
     {
         return $this->hasRole(Role::panelRoles());
     }
+
+    public function highestRole(): ?Role
+    {
+        $highest = null;
+
+        foreach ($this->getRoleNames() as $name) {
+            $role = Role::tryFrom($name);
+
+            if ($role === null) {
+                continue;
+            }
+
+            if ($highest === null || $role->rank() > $highest->rank()) {
+                $highest = $role;
+            }
+        }
+
+        return $highest;
+    }
+
+    public function rank(): int
+    {
+        return $this->highestRole()?->rank() ?? -1;
+    }
 }

@@ -36,15 +36,6 @@ final class UserPolicy
 
     private function outranks(User $actor, User $target): bool
     {
-        return $this->highestRank($actor) > $this->highestRank($target);
-    }
-
-    private function highestRank(User $user): int
-    {
-        return $user->getRoleNames()
-            ->map(static fn (string $name): ?Role => Role::tryFrom($name))
-            ->filter()
-            ->map(static fn (Role $role): int => $role->rank())
-            ->max() ?? -1;
+        return $actor->rank() > $target->rank();
     }
 }

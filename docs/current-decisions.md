@@ -43,6 +43,13 @@
 * FormRequest for every endpoint (validation lives in the request, never in the Action)
 * Actions receive typed DTOs (e.g. `RegisterData`), never raw arrays
 
+## Translations
+
+* All user-facing strings go through translations (`__()` / `trans()`), never hardcoded.
+* Standard Laravel `lang/{locale}/` directory; one file per module (`lang/en/users.php`).
+* Key convention: `module.section.key` (e.g. `users.fields.roles`, `users.role.admin`).
+* No per-module `Lang` folders / namespace registration (KISS — framework auto-loads `lang/`).
+
 ## Persistence Conventions
 
 * Public identifiers: ULID via `HasPublicId` (`public_id`); numeric ids never exposed

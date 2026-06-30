@@ -19,7 +19,7 @@ final class ProductApiTest extends TestCase
         Product::factory()->active()->count(2)->create();
         Product::factory()->create();
 
-        $response = $this->getJson('/api/products');
+        $response = $this->getJson(route('api.products.list'));
 
         $response
             ->assertOk()
@@ -39,7 +39,9 @@ final class ProductApiTest extends TestCase
         Product::factory()->active()->for($category)->create();
         Product::factory()->active()->create();
 
-        $response = $this->getJson('/api/products?category='.$category->public_id);
+        $response = $this->getJson(route('api.products.list', [
+            'category' => $category->public_id,
+        ]));
 
         $response->assertOk()->assertJsonCount(1, 'data');
     }
@@ -48,7 +50,10 @@ final class ProductApiTest extends TestCase
     {
         Product::factory()->active()->count(3)->create();
 
-        $response = $this->getJson('/api/products?per_page=2&page=2');
+        $response = $this->getJson(route('api.products.list', [
+            'per_page' => 2,
+            'page' => 2,
+        ]));
 
         $response
             ->assertOk()
@@ -72,32 +77,42 @@ final class ProductApiTest extends TestCase
 
     public function test_index_returns_422_for_invalid_per_page(): void
     {
-        $this->getJson('/api/products?per_page=0')
+        $this->getJson(route('api.products.list', [
+            'per_page' => 0,
+        ]))
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['per_page']);
 
-        $this->getJson('/api/products?per_page=101')
+        $this->getJson(route('api.products.list', [
+            'per_page' => 101,
+        ]))
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['per_page']);
     }
 
     public function test_index_returns_422_for_invalid_page(): void
     {
-        $this->getJson('/api/products?page=0')
+        $this->getJson(route('api.products.list', [
+            'page' => 0,
+        ]))
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['page']);
     }
 
     public function test_index_returns_422_for_invalid_category_ulid(): void
     {
-        $this->getJson('/api/products?category=not-a-ulid')
+        $this->getJson(route('api.products.list', [
+            'category' => 'not-a-ulid',
+        ]))
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['category']);
     }
 
     public function test_index_returns_422_for_unknown_category(): void
     {
-        $this->getJson('/api/products?category='.Str::ulid())
+        $this->getJson(route('api.products.list', [
+            'category' => (string) Str::ulid(),
+        ]))
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['category']);
     }
@@ -105,7 +120,10 @@ final class ProductApiTest extends TestCase
     public function test_index_returns_422_for_inactive_category(): void
     {
         $category = Category::factory()->inactive()->create();
-        $this->getJson('/api/products?category='.$category->public_id)
+
+        $this->getJson(route('api.products.list', [
+            'category' => $category->public_id,
+        ]))
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['category'])
             ->assertJsonPath('errors.category.0', 'The selected category is not available.');
@@ -115,7 +133,9 @@ final class ProductApiTest extends TestCase
     {
         $product = Product::factory()->active()->create();
 
-        $this->getJson('/api/products/'.$product->public_id)
+        $this->getJson(route('api.products.show', [
+            'productId' => $product->public_id,
+        ]))
             ->assertOk()
             ->assertJsonPath('data.id', $product->public_id)
             ->assertJsonPath('data.status', 'active');
@@ -125,13 +145,17 @@ final class ProductApiTest extends TestCase
     {
         $product = Product::factory()->create();
 
-        $this->getJson('/api/products/'.$product->public_id)
+        $this->getJson(route('api.products.show', [
+            'productId' => $product->public_id,
+        ]))
             ->assertNotFound();
     }
 
     public function test_show_returns_404_for_unknown_public_id(): void
     {
-        $this->getJson('/api/products/'.Str::ulid())
+        $this->getJson(route('api.products.show', [
+            'productId' => (string) Str::ulid(),
+        ]))
             ->assertNotFound();
     }
 }

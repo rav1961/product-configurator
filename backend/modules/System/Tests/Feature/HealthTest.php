@@ -10,7 +10,7 @@ final class HealthTest extends TestCase
 {
     public function test_health_endpoint_returns_application_status(): void
     {
-        $response = $this->getJson('/api/health');
+        $response = $this->getJson(route('api.health'));
 
         $response
             ->assertOk()

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Modules\Catalog\Tests\Unit;
+namespace Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Catalog\Application\Actions\ListProductsAction;

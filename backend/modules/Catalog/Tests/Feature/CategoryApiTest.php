@@ -17,7 +17,7 @@ final class CategoryApiTest extends TestCase
         Category::factory()->count(2)->create();
         Category::factory()->inactive()->create();
 
-        $response = $this->getJson('/api/categories');
+        $response = $this->getJson(route('api.categories.list'));
 
         $response
             ->assertOk()
@@ -35,7 +35,7 @@ final class CategoryApiTest extends TestCase
         Category::factory()->create(['name' => 'Beta', 'position' => 10]);
         Category::factory()->create(['name' => 'Alpha', 'position' => 10]);
 
-        $this->getJson('/api/categories')
+        $this->getJson(route('api.categories.list'))
             ->assertOk()
             ->assertJsonPath('data.0.name', 'Alpha')
             ->assertJsonPath('data.1.name', 'Beta')

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Modules\Users\Application\Actions;
 
-use Filament\Auth\Events\Registered;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Modules\Users\Application\DTO\RegisterData;

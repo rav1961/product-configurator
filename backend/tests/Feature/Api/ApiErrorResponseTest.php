@@ -14,7 +14,7 @@ final class ApiErrorResponseTest extends TestCase
 
     public function test_protected_api_route_returns_json_unauthenticated_response(): void
     {
-        $response = $this->getJson('/api/user');
+        $response = $this->getJson(route('api.profile'));
 
         $response
             ->assertUnauthorized()

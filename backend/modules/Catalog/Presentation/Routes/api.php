@@ -7,7 +7,7 @@ use Modules\Catalog\Presentation\Http\Controllers\CategoryListController;
 use Modules\Catalog\Presentation\Http\Controllers\ProductListController;
 use Modules\Catalog\Presentation\Http\Controllers\ProductShowController;
 
-Route::middleware('auth:sanctum')
+Route::middleware(['auth:sanctum', 'verified'])
     ->group(function (): void {
         Route::get('/categories', CategoryListController::class)
             ->name('api.categories.list');

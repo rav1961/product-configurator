@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Modules\Users\Tests\Feature;
 
-use Filament\Auth\Events\Registered;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Modules\Users\Domain\Enums\Role;

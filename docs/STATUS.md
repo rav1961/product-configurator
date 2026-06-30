@@ -11,7 +11,7 @@ tool, not a web shop.
 
 ## Currently working on
 
-- Users: closing Definition of Done — feature/unit tests for auth + Filament policy/hierarchy.
+- Users: Porcja B — password reset (`forgot-password` / `reset-password`).
 
 ## Conventions in place
 
@@ -33,13 +33,14 @@ tool, not a web shop.
 - [x] Persistence: `UserFactory`, module migration, `UserPolicy`.
 - [x] Filament `UserResource` + Pages + provider wiring (resource + policy + role field via `assignableRoles()`).
 - [x] PL translations (`resources/lang/pl/users.php`).
-- [ ] Tests: feature (auth flows, panel access) + unit (policy / role hierarchy) to close Definition of Done.
-- [ ] Password reset + email verification flows wired end-to-end (Password broker, `Registered` event).
+- [x] Tests: feature (auth flows, panel access) + unit (policy / role hierarchy). Shared `InteractsWithSpaSession` test trait for SPA-session feature tests.
+- [x] Email verification: signed verify URL, resend notification, `verified` middleware on business endpoints, `Registered` event fix.
+- [ ] Password reset: `forgot-password` / `reset-password` via Password broker + SPA links.
 
 ### 3. Catalog
 - [x] Domain: `Category`, `Product` models, `ProductStatus` enum.
 - [x] Persistence: factories, seeders, migrations.
-- [x] Read API: list/show products, list categories (DTO + Action + FormRequest) + tests.
+- [x] Read API: list/show products, list categories (DTO + Action + FormRequest) + tests. Endpoints behind `auth:sanctum` (authenticated-only app; `health` stays public).
 - [x] Filament: `CategoryResource`, `ProductResource` + pages.
 - [x] PL translations (`resources/lang/pl/catalog.php`, `resources/lang/pl/products.php`, `ProductStatus::label()`).
 - [ ] Write/admin completeness: media (spatie/medialibrary) for product images, validation, policies.

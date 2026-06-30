@@ -29,6 +29,13 @@ final class ProductApiTest extends TestCase
         $this->getJson(route('api.products.list'))->assertUnauthorized();
     }
 
+    public function test_unverified_user_is_forbidden(): void
+    {
+        $this->actingAs(User::factory()->unverified()->create())
+            ->getJson(route('api.products.list'))
+            ->assertForbidden();
+    }
+
     public function test_guest_cannot_show_product(): void
     {
         $product = Product::factory()->active()->create();

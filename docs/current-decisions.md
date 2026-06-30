@@ -29,8 +29,11 @@
 * Guard: web
 * Own thin controllers + FormRequest + Actions + DTOs in the `Users` module (register, login, logout, me)
 * Native framework primitives: `Auth::attempt`, session regeneration, `RateLimiter`, Password broker, email verification
-* Authenticated-only API: every domain endpoint sits behind `auth:sanctum`; the only public exceptions are `register`, `login` and `health`
+* Authenticated-only API: every domain endpoint sits behind `auth:sanctum`; the only public exceptions are `register`, `login`, `forgot-password`, `reset-password`, `email/verify/{id}/{hash}` (signed) and `health`
 * Catalog endpoints (`categories`, `products`) require authentication; auth is applied per-module in `Presentation/Routes/api.php`, never globally
+* Email verification required: business endpoints add `verified` (`EnsureEmailIsVerified`) on top of `auth:sanctum`. Account endpoints (`logout`, `profile`, resend verification) intentionally do NOT require `verified`
+* Email verification + password reset use native primitives (`MustVerifyEmail`, Password broker, events `Registered`/`Verified`/`PasswordReset`) wrapped in our controller + FormRequest + DTO + Action pattern
+* Mail links target the SPA: configured via `config('app.frontend_url')` (`FRONTEND_URL`); reset opens a frontend form, email verification confirms server-side then redirects to the SPA
 
 ## Authorization
 

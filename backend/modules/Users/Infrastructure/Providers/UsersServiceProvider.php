@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Modules\Users\Infrastructure\Providers;
 
 use Filament\Panel;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use Modules\Shared\Infrastructure\Providers\ModuleServiceProvider;
 use Modules\Users\Domain\Models\User;
 use Modules\Users\Presentation\Filament\Policies\UserPolicy;
@@ -36,5 +38,14 @@ final class UsersServiceProvider extends ModuleServiceProvider
         parent::boot();
 
         Gate::policy(User::class, UserPolicy::class);
+
+        VerifyEmail::createUrlUsing(static fn (User $notifiable): string => URL::temporarySignedRoute(
+            'api.verification.verify',
+            now()->addMinutes(60),
+            [
+                'id' => $notifiable->public_id,
+                'hash' => sha1($notifiable->getEmailForVerification()),
+            ],
+        ));
     }
 }

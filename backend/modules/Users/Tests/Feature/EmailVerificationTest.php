@@ -100,6 +100,13 @@ final class EmailVerificationTest extends TestCase
         Notification::assertNothingSent();
     }
 
+    public function test_unverified_user_cannot_access_catalog(): void
+    {
+        $this->actingAs(User::factory()->unverified()->create())
+            ->getJson(route('api.products.list'))
+            ->assertForbidden();
+    }
+
     private function verificationUrl(User $user): string
     {
         return URL::temporarySignedRoute(

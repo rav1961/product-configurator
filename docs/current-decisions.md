@@ -34,6 +34,10 @@
 * Email verification required: business endpoints add `verified` (`EnsureEmailIsVerified`) on top of `auth:sanctum`. Account endpoints (`logout`, `profile`, resend verification) intentionally do NOT require `verified`
 * Email verification + password reset use native primitives (`MustVerifyEmail`, Password broker, events `Registered`/`Verified`/`PasswordReset`) wrapped in our controller + FormRequest + DTO + Action pattern
 * Mail links target the SPA: configured via `config('app.frontend_url')` (`FRONTEND_URL`); reset opens a frontend form, email verification confirms server-side then redirects to the SPA
+* Auth notification URLs and PL mail copy: `Infrastructure/Notifications/AuthNotificationConfigurator` (provider only wires it)
+* Default locale: `pl` (`APP_LOCALE`); auth mail strings in `resources/lang/pl/users.php` (`users.mail.*`); branded HTML layout deferred until frontend identity is ready
+* Persistence access: `Domain/Contracts/{Entity}Repository` + `Infrastructure/Persistence/Repositories/Eloquent{Entity}Repository`; Actions depend on the contract, not `Model::query()` directly
+* Layer boundaries: Application (Actions) has no HTTP dependencies — returns DTOs/primitives or throws `Domain/Exceptions`; Presentation (controllers) maps to JSON/redirect/status codes
 
 ## Authorization
 
@@ -61,6 +65,9 @@
 
 ## Persistence Conventions
 
+* Repository contract: `Domain/Contracts/{Entity}Repository.php`
+* Eloquent implementation: `Infrastructure/Persistence/Repositories/Eloquent{Entity}Repository.php`
+* Bind contract → implementation in module `ServiceProvider` (`register()`)
 * Public identifiers: ULID via `HasPublicId` (`public_id`); numeric ids never exposed
 * Module factories via `HasModuleFactory` convention
 * Module-owned seeders/factories; `DatabaseSeeder` only orchestrates
@@ -77,9 +84,10 @@
 ## Coding Style
 
 * DTO
-* Actions
+* Actions (no HTTP — see Layer Boundaries in `ai/workflow-rules.md`)
 * Events
-* Thin Controllers
+* Thin Controllers (HTTP mapping only)
+* Domain exceptions for business rule violations; controllers map them to HTTP responses
 
 ## Pricing Engine
 

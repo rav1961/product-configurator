@@ -11,7 +11,7 @@ tool, not a web shop.
 
 ## Currently working on
 
-- Users: Porcja B — password reset (`forgot-password` / `reset-password`).
+- Catalog write/admin completeness (next module slice).
 
 ## Conventions in place
 
@@ -27,6 +27,7 @@ tool, not a web shop.
 ## Module backlog (roadmap order)
 
 ### 1-2. Auth + Users
+- [x] Module complete (auth, RBAC, Filament, verification, password reset, repository pattern, PL mail copy).
 - [x] Auth: Sanctum SPA (no Fortify), native primitives; register / login / logout / profile
       (thin controllers + FormRequest + DTO + Actions).
 - [x] RBAC: `Role` enum (admin/manager/sales/customer), `RoleSeeder`, `AdminSeeder`, role hierarchy.
@@ -35,7 +36,9 @@ tool, not a web shop.
 - [x] PL translations (`resources/lang/pl/users.php`).
 - [x] Tests: feature (auth flows, panel access) + unit (policy / role hierarchy). Shared `InteractsWithSpaSession` test trait for SPA-session feature tests.
 - [x] Email verification: signed verify URL, resend notification, `verified` middleware on business endpoints, `Registered` event fix.
-- [ ] Password reset: `forgot-password` / `reset-password` via Password broker + SPA links.
+- [x] Password reset: `forgot-password` / `reset-password` via Password broker + SPA links.
+- [x] Polish auth mail templates (`users.mail.*`), `AuthNotificationConfigurator`, default locale `pl`.
+- [x] `UserRepository` + `Infrastructure/Persistence/Repositories/EloquentUserRepository`; persistence queries out of controllers/actions.
 
 ### 3. Catalog
 - [x] Domain: `Category`, `Product` models, `ProductStatus` enum.

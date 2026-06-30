@@ -60,6 +60,25 @@ Use Events for side effects.
 
 Prefer composition over inheritance.
 
+## Layer Boundaries
+
+* **Application** (Actions) must not depend on HTTP: no `Illuminate\Http\*`, no `redirect()`,
+  `abort()`, `response()`, no `Request`/`Response`/`JsonResponse`/`RedirectResponse`.
+* Actions return business results (DTOs, primitives, domain value objects) or throw **domain
+  exceptions** defined under `Domain/Exceptions`.
+* **Presentation** (controllers) maps those results to HTTP: status codes, JSON envelopes,
+  redirects, headers. Example: an Action returns a redirect URL (`string`); the controller calls
+  `redirect()->away(...)` and maps domain exceptions to `abort(403)` / validation errors.
+* **Infrastructure** owns persistence queries. Actions/controllers depend on
+  `Domain/Contracts/{Entity}Repository`, never `Model::query()` directly (except inside the
+  Eloquent repository implementation).
+
+## Repository Convention
+
+* Contract: `Domain/Contracts/{Entity}Repository.php` (e.g. `UserRepository`).
+* Implementation: `Infrastructure/Persistence/Repositories/Eloquent{Entity}Repository.php`.
+* Bind contract → implementation in the module `ServiceProvider` (`register()`).
+
 ## Communication
 
 The assistant should keep project context.

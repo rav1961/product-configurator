@@ -8,6 +8,11 @@ Thin (invokable) controllers, DTOs, Actions, Events, Form Requests.
 - Business logic lives in Application Actions (single responsibility, one public method).
 - Output is shaped by DTOs (`spatie/laravel-data`); never return Eloquent models directly from the API.
 - Side effects are handled via Domain Events.
+- **Application must not use HTTP** — no `Illuminate\Http\*`, `redirect()`, `abort()`, or `response()`.
+  Actions return DTOs/primitives or throw domain exceptions (`Domain/Exceptions`); controllers map
+  those to HTTP (JSON, status codes, redirects).
+- Persistence queries live in repositories; Actions depend on `Domain/Contracts/{Entity}Repository`,
+  not `Model::query()` (except inside `Infrastructure/Persistence/Repositories/`).
 
 ## Validation (consistent — no exceptions)
 
@@ -24,6 +29,9 @@ Thin (invokable) controllers, DTOs, Actions, Events, Form Requests.
 
 ## Persistence Conventions
 
+- Repository contract: `Domain/Contracts/{Entity}Repository.php`.
+- Eloquent implementation: `Infrastructure/Persistence/Repositories/Eloquent{Entity}Repository.php`.
+- Bind in the module `ServiceProvider` (`register()`).
 - Model factories follow the `HasModuleFactory` convention:
   `Modules\{Module}\Infrastructure\Persistence\Factories\{Model}Factory`.
   Do NOT place factories for module models in `database/factories`.

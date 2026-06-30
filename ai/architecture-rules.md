@@ -7,16 +7,18 @@ Laravel API + Next.js. Modular Monolith (Laravel).
 - Each bounded context is a module in `backend/modules/{Module}`.
 - PSR-4 namespace `Modules\{Module}\` mapped to `modules/{Module}`.
 - Modules are organized into explicit layers:
-  - `Domain` — models, enums, value objects, domain events, reusable model behaviors.
-  - `Application` — actions (use cases), DTOs.
-  - `Infrastructure` — persistence (migrations/factories/seeders) and service providers.
-  - `Presentation` — Http (controllers/requests/resources) and routes.
+  - `Domain` — models, enums, value objects, domain events, domain exceptions, repository contracts.
+  - `Application` — actions (use cases), DTOs. No HTTP dependencies.
+  - `Infrastructure` — persistence (migrations/factories/seeders/repositories) and service providers.
+  - `Presentation` — Http (controllers/requests/resources), routes. Maps Action results to HTTP.
 - Each module self-registers via `Modules\{Module}\Infrastructure\Providers\{Module}ServiceProvider`
   extending the shared `Modules\Shared\Infrastructure\Providers\ModuleServiceProvider`.
 - Factories are wired by convention via the `HasModuleFactory` behavior (no global resolver).
 - Inter-module communication only through public contracts (Actions, DTOs, Events).
 - Cross-cutting, framework-level building blocks live in the `Shared` kernel module.
 - No DDD-Lite shortcuts: each module owns its domain, persistence, presentation and tests.
+- Repository pattern: `Domain/Contracts/{Entity}Repository` + `Infrastructure/Persistence/Repositories/Eloquent{Entity}Repository`.
+- Application layer never imports `Illuminate\Http`; HTTP mapping belongs in Presentation only.
 
 ## Module Self-Registration & Framework Integration
 

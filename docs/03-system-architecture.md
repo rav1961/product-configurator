@@ -12,9 +12,11 @@ and is organized into explicit layers:
 ```
 modules/{Module}/
   Domain/                         # models, enums, value objects, domain events, concerns
+    Contracts/                    # repository interfaces ({Entity}Repository)
   Application/                    # actions (use cases), DTOs
   Infrastructure/
     Persistence/                  # migrations, factories, seeders
+      Repositories/               # Eloquent{Entity}Repository implementations
     Providers/                    # {Module}ServiceProvider
   Presentation/
     Http/                         # controllers, requests, resources
@@ -39,6 +41,10 @@ Conventions:
 - Factories are resolved by convention through the `HasModuleFactory` behavior:
   `Domain\Models\{Model}` -> `Infrastructure\Persistence\Factories\{Model}Factory`.
 - Inter-module communication via Actions / DTOs / Events only.
+- Application layer (Actions) must not use HTTP primitives; controllers in Presentation map
+  Action results to JSON, redirects and status codes.
+- Persistence queries go through `Domain/Contracts/{Entity}Repository`, implemented in
+  `Infrastructure/Persistence/Repositories/Eloquent{Entity}Repository`.
 - Each module owns the migrations for its domain tables in `Infrastructure/Persistence/Migrations`
   (e.g. the `Users` module owns `users` and `password_reset_tokens`).
 - Only framework runtime tables that belong to no bounded context stay in `database/migrations`

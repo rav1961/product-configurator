@@ -25,7 +25,6 @@ use Modules\Catalog\Domain\Models\Product;
 use Modules\Catalog\Presentation\Filament\Resources\ProductResource\Pages\CreateProduct;
 use Modules\Catalog\Presentation\Filament\Resources\ProductResource\Pages\EditProduct;
 use Modules\Catalog\Presentation\Filament\Resources\ProductResource\Pages\ListProducts;
-use UnitEnum;
 
 final class ProductResource extends Resource
 {
@@ -33,19 +32,39 @@ final class ProductResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCube;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Catalog';
-
     protected static ?int $navigationSort = 2;
+
+    public static function getNavigationGroup(): string
+    {
+        return __('products.navigation.group');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('products.navigation.label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('products.label.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('products.label.plural');
+    }
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             Select::make('category_id')
+                ->label(__('products.fields.category'))
                 ->relationship('category', 'name')
                 ->searchable()
                 ->preload()
                 ->nullable(),
             TextInput::make('name')
+                ->label(__('products.fields.name'))
                 ->required()
                 ->maxLength(255)
                 ->live(onBlur: true)
@@ -56,20 +75,25 @@ final class ProductResource extends Resource
                     $set('slug', Str::slug((string) $state));
                 }),
             TextInput::make('slug')
+                ->label(__('products.fields.slug'))
                 ->required()
                 ->maxLength(255)
                 ->unique(ignoreRecord: true),
             TextInput::make('sku')
+                ->label(__('products.fields.sku'))
                 ->maxLength(255)
                 ->unique(ignoreRecord: true),
             Select::make('status')
+                ->label(__('products.fields.status'))
                 ->options(self::statusOptions())
                 ->default(ProductStatus::Draft->value)
                 ->required(),
             Textarea::make('description')
+                ->label(__('products.fields.description'))
                 ->rows(5)
                 ->columnSpanFull(),
             TextInput::make('position')
+                ->label(__('products.fields.position'))
                 ->numeric()
                 ->default(0)
                 ->required(),
@@ -81,26 +105,32 @@ final class ProductResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('products.fields.name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('category.name')
+                    ->label(__('products.fields.category'))
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('sku')
+                    ->label(__('products.fields.sku'))
                     ->searchable()
                     ->toggleable(),
                 TextColumn::make('status')
+                    ->label(__('products.fields.status'))
                     ->badge()
-                    ->formatStateUsing(static fn (ProductStatus $state): string => Str::headline($state->value))
+                    ->formatStateUsing(static fn (ProductStatus $state): string => $state->label())
                     ->color(static fn (ProductStatus $state): string => match ($state) {
                         ProductStatus::Draft => 'gray',
                         ProductStatus::Active => 'success',
                         ProductStatus::Archived => 'warning',
                     }),
                 TextColumn::make('position')
+                    ->label(__('products.fields.position'))
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('updated_at')
+                    ->label(__('products.fields.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -108,8 +138,10 @@ final class ProductResource extends Resource
             ->defaultSort('position')
             ->filters([
                 SelectFilter::make('status')
+                    ->label(__('products.fields.status'))
                     ->options(self::statusOptions()),
                 SelectFilter::make('category')
+                    ->label(__('products.fields.category'))
                     ->relationship('category', 'name')
                     ->searchable()
                     ->preload(),
@@ -133,7 +165,7 @@ final class ProductResource extends Resource
         $options = [];
 
         foreach (ProductStatus::cases() as $status) {
-            $options[$status->value] = Str::headline($status->value);
+            $options[$status->value] = $status->label();
         }
 
         return $options;

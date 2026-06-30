@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 return [
     'navigation' => [
-        'group' => 'Access',
-        'label' => 'Users',
+        'group' => 'Uprawnienia',
+        'label' => 'Użytkownicy',
     ],
     'label' => [
-        'singular' => 'User',
-        'plural' => 'Users',
+        'singular' => 'Użytkownik',
+        'plural' => 'Użytkownicy',
     ],
     'fields' => [
-        'name' => 'Name',
+        'name' => 'Nazwa',
         'email' => 'Email',
-        'password' => 'Password',
-        'roles' => 'Roles',
-        'email_verified_at' => 'Verified',
-        'created_at' => 'Created at',
+        'password' => 'Hasło',
+        'roles' => 'Role',
+        'email_verified_at' => 'Zweryfikowany',
+        'created_at' => 'Utworzono',
     ],
     'role' => [
         'admin' => 'Administrator',
         'manager' => 'Manager',
-        'sales' => 'Sales',
-        'customer' => 'Customer',
+        'sales' => 'Obsługa',
+        'customer' => 'Klient',
     ],
 ];

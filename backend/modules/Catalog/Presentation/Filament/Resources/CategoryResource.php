@@ -25,7 +25,6 @@ use Modules\Catalog\Domain\Models\Category;
 use Modules\Catalog\Presentation\Filament\Resources\CategoryResource\Pages\CreateCategory;
 use Modules\Catalog\Presentation\Filament\Resources\CategoryResource\Pages\EditCategory;
 use Modules\Catalog\Presentation\Filament\Resources\CategoryResource\Pages\ListCategories;
-use UnitEnum;
 
 final class CategoryResource extends Resource
 {
@@ -33,14 +32,33 @@ final class CategoryResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Catalog';
-
     protected static ?int $navigationSort = 1;
+
+    public static function getNavigationGroup(): string
+    {
+        return __('catalog.navigation.group');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('catalog.navigation.label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('catalog.label.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('catalog.label.plural');
+    }
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             TextInput::make('name')
+                ->label(__('catalog.fields.name'))
                 ->required()
                 ->maxLength(255)
                 ->live(onBlur: true)
@@ -52,17 +70,21 @@ final class CategoryResource extends Resource
                     $set('slug', Str::slug((string) $state));
                 }),
             TextInput::make('slug')
+                ->label(__('catalog.fields.slug'))
                 ->required()
                 ->maxLength(255)
                 ->unique(ignoreRecord: true),
             Textarea::make('description')
+                ->label(__('catalog.fields.description'))
                 ->rows(4)
                 ->columnSpanFull(),
             TextInput::make('position')
+                ->label(__('catalog.fields.position'))
                 ->numeric()
                 ->default(0)
                 ->required(),
             Toggle::make('is_active')
+                ->label(__('catalog.fields.is_active'))
                 ->default(true),
         ]);
     }
@@ -71,25 +93,31 @@ final class CategoryResource extends Resource
     {
         return $table->columns([
             TextColumn::make('name')
+                ->label(__('catalog.fields.name'))
                 ->searchable()
                 ->sortable(),
             TextColumn::make('slug')
+                ->label(__('catalog.fields.slug'))
                 ->searchable()
                 ->toggleable(),
             IconColumn::make('is_active')
+                ->label(__('catalog.fields.is_active'))
                 ->boolean()
                 ->sortable(),
             TextColumn::make('position')
+                ->label(__('catalog.fields.position'))
                 ->numeric()
                 ->sortable(),
             TextColumn::make('updated_at')
+                ->label(__('catalog.fields.updated_at'))
                 ->dateTime()
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
         ])
             ->defaultSort('position')
             ->filters([
-                TernaryFilter::make('is_active'),
+                TernaryFilter::make('is_active')
+                    ->label(__('catalog.fields.is_active')),
             ])
             ->recordActions([
                 EditAction::make(),

@@ -24,7 +24,6 @@ use Modules\Users\Presentation\Filament\Resources\UserResource\Pages\CreateUser;
 use Modules\Users\Presentation\Filament\Resources\UserResource\Pages\EditUser;
 use Modules\Users\Presentation\Filament\Resources\UserResource\Pages\ListUsers;
 use Spatie\Permission\Models\Role as SpatieRole;
-use UnitEnum;
 
 final class UserResource extends Resource
 {
@@ -32,24 +31,45 @@ final class UserResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Access';
-
     protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getNavigationGroup(): string
+    {
+        return __('users.navigation.group');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('users.navigation.label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('users.label.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('users.label.plural');
+    }
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             TextInput::make('name')
+                ->label(__('users.fields.name'))
                 ->required()
                 ->maxLength(255),
             TextInput::make('email')
+                ->label(__('users.fields.email'))
                 ->required()
                 ->email()
                 ->maxLength(255)
                 ->unique(ignoreRecord: true),
             TextInput::make('password')
+                ->label(__('users.fields.password'))
                 ->password()
                 ->revealable()
                 ->maxLength(255)
@@ -57,7 +77,7 @@ final class UserResource extends Resource
                 ->dehydrated(static fn (?string $state): bool => filled($state))
                 ->rule(Password::default(), static fn (?string $state): bool => filled($state)),
             Select::make('roles')
-                ->label('Roles')
+                ->label(__('users.fields.roles'))
                 ->multiple()
                 ->preload()
                 ->relationship(
@@ -66,7 +86,7 @@ final class UserResource extends Resource
                     modifyQueryUsing: static fn (Builder $query): Builder => $query->whereIn('name', self::assignableRoleNames()),
                 )
                 ->getOptionLabelFromRecordUsing(
-                    static fn (SpatieRole $record): string => Role::tryFrom($record->name)?->label() ?? $record->name,
+                    static fn (SpatieRole $record): string => __('users.role.'.$record->name),
                 )
                 ->visible(static fn (?User $record): bool => self::assignableRoleNames() !== []
                     && ! ($record instanceof User && $record->is(auth()->user()))),
@@ -78,17 +98,26 @@ final class UserResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('users.fields.name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('email')
+                    ->label(__('users.fields.email'))
                     ->searchable()
                     ->sortable()
                     ->copyable(),
                 TextColumn::make('roles.name')
-                    ->label('Roles')
+                    ->label(__('users.fields.roles'))
                     ->badge()
                     ->formatStateUsing(static fn (string $state): string => Role::tryFrom($state)?->label() ?? $state),
                 TextColumn::make('email_verified_at')
+                    ->label(__('users.fields.email_verified_at'))
+                    ->dateTime()
+                    ->placeholder('-')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('created_at')
+                    ->label(__('users.fields.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -125,7 +154,7 @@ final class UserResource extends Resource
         return $query->where(static function (Builder $builder) use ($blockedRoleNames, $actor): void {
             $builder
                 ->whereDoesntHave('roles', static fn (Builder $roles): Builder => $roles->whereIn('name', $blockedRoleNames))
-                ->whereKey($actor->getKey());
+                ->orWhere($actor->getKeyName(), $actor->getKey());
         });
     }
 

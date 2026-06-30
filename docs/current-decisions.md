@@ -45,10 +45,14 @@
 
 ## Translations
 
-* All user-facing strings go through translations (`__()` / `trans()`), never hardcoded.
-* Standard Laravel `lang/{locale}/` directory; one file per module (`lang/en/users.php`).
-* Key convention: `module.section.key` (e.g. `users.fields.roles`, `users.role.admin`).
-* No per-module `Lang` folders / namespace registration (KISS — framework auto-loads `lang/`).
+* All user-facing strings go through translations (`__()`), never hardcoded.
+* Location: `resources/lang/{locale}/{domain}.php`; one file per Filament resource
+  (`users.php`, `catalog.php`, `products.php`).
+* Key convention: `domain.section.key` (e.g. `users.fields.roles`, `users.role.admin`,
+  `products.status.draft`). Enum display labels expose `label()` returning `__()`.
+* Primary language is `pl`; `en` deferred to the Multilanguage stage.
+* `__()` is typed as `string` by larastan, so it can be returned directly from `: string` methods.
+* No per-module `Lang` folders / namespace registration (KISS — framework auto-loads `resources/lang/`).
 
 ## Persistence Conventions
 

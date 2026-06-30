@@ -11,8 +11,12 @@ tool, not a web shop.
 
 ## Currently working on
 
-- Users · slice 4b: Filament `UserResource` + Pages (List/Create/Edit) + `UsersServiceProvider`
-  wiring (resource + policy registration, role field limited to `assignableRoles()`).
+- Users: closing Definition of Done — feature/unit tests for auth + Filament policy/hierarchy.
+
+## Conventions in place
+
+- Translations: `resources/lang/pl/{domain}.php` (one file per Filament resource), used via `__()`.
+  Polish is the primary app language; `en` added later (Multilanguage). Applied to Users + Catalog.
 
 ## Foundations
 
@@ -27,7 +31,8 @@ tool, not a web shop.
       (thin controllers + FormRequest + DTO + Actions).
 - [x] RBAC: `Role` enum (admin/manager/sales/customer), `RoleSeeder`, `AdminSeeder`, role hierarchy.
 - [x] Persistence: `UserFactory`, module migration, `UserPolicy`.
-- [~] Filament `UserResource` + Pages + provider wiring (slice 4b).
+- [x] Filament `UserResource` + Pages + provider wiring (resource + policy + role field via `assignableRoles()`).
+- [x] PL translations (`resources/lang/pl/users.php`).
 - [ ] Tests: feature (auth flows, panel access) + unit (policy / role hierarchy) to close Definition of Done.
 - [ ] Password reset + email verification flows wired end-to-end (Password broker, `Registered` event).
 
@@ -36,6 +41,7 @@ tool, not a web shop.
 - [x] Persistence: factories, seeders, migrations.
 - [x] Read API: list/show products, list categories (DTO + Action + FormRequest) + tests.
 - [x] Filament: `CategoryResource`, `ProductResource` + pages.
+- [x] PL translations (`resources/lang/pl/catalog.php`, `resources/lang/pl/products.php`, `ProductStatus::label()`).
 - [ ] Write/admin completeness: media (spatie/medialibrary) for product images, validation, policies.
 - [ ] Link products to configurable attributes (bridge to Configurator).
 

@@ -6,7 +6,7 @@ namespace Modules\System\Application\Actions;
 
 use Modules\System\Application\DTO\HealthStatusData;
 
-final class GetHealthStatusAction
+final readonly class GetHealthStatusAction
 {
     public function execute(): HealthStatusData
     {

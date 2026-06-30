@@ -8,14 +8,14 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Modules\Users\Application\DTO\RegisterData;
-use Modules\Users\Domain\Contracts\UserRepository;
+use Modules\Users\Domain\Contracts\UserRepositoryInterface;
 use Modules\Users\Domain\Enums\Role;
 use Modules\Users\Domain\Models\User;
 
 final readonly class RegisterCustomer
 {
     public function __construct(
-        private UserRepository $users,
+        private UserRepositoryInterface $users,
     ) {}
 
     public function handle(RegisterData $data): User

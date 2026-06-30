@@ -6,6 +6,7 @@ namespace Modules\Catalog\Presentation\Http\Controllers;
 
 use Modules\Catalog\Application\Actions\ListProductsAction;
 use Modules\Catalog\Application\DTO\ProductData;
+use Modules\Catalog\Application\DTO\ProductIndexData;
 use Modules\Catalog\Domain\Models\Product;
 use Modules\Catalog\Presentation\Http\Requests\ProductIndexRequest;
 use Modules\Shared\Presentation\Http\Controllers\ApiController;
@@ -23,12 +24,7 @@ final class ProductListController extends ApiController
         $validated = $request->validated();
 
         $products = $action->execute(
-            categoryPublicId: isset($validated['category'])
-                ? (string) $validated['category']
-                : null,
-            perPage: isset($validated['per_page'])
-                ? (int) $validated['per_page']
-                : null,
+            ProductIndexData::from($request->validated()),
         );
 
         return ProductData::collect(

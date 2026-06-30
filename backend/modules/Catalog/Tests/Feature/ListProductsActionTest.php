@@ -6,6 +6,7 @@ namespace Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Catalog\Application\Actions\ListProductsAction;
+use Modules\Catalog\Application\DTO\ProductIndexData;
 use Modules\Catalog\Domain\Models\Category;
 use Modules\Catalog\Domain\Models\Product;
 use Tests\TestCase;
@@ -19,7 +20,7 @@ final class ListProductsActionTest extends TestCase
         Product::factory()->active()->count(2)->create();
         Product::factory()->create();
 
-        $result = app(ListProductsAction::class)->execute();
+        $result = app(ListProductsAction::class)->execute(new ProductIndexData);
 
         $this->assertCount(2, $result->items());
     }
@@ -32,7 +33,7 @@ final class ListProductsActionTest extends TestCase
         Product::factory()->active()->create();
 
         $result = app(ListProductsAction::class)->execute(
-            categoryPublicId: $category->public_id,
+            new ProductIndexData(categoryPublicId: $category->public_id),
         );
 
         $this->assertCount(1, $result->items());
@@ -46,7 +47,7 @@ final class ListProductsActionTest extends TestCase
         Product::factory()->active()->for($category)->create();
 
         $result = app(ListProductsAction::class)->execute(
-            categoryPublicId: $category->public_id,
+            new ProductIndexData(categoryPublicId: $category->public_id),
         );
 
         $this->assertCount(0, $result->items());
@@ -56,7 +57,9 @@ final class ListProductsActionTest extends TestCase
     {
         Product::factory()->active()->count(3)->create();
 
-        $result = app(ListProductsAction::class)->execute(perPage: 2);
+        $result = app(ListProductsAction::class)->execute(
+            new ProductIndexData(perPage: 2),
+        );
 
         $this->assertCount(2, $result->items());
         $this->assertSame(3, $result->total());

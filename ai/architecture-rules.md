@@ -7,7 +7,7 @@ Laravel API + Next.js. Modular Monolith (Laravel).
 - Each bounded context is a module in `backend/modules/{Module}`.
 - PSR-4 namespace `Modules\{Module}\` mapped to `modules/{Module}`.
 - Modules are organized into explicit layers:
-  - `Domain` — models, enums, value objects, domain events, domain exceptions, repository contracts.
+  - `Domain` — models, enums, value objects, domain events, domain exceptions, repository contracts (`*Interface`).
   - `Application` — actions (use cases), DTOs. No HTTP dependencies.
   - `Infrastructure` — persistence (migrations/factories/seeders/repositories) and service providers.
   - `Presentation` — Http (controllers/requests/resources), routes. Maps Action results to HTTP.
@@ -17,7 +17,8 @@ Laravel API + Next.js. Modular Monolith (Laravel).
 - Inter-module communication only through public contracts (Actions, DTOs, Events).
 - Cross-cutting, framework-level building blocks live in the `Shared` kernel module.
 - No DDD-Lite shortcuts: each module owns its domain, persistence, presentation and tests.
-- Repository pattern: `Domain/Contracts/{Entity}Repository` + `Infrastructure/Persistence/Repositories/Eloquent{Entity}Repository`.
+- Repository pattern: `Domain/Contracts/{Entity}RepositoryInterface` + `Infrastructure/Persistence/Repositories/Eloquent{Entity}Repository`.
+- All domain contracts (interfaces) use the `Interface` suffix (e.g. `UserRepositoryInterface`, not `UserRepository`).
 - Application layer never imports `Illuminate\Http`; HTTP mapping belongs in Presentation only.
 
 ## Module Self-Registration & Framework Integration

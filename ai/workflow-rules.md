@@ -70,12 +70,12 @@ Prefer composition over inheritance.
   redirects, headers. Example: an Action returns a redirect URL (`string`); the controller calls
   `redirect()->away(...)` and maps domain exceptions to `abort(403)` / validation errors.
 * **Infrastructure** owns persistence queries. Actions/controllers depend on
-  `Domain/Contracts/{Entity}Repository`, never `Model::query()` directly (except inside the
+  `Domain/Contracts/{Entity}RepositoryInterface`, never `Model::query()` directly (except inside the
   Eloquent repository implementation).
 
 ## Repository Convention
 
-* Contract: `Domain/Contracts/{Entity}Repository.php` (e.g. `UserRepository`).
+* Contract (interface): `Domain/Contracts/{Entity}RepositoryInterface.php` — always use the `Interface` suffix.
 * Implementation: `Infrastructure/Persistence/Repositories/Eloquent{Entity}Repository.php`.
 * Bind contract → implementation in the module `ServiceProvider` (`register()`).
 

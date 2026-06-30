@@ -5,19 +5,20 @@ declare(strict_types=1);
 namespace Modules\Catalog\Application\Actions;
 
 use Illuminate\Support\Collection;
+use Modules\Catalog\Domain\Contracts\CategoryRepositoryInterface;
 use Modules\Catalog\Domain\Models\Category;
 
-final class ListCategoriesAction
+final readonly class ListCategoriesAction
 {
+    public function __construct(
+        private CategoryRepositoryInterface $categories,
+    ) {}
+
     /**
      * @return Collection<int, Category>
      */
     public function execute(): Collection
     {
-        return Category::query()
-            ->active()
-            ->orderBy('position')
-            ->orderBy('name')
-            ->get();
+        return $this->categories->listActiveOrdered();
     }
 }

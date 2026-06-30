@@ -6,8 +6,8 @@ namespace Modules\Users\Infrastructure\Persistence\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Modules\Users\Domain\Contracts\UserRepositoryInterface;
 use Modules\Users\Domain\Enums\Role;
-use Modules\Users\Domain\Models\User;
 use RuntimeException;
 
 final class AdminSeeder extends Seeder
@@ -29,14 +29,14 @@ final class AdminSeeder extends Seeder
             throw new RuntimeException('Admin password must be changed in production.');
         }
 
-        $admin = User::query()->updateOrCreate(
-            ['email' => $email],
-            [
-                'name' => config('admin.name', 'Admin'),
-                'email_verified_at' => now(),
-                'password' => Hash::make($password),
-            ],
-        );
+        /** @var UserRepositoryInterface $users */
+        $users = app(UserRepositoryInterface::class);
+
+        $admin = $users->updateOrCreateByEmail($email, [
+            'name' => config('admin.name', 'Admin'),
+            'email_verified_at' => now(),
+            'password' => Hash::make($password),
+        ]);
 
         $admin->assignRole(Role::Admin->value);
     }

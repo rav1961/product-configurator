@@ -7,7 +7,7 @@ namespace Modules\Users\Infrastructure\Providers;
 use Filament\Panel;
 use Illuminate\Support\Facades\Gate;
 use Modules\Shared\Infrastructure\Providers\ModuleServiceProvider;
-use Modules\Users\Domain\Contracts\UserRepository;
+use Modules\Users\Domain\Contracts\UserRepositoryInterface;
 use Modules\Users\Domain\Models\User;
 use Modules\Users\Infrastructure\Notifications\AuthNotificationConfigurator;
 use Modules\Users\Infrastructure\Persistence\Repositories\EloquentUserRepository;
@@ -23,7 +23,7 @@ final class UsersServiceProvider extends ModuleServiceProvider
 
     public function register(): void
     {
-        $this->app->bind(UserRepository::class, EloquentUserRepository::class);
+        $this->app->bind(UserRepositoryInterface::class, EloquentUserRepository::class);
 
         Panel::configureUsing(static function (Panel $panel): void {
             if ($panel->getId() !== 'admin') {

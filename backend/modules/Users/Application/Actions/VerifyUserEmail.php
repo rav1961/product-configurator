@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Modules\Users\Application\Actions;
 
 use Illuminate\Auth\Events\Verified;
-use Modules\Users\Domain\Contracts\UserRepository;
+use Modules\Users\Domain\Contracts\UserRepositoryInterface;
 use Modules\Users\Domain\Exceptions\InvalidEmailVerificationHash;
 
 final readonly class VerifyUserEmail
 {
     public function __construct(
-        private UserRepository $users,
+        private UserRepositoryInterface $users,
     ) {}
 
     public function handle(string $publicId, string $hash): string

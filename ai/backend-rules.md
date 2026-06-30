@@ -11,7 +11,7 @@ Thin (invokable) controllers, DTOs, Actions, Events, Form Requests.
 - **Application must not use HTTP** — no `Illuminate\Http\*`, `redirect()`, `abort()`, or `response()`.
   Actions return DTOs/primitives or throw domain exceptions (`Domain/Exceptions`); controllers map
   those to HTTP (JSON, status codes, redirects).
-- Persistence queries live in repositories; Actions depend on `Domain/Contracts/{Entity}Repository`,
+- Persistence queries live in repositories; Actions depend on `Domain/Contracts/{Entity}RepositoryInterface`,
   not `Model::query()` (except inside `Infrastructure/Persistence/Repositories/`).
 
 ## Validation (consistent — no exceptions)
@@ -29,8 +29,8 @@ Thin (invokable) controllers, DTOs, Actions, Events, Form Requests.
 
 ## Persistence Conventions
 
-- Repository contract: `Domain/Contracts/{Entity}Repository.php`.
-- Eloquent implementation: `Infrastructure/Persistence/Repositories/Eloquent{Entity}Repository.php`.
+- Repository contract: `Domain/Contracts/{Entity}RepositoryInterface.php` (always `Interface` suffix).
+- Eloquent implementation: `Infrastructure/Persistence/Repositories/Eloquent{Entity}Repository.php` (no `Interface` suffix on concrete class).
 - Bind in the module `ServiceProvider` (`register()`).
 - Model factories follow the `HasModuleFactory` convention:
   `Modules\{Module}\Infrastructure\Persistence\Factories\{Model}Factory`.

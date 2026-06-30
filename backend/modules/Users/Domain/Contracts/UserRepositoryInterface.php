@@ -6,7 +6,7 @@ namespace Modules\Users\Domain\Contracts;
 
 use Modules\Users\Domain\Models\User;
 
-interface UserRepository
+interface UserRepositoryInterface
 {
     public function findByPublicId(string $publicId): User;
 
@@ -14,4 +14,9 @@ interface UserRepository
      * @param  array<string, mixed>  $attributes
      */
     public function create(array $attributes): User;
+
+    /**
+     * @param  array<string, mixed>  $values
+     */
+    public function updateOrCreateByEmail(string $email, array $values): User;
 }

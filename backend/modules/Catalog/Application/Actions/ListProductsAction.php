@@ -4,33 +4,25 @@ declare(strict_types=1);
 
 namespace Modules\Catalog\Application\Actions;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Modules\Catalog\Application\DTO\ProductIndexData;
+use Modules\Catalog\Domain\Contracts\ProductRepositoryInterface;
 use Modules\Catalog\Domain\Models\Product;
 
-final class ListProductsAction
+final readonly class ListProductsAction
 {
+    public function __construct(
+        private ProductRepositoryInterface $products,
+    ) {}
+
     /**
      * @return LengthAwarePaginator<int, Product>
      */
-    public function execute(
-        ?string $categoryPublicId = null,
-        ?int $perPage = 15
-    ): LengthAwarePaginator {
-        return Product::query()
-            ->active()
-            ->when(
-                $categoryPublicId !== null,
-                static function (Builder $query) use ($categoryPublicId): void {
-                    $query->whereHas('category', static function (Builder $relation) use ($categoryPublicId): void {
-                        $relation->where('public_id', $categoryPublicId)
-                            ->where('is_active', true);
-                    });
-                },
-            )
-            ->with('category')
-            ->orderBy('position')
-            ->orderBy('name')
-            ->paginate($perPage);
+    public function execute(ProductIndexData $data): LengthAwarePaginator
+    {
+        return $this->products->paginateActive(
+            categoryPublicId: $data->categoryPublicId,
+            perPage: $data->perPage,
+        );
     }
 }

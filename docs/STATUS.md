@@ -17,6 +17,9 @@ tool, not a web shop.
 
 - Translations: `resources/lang/pl/{domain}.php` (one file per Filament resource), used via `__()`.
   Polish is the primary app language; `en` added later (Multilanguage). Applied to Users + Catalog.
+- Repository contracts: `Domain/Contracts/{Entity}RepositoryInterface.php`; Eloquent implementations
+  in `Infrastructure/Persistence/Repositories/Eloquent{Entity}Repository.php`.
+- Layer boundaries: Application (Actions) has no HTTP dependencies; Presentation maps to HTTP.
 
 ## Foundations
 
@@ -38,14 +41,15 @@ tool, not a web shop.
 - [x] Email verification: signed verify URL, resend notification, `verified` middleware on business endpoints, `Registered` event fix.
 - [x] Password reset: `forgot-password` / `reset-password` via Password broker + SPA links.
 - [x] Polish auth mail templates (`users.mail.*`), `AuthNotificationConfigurator`, default locale `pl`.
-- [x] `UserRepository` + `Infrastructure/Persistence/Repositories/EloquentUserRepository`; persistence queries out of controllers/actions.
+- [x] `UserRepositoryInterface` + `Infrastructure/Persistence/Repositories/EloquentUserRepository`; persistence queries out of controllers/actions.
 
 ### 3. Catalog
 - [x] Domain: `Category`, `Product` models, `ProductStatus` enum.
 - [x] Persistence: factories, seeders, migrations.
-- [x] Read API: list/show products, list categories (DTO + Action + FormRequest) + tests. Endpoints behind `auth:sanctum` (authenticated-only app; `health` stays public).
+- [x] Read API: list/show products, list categories (DTO + Action + FormRequest) + tests. Endpoints behind `auth:sanctum` + `verified`.
 - [x] Filament: `CategoryResource`, `ProductResource` + pages.
 - [x] PL translations (`resources/lang/pl/catalog.php`, `resources/lang/pl/products.php`, `ProductStatus::label()`).
+- [x] Repository pattern: `CategoryRepositoryInterface`, `ProductRepositoryInterface` + Eloquent implementations; `ProductIndexData` input DTO; actions `readonly`; test namespaces fixed (PSR-4).
 - [ ] Write/admin completeness: media (spatie/medialibrary) for product images, validation, policies.
 - [ ] Link products to configurable attributes (bridge to Configurator).
 

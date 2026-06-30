@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Modules\Users\Infrastructure\Providers;
 
 use Filament\Panel;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
@@ -47,5 +48,10 @@ final class UsersServiceProvider extends ModuleServiceProvider
                 'hash' => sha1($notifiable->getEmailForVerification()),
             ],
         ));
+
+        ResetPassword::createUrlUsing(static fn (User $notifiable, string $token): string => rtrim(
+            (string) config('app.frontend_url'),
+            '/',
+        ).'/reset-password?token='.urldecode($token).'&email='.urldecode($notifiable->getEmailForPasswordReset()));
     }
 }

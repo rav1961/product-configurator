@@ -6,18 +6,34 @@ namespace Modules\Catalog\Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Catalog\Domain\Models\Category;
+use Modules\Users\Domain\Models\User;
 use Tests\TestCase;
 
 final class CategoryApiTest extends TestCase
 {
     use RefreshDatabase;
 
+    private User $user;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->user = User::factory()->create();
+    }
+
+    public function test_guest_cannot_list_categories(): void
+    {
+        $this->getJson(route('api.categories.list'))->assertUnauthorized();
+    }
+
     public function test_index_returns_only_active_categories(): void
     {
         Category::factory()->count(2)->create();
         Category::factory()->inactive()->create();
 
-        $response = $this->getJson(route('api.categories.list'));
+        $response = $this->actingAs($this->user)
+            ->getJson(route('api.categories.list'));
 
         $response
             ->assertOk()
@@ -35,7 +51,8 @@ final class CategoryApiTest extends TestCase
         Category::factory()->create(['name' => 'Beta', 'position' => 10]);
         Category::factory()->create(['name' => 'Alpha', 'position' => 10]);
 
-        $this->getJson(route('api.categories.list'))
+        $this->actingAs($this->user)
+            ->getJson(route('api.categories.list'))
             ->assertOk()
             ->assertJsonPath('data.0.name', 'Alpha')
             ->assertJsonPath('data.1.name', 'Beta')

@@ -8,18 +8,43 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Modules\Catalog\Domain\Models\Category;
 use Modules\Catalog\Domain\Models\Product;
+use Modules\Users\Domain\Models\User;
 use Tests\TestCase;
 
 final class ProductApiTest extends TestCase
 {
     use RefreshDatabase;
 
+    private User $user;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->user = User::factory()->create();
+    }
+
+    public function test_guest_cannot_list_products(): void
+    {
+        $this->getJson(route('api.products.list'))->assertUnauthorized();
+    }
+
+    public function test_guest_cannot_show_product(): void
+    {
+        $product = Product::factory()->active()->create();
+
+        $this->getJson(route('api.products.show', [
+            'productId' => $product->public_id,
+        ]))->assertUnauthorized();
+    }
+
     public function test_index_returns_only_active_products(): void
     {
         Product::factory()->active()->count(2)->create();
         Product::factory()->create();
 
-        $response = $this->getJson(route('api.products.list'));
+        $response = $this->actingAs($this->user)
+            ->getJson(route('api.products.list'));
 
         $response
             ->assertOk()
@@ -39,9 +64,10 @@ final class ProductApiTest extends TestCase
         Product::factory()->active()->for($category)->create();
         Product::factory()->active()->create();
 
-        $response = $this->getJson(route('api.products.list', [
-            'category' => $category->public_id,
-        ]));
+        $response = $this->actingAs($this->user)
+            ->getJson(route('api.products.list', [
+                'category' => $category->public_id,
+            ]));
 
         $response->assertOk()->assertJsonCount(1, 'data');
     }
@@ -50,10 +76,11 @@ final class ProductApiTest extends TestCase
     {
         Product::factory()->active()->count(3)->create();
 
-        $response = $this->getJson(route('api.products.list', [
-            'per_page' => 2,
-            'page' => 2,
-        ]));
+        $response = $this->actingAs($this->user)
+            ->getJson(route('api.products.list', [
+                'per_page' => 2,
+                'page' => 2,
+            ]));
 
         $response
             ->assertOk()
@@ -77,42 +104,47 @@ final class ProductApiTest extends TestCase
 
     public function test_index_returns_422_for_invalid_per_page(): void
     {
-        $this->getJson(route('api.products.list', [
-            'per_page' => 0,
-        ]))
+        $this->actingAs($this->user)
+            ->getJson(route('api.products.list', [
+                'per_page' => 0,
+            ]))
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['per_page']);
 
-        $this->getJson(route('api.products.list', [
-            'per_page' => 101,
-        ]))
+        $this->actingAs($this->user)
+            ->getJson(route('api.products.list', [
+                'per_page' => 101,
+            ]))
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['per_page']);
     }
 
     public function test_index_returns_422_for_invalid_page(): void
     {
-        $this->getJson(route('api.products.list', [
-            'page' => 0,
-        ]))
+        $this->actingAs($this->user)
+            ->getJson(route('api.products.list', [
+                'page' => 0,
+            ]))
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['page']);
     }
 
     public function test_index_returns_422_for_invalid_category_ulid(): void
     {
-        $this->getJson(route('api.products.list', [
-            'category' => 'not-a-ulid',
-        ]))
+        $this->actingAs($this->user)
+            ->getJson(route('api.products.list', [
+                'category' => 'not-a-ulid',
+            ]))
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['category']);
     }
 
     public function test_index_returns_422_for_unknown_category(): void
     {
-        $this->getJson(route('api.products.list', [
-            'category' => (string) Str::ulid(),
-        ]))
+        $this->actingAs($this->user)
+            ->getJson(route('api.products.list', [
+                'category' => (string) Str::ulid(),
+            ]))
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['category']);
     }
@@ -121,9 +153,10 @@ final class ProductApiTest extends TestCase
     {
         $category = Category::factory()->inactive()->create();
 
-        $this->getJson(route('api.products.list', [
-            'category' => $category->public_id,
-        ]))
+        $this->actingAs($this->user)
+            ->getJson(route('api.products.list', [
+                'category' => $category->public_id,
+            ]))
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['category'])
             ->assertJsonPath('errors.category.0', 'The selected category is not available.');
@@ -133,9 +166,10 @@ final class ProductApiTest extends TestCase
     {
         $product = Product::factory()->active()->create();
 
-        $this->getJson(route('api.products.show', [
-            'productId' => $product->public_id,
-        ]))
+        $this->actingAs($this->user)
+            ->getJson(route('api.products.show', [
+                'productId' => $product->public_id,
+            ]))
             ->assertOk()
             ->assertJsonPath('data.id', $product->public_id)
             ->assertJsonPath('data.status', 'active');
@@ -145,17 +179,19 @@ final class ProductApiTest extends TestCase
     {
         $product = Product::factory()->create();
 
-        $this->getJson(route('api.products.show', [
-            'productId' => $product->public_id,
-        ]))
+        $this->actingAs($this->user)
+            ->getJson(route('api.products.show', [
+                'productId' => $product->public_id,
+            ]))
             ->assertNotFound();
     }
 
     public function test_show_returns_404_for_unknown_public_id(): void
     {
-        $this->getJson(route('api.products.show', [
-            'productId' => (string) Str::ulid(),
-        ]))
+        $this->actingAs($this->user)
+            ->getJson(route('api.products.show', [
+                'productId' => (string) Str::ulid(),
+            ]))
             ->assertNotFound();
     }
 }

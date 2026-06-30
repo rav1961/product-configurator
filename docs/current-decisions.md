@@ -29,6 +29,8 @@
 * Guard: web
 * Own thin controllers + FormRequest + Actions + DTOs in the `Users` module (register, login, logout, me)
 * Native framework primitives: `Auth::attempt`, session regeneration, `RateLimiter`, Password broker, email verification
+* Authenticated-only API: every domain endpoint sits behind `auth:sanctum`; the only public exceptions are `register`, `login` and `health`
+* Catalog endpoints (`categories`, `products`) require authentication; auth is applied per-module in `Presentation/Routes/api.php`, never globally
 
 ## Authorization
 

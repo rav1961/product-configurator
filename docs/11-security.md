@@ -19,6 +19,15 @@ Sanctum, HttpOnly Cookies, Spatie Permission, Audit Log.
 - Permissions strategy: role-based now. Granular per-feature permissions are introduced
   per module as those modules are built; each module owns and seeds its own permissions.
 
+## API access policy
+
+- The application is authenticated-only: every domain API endpoint sits behind `auth:sanctum`.
+- Public exceptions are intentional and limited to: `register`, `login` (auth entry points)
+  and `health` (uptime/monitoring probe).
+- Catalog (`categories`, `products`) is **not** public — browsing requires an authenticated
+  user. Each module enforces this in its own `Presentation/Routes/api.php` (mirroring `Users`),
+  not globally, so per-route exceptions stay explicit.
+
 ## Auditing
 
 - spatie/laravel-activitylog for the audit trail.

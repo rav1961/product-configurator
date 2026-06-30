@@ -6,6 +6,7 @@ namespace Tests\Feature\Api;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Catalog\Domain\Models\Product;
+use Modules\Users\Domain\Models\User;
 use Tests\TestCase;
 
 final class ApiResponseShapeTest extends TestCase
@@ -28,7 +29,8 @@ final class ApiResponseShapeTest extends TestCase
 
     public function test_categories_endpoint_uses_data_envelope(): void
     {
-        $this->getJson('/api/categories')
+        $this->actingAs(User::factory()->create())
+            ->getJson('/api/categories')
             ->assertOk()
             ->assertJsonStructure([
                 'data',
@@ -39,7 +41,8 @@ final class ApiResponseShapeTest extends TestCase
     {
         Product::factory()->active()->create();
 
-        $this->getJson('/api/products')
+        $this->actingAs(User::factory()->create())
+            ->getJson('/api/products')
             ->assertOk()
             ->assertJsonStructure([
                 'data',
@@ -52,7 +55,8 @@ final class ApiResponseShapeTest extends TestCase
     {
         $product = Product::factory()->active()->create();
 
-        $this->getJson('/api/products/'.$product->public_id)
+        $this->actingAs(User::factory()->create())
+            ->getJson('/api/products/'.$product->public_id)
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [

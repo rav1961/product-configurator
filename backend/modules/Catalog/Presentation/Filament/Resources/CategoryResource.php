@@ -9,6 +9,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -17,6 +18,7 @@ use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
@@ -25,6 +27,8 @@ use Modules\Catalog\Domain\Models\Category;
 use Modules\Catalog\Presentation\Filament\Resources\CategoryResource\Pages\CreateCategory;
 use Modules\Catalog\Presentation\Filament\Resources\CategoryResource\Pages\EditCategory;
 use Modules\Catalog\Presentation\Filament\Resources\CategoryResource\Pages\ListCategories;
+use Modules\Shared\Domain\Enums\MediaCollection;
+use Modules\Shared\Domain\Enums\MediaConversion;
 
 final class CategoryResource extends Resource
 {
@@ -78,6 +82,12 @@ final class CategoryResource extends Resource
                 ->label(__('catalog.fields.description'))
                 ->rows(4)
                 ->columnSpanFull(),
+            SpatieMediaLibraryFileUpload::make('cover')
+                ->label(__('products.fields.cover'))
+                ->collection(MediaCollection::Cover->value)
+                ->image()
+                ->maxFiles(1)
+                ->columnSpanFull(),
             TextInput::make('position')
                 ->label(__('catalog.fields.position'))
                 ->numeric()
@@ -92,6 +102,10 @@ final class CategoryResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->columns([
+            SpatieMediaLibraryImageColumn::make('cover')
+                ->collection(MediaCollection::Cover->value)
+                ->conversion(MediaConversion::Thumb->value)
+                ->square(),
             TextColumn::make('name')
                 ->label(__('catalog.fields.name'))
                 ->searchable()

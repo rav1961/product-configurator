@@ -8,8 +8,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Catalog\Infrastructure\Persistence\Factories\CategoryFactory;
+use Modules\Shared\Domain\Concerns\HasConfiguredMedia;
 use Modules\Shared\Domain\Concerns\HasModuleFactory;
 use Modules\Shared\Domain\Concerns\HasPublicId;
+use Modules\Shared\Domain\Concerns\RegistersDefaultMediaCollection;
+use Modules\Shared\Domain\Enums\MediaCollection;
+use Modules\Shared\Domain\Enums\MediaProfile;
+use Spatie\MediaLibrary\HasMedia;
 
 /**
  * @property int $id
@@ -20,12 +25,15 @@ use Modules\Shared\Domain\Concerns\HasPublicId;
  * @property int $position
  * @property bool $is_active
  */
-final class Category extends Model
+final class Category extends Model implements HasMedia
 {
+    use HasConfiguredMedia;
+
     /** @use HasModuleFactory<CategoryFactory> */
     use HasModuleFactory;
 
     use HasPublicId;
+    use RegistersDefaultMediaCollection;
 
     protected $table = 'catalog_categories';
 
@@ -44,6 +52,16 @@ final class Category extends Model
             'is_active' => 'boolean',
             'position' => 'integer',
         ];
+    }
+
+    protected function mediaProfile(): MediaProfile
+    {
+        return MediaProfile::CategoryCover;
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->registerDefaultMediaCollection(MediaCollection::Cover);
     }
 
     /**

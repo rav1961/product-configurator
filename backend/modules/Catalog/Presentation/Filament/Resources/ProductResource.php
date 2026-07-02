@@ -10,12 +10,14 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -25,6 +27,8 @@ use Modules\Catalog\Domain\Models\Product;
 use Modules\Catalog\Presentation\Filament\Resources\ProductResource\Pages\CreateProduct;
 use Modules\Catalog\Presentation\Filament\Resources\ProductResource\Pages\EditProduct;
 use Modules\Catalog\Presentation\Filament\Resources\ProductResource\Pages\ListProducts;
+use Modules\Shared\Domain\Enums\MediaCollection;
+use Modules\Shared\Domain\Enums\MediaConversion;
 
 final class ProductResource extends Resource
 {
@@ -92,6 +96,12 @@ final class ProductResource extends Resource
                 ->label(__('products.fields.description'))
                 ->rows(5)
                 ->columnSpanFull(),
+            SpatieMediaLibraryFileUpload::make('cover')
+                ->label(__('products.fields.cover'))
+                ->collection(MediaCollection::Cover->value)
+                ->image()
+                ->maxFiles(1)
+                ->columnSpanFull(),
             TextInput::make('position')
                 ->label(__('products.fields.position'))
                 ->numeric()
@@ -104,6 +114,10 @@ final class ProductResource extends Resource
     {
         return $table
             ->columns([
+                SpatieMediaLibraryImageColumn::make('cover')
+                    ->collection(MediaCollection::Cover->value)
+                    ->conversion(MediaConversion::Thumb->value)
+                    ->square(),
                 TextColumn::make('name')
                     ->label(__('products.fields.name'))
                     ->searchable()

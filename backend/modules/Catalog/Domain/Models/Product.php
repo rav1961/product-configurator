@@ -9,8 +9,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Catalog\Domain\Enums\ProductStatus;
 use Modules\Catalog\Infrastructure\Persistence\Factories\ProductFactory;
+use Modules\Shared\Domain\Concerns\HasConfiguredMedia;
 use Modules\Shared\Domain\Concerns\HasModuleFactory;
 use Modules\Shared\Domain\Concerns\HasPublicId;
+use Modules\Shared\Domain\Concerns\RegistersDefaultMediaCollection;
+use Modules\Shared\Domain\Enums\MediaCollection;
+use Modules\Shared\Domain\Enums\MediaProfile;
+use Spatie\MediaLibrary\HasMedia;
 
 /**
  * @property int $id
@@ -24,12 +29,15 @@ use Modules\Shared\Domain\Concerns\HasPublicId;
  * @property int $position
  * @property-read Category|null $category
  */
-final class Product extends Model
+final class Product extends Model implements HasMedia
 {
+    use HasConfiguredMedia;
+
     /** @use HasModuleFactory<ProductFactory> */
     use HasModuleFactory;
 
     use HasPublicId;
+    use RegistersDefaultMediaCollection;
 
     protected $table = 'catalog_products';
 
@@ -50,6 +58,16 @@ final class Product extends Model
             'status' => ProductStatus::class,
             'position' => 'integer',
         ];
+    }
+
+    protected function mediaProfile(): MediaProfile
+    {
+        return MediaProfile::ProductCover;
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->registerDefaultMediaCollection(MediaCollection::Cover);
     }
 
     /**

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Feature;
+namespace Modules\Catalog\Tests\Feature;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -22,6 +22,7 @@ final class GetProductActionTest extends TestCase
         $result = app(GetProductAction::class)->execute($product->public_id);
 
         $this->assertTrue($result->relationLoaded('category'));
+        $this->assertTrue($result->relationLoaded('media'));
         $this->assertSame($product->public_id, $result->public_id);
         $this->assertTrue($result->isActive());
     }

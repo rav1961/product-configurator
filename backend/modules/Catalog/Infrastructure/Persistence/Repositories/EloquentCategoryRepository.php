@@ -17,6 +17,7 @@ final class EloquentCategoryRepository implements CategoryRepositoryInterface
     {
         return Category::query()
             ->active()
+            ->with('media')
             ->orderBy('position')
             ->orderBy('name')
             ->get();

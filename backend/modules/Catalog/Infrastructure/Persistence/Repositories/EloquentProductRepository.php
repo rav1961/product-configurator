@@ -27,7 +27,7 @@ final class EloquentProductRepository implements ProductRepositoryInterface
                     });
                 },
             )
-            ->with('category')
+            ->with(['category', 'media'])
             ->orderBy('position')
             ->orderBy('name')
             ->paginate($perPage);
@@ -37,7 +37,7 @@ final class EloquentProductRepository implements ProductRepositoryInterface
     {
         return Product::query()
             ->active()
-            ->with('category')
+            ->with(['category', 'media'])
             ->where('public_id', $publicId)
             ->firstOrFail();
     }

@@ -68,6 +68,7 @@ final class ApiResponseShapeTest extends TestCase
                     'status',
                     'position',
                     'category',
+                    'cover',
                 ],
             ]);
     }

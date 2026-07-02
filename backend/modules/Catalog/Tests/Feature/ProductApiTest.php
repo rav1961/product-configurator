@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Modules\Catalog\Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Modules\Catalog\Domain\Models\Category;
 use Modules\Catalog\Domain\Models\Product;
+use Modules\Shared\Domain\Enums\MediaCollection;
 use Modules\Users\Domain\Models\User;
 use Tests\TestCase;
 
@@ -58,9 +61,33 @@ final class ProductApiTest extends TestCase
             ->assertJsonCount(2, 'data')
             ->assertJsonStructure([
                 'data' => [
-                    ['id', 'name', 'slug', 'sku', 'description', 'status', 'position', 'category'],
+                    ['id', 'name', 'slug', 'sku', 'description', 'status', 'position', 'category', 'cover'],
                 ],
                 'meta',
+            ])
+            ->assertJsonPath('data.0.cover', null);
+    }
+
+    public function test_show_returns_product_cover_with_responsive_urls(): void
+    {
+        Storage::fake('public');
+
+        $product = Product::factory()->active()->create();
+
+        $product->addMedia(UploadedFile::fake()->image('product.jpg'))
+            ->usingName('Main photo')
+            ->toMediaCollection(MediaCollection::Cover->value);
+
+        $this->actingAs($this->user)
+            ->getJson(route('api.products.show', [
+                'productId' => $product->public_id,
+            ]))
+            ->assertOk()
+            ->assertJsonPath('data.cover.name', 'Main photo')
+            ->assertJsonStructure([
+                'data' => [
+                    'cover' => ['name', 'position', 'src', 'srcset', 'thumb'],
+                ],
             ]);
     }
 

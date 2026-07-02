@@ -18,11 +18,13 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
+    libwebp-dev \
     libfreetype6-dev
 
 RUN docker-php-ext-configure gd \
     --with-freetype \
-    --with-jpeg
+    --with-jpeg \
+    --with-webp
 
 RUN docker-php-ext-install \
     pdo \

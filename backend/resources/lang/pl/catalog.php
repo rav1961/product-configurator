@@ -19,4 +19,5 @@ return [
         'is_active' => 'Aktywna',
         'updated_at' => 'Zaktualizowano',
     ],
+    'cover' => 'Okładka',
 ];

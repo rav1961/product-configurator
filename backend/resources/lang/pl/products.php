@@ -26,4 +26,5 @@ return [
         'active' => 'Aktywny',
         'archived' => 'Zarchiwizowany',
     ],
+    'cover' => 'Okładka',
 ];

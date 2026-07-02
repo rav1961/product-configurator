@@ -28,6 +28,8 @@ Thumbs.db
 /public/js/filament
 /public/fonts/filament
 
+/storage/media-library/
+
 # Local env files
 .env.*
 !.env.example

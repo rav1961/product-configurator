@@ -11,7 +11,7 @@ tool, not a web shop.
 
 ## Currently working on
 
-- Catalog write/admin completeness (next module slice).
+- Catalog write/admin completeness — **Porcja B: policies** (`CategoryPolicy`, `ProductPolicy`).
 
 ## Conventions in place
 
@@ -20,6 +20,14 @@ tool, not a web shop.
 - Repository contracts: `Domain/Contracts/{Entity}RepositoryInterface.php`; Eloquent implementations
   in `Infrastructure/Persistence/Repositories/Eloquent{Entity}Repository.php`.
 - Layer boundaries: Application (Actions) has no HTTP dependencies; Presentation maps to HTTP.
+- **Media (Shared kernel):** Spatie Media Library v11 + Filament plugin. Enums in
+  `Shared/Domain/Enums/` (`MediaCollection`, `MediaConversion`, `MediaProfile`). Profile-specific
+  dimensions via `MediaProfile::definitions()`; registration via `MediaConversionRegistrar` +
+  `HasConfiguredMedia` (composite over `InteractsWithMedia`). Default MIME list in
+  `MediaMimeTypes::images()`; override per model via `RegistersDefaultMediaCollection`. API shape:
+  `MediaData` (`name`, `position`, `src`, `srcset`, `thumb`) — `Preview` conversion uses
+  `withResponsiveImages()` for frontend srcset. Docker PHP image: GD compiled with WebP
+  (`libwebp-dev`, `--with-webp`). Runtime temp files under `storage/media-library/` are gitignored.
 
 ## Foundations
 
@@ -50,7 +58,14 @@ tool, not a web shop.
 - [x] Filament: `CategoryResource`, `ProductResource` + pages.
 - [x] PL translations (`resources/lang/pl/catalog.php`, `resources/lang/pl/products.php`, `ProductStatus::label()`).
 - [x] Repository pattern: `CategoryRepositoryInterface`, `ProductRepositoryInterface` + Eloquent implementations; `ProductIndexData` input DTO; actions `readonly`; test namespaces fixed (PSR-4).
-- [ ] Write/admin completeness: media (spatie/medialibrary) for product images, validation, policies.
+- [x] **Porcja A — media:** Shared media kernel (`MediaCollection`, `MediaConversion`, `MediaProfile`,
+      `MediaConversionDefinition`, `MediaConversionRegistrar`, `HasConfiguredMedia`,
+      `RegistersDefaultMediaCollection`, `MediaData`). `Category` + `Product` cover upload (Filament,
+      collection `cover`, profiles `CategoryCover` / `ProductCover`). Read API: `cover` on
+      `CategoryData` / `ProductData` with responsive `src` + `srcset`. Tests: `CategoryMediaTest`,
+      `ProductMediaTest`, API cover assertions. `filament/spatie-laravel-media-library-plugin`.
+      Docker: GD + WebP. `storage/media-library/` gitignored.
+- [ ] Write/admin completeness (remaining): policies.
 - [ ] Link products to configurable attributes (bridge to Configurator).
 
 ### 4. Configurator

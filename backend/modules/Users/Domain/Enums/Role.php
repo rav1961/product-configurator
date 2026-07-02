@@ -21,9 +21,6 @@ enum Role: string
         };
     }
 
-    /**
-     * Higher number means more privileges.
-     */
     public function rank(): int
     {
         return match ($this) {
@@ -35,8 +32,6 @@ enum Role: string
     }
 
     /**
-     * Roles allowed to access the back-office (Filament) panel.
-     *
      * @return list<string>
      */
     public static function panelRoles(): array
@@ -49,8 +44,17 @@ enum Role: string
     }
 
     /**
-     * Roles this role may create/assign in the panel (strictly lower in hierarchy).
-     *
+     * @return list<string>
+     */
+    public static function catalogManagementRoles(): array
+    {
+        return [
+            self::Admin->value,
+            self::Manager->value,
+        ];
+    }
+
+    /**
      * @return list<string>
      */
     public function assignableRoles(): array

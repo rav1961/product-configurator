@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Modules\Users\Infrastructure\Persistence\Seeders\AdminSeeder;
+use Modules\Users\Infrastructure\Persistence\Seeders\DemoUsersSeeder;
 use Modules\Users\Infrastructure\Persistence\Seeders\RoleSeeder;
 
 class DatabaseSeeder extends Seeder
@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RoleSeeder::class,
-            AdminSeeder::class,
+            DemoUsersSeeder::class,
         ]);
     }
 }

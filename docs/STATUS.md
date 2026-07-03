@@ -11,7 +11,7 @@ tool, not a web shop.
 
 ## Currently working on
 
-- Catalog write/admin completeness — **Porcja B: policies** (`CategoryPolicy`, `ProductPolicy`).
+- **Configurator** module (domain foundation) — next after Catalog admin completeness.
 
 ## Conventions in place
 
@@ -41,7 +41,7 @@ tool, not a web shop.
 - [x] Module complete (auth, RBAC, Filament, verification, password reset, repository pattern, PL mail copy).
 - [x] Auth: Sanctum SPA (no Fortify), native primitives; register / login / logout / profile
       (thin controllers + FormRequest + DTO + Actions).
-- [x] RBAC: `Role` enum (admin/manager/sales/customer), `RoleSeeder`, `AdminSeeder`, role hierarchy.
+- [x] RBAC: `Role` enum (admin/manager/sales/customer), `RoleSeeder`, `DemoUsersSeeder` (one verified user per role), role hierarchy.
 - [x] Persistence: `UserFactory`, module migration, `UserPolicy`.
 - [x] Filament `UserResource` + Pages + provider wiring (resource + policy + role field via `assignableRoles()`).
 - [x] PL translations (`resources/lang/pl/users.php`).
@@ -65,7 +65,10 @@ tool, not a web shop.
       `CategoryData` / `ProductData` with responsive `src` + `srcset`. Tests: `CategoryMediaTest`,
       `ProductMediaTest`, API cover assertions. `filament/spatie-laravel-media-library-plugin`.
       Docker: GD + WebP. `storage/media-library/` gitignored.
-- [ ] Write/admin completeness (remaining): policies.
+- [x] **Porcja B — policies:** `CategoryPolicy`, `ProductPolicy`; `Role::catalogManagementRoles()`
+      (`admin`, `manager` only); Gate registration in `CatalogServiceProvider`. Tests: `CatalogPolicyTest`.
+- [x] **Demo users seeder:** `DemoUsersSeeder` + `config/demo-users.php` (replaces `AdminSeeder`); idempotent
+      `updateOrCreateByEmail` + `syncRoles`; shared password via `DEMO_USERS_PASSWORD` / `ADMIN_PASSWORD`.
 - [ ] Link products to configurable attributes (bridge to Configurator).
 
 ### 4. Configurator

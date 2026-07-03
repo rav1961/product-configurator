@@ -23,6 +23,8 @@ use Modules\Shared\Domain\Concerns\HasPublicId;
  * @property bool $is_default
  * @property-read Attribute|null $attribute
  * @property-read AttributeCollection|null $collection
+ *
+ * @method static Builder<static> ordered()
  */
 final class AttributeValue extends Model
 {

@@ -24,6 +24,8 @@ use Modules\Shared\Domain\Concerns\HasPublicId;
  * @property-read Product $product
  * @property-read Collection<int, AttributeValue> $values
  * @property-read Collection<int, Attribute> $attributes
+ *
+ * @method static Builder<static> ordered()
  */
 final class AttributeCollection extends Model
 {

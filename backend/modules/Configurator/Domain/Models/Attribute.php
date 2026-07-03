@@ -27,6 +27,8 @@ use Modules\Shared\Domain\Concerns\HasPublicId;
  * @property-read Step $step
  * @property-read AttributeCollection|null $collection
  * @property-read Collection<int, AttributeValue> $values
+ *
+ * @method static Builder<static> ordered()
  */
 final class Attribute extends Model
 {

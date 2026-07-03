@@ -29,6 +29,8 @@ use Modules\Shared\Domain\Concerns\HasPublicId;
  * @property-read Product $product
  * @property-read Attribute $sourceAttribute
  * @property-read Attribute $targetAttribute
+ *
+ * @method static Builder<static> ordered()
  */
 #[ObservedBy([DependencyObserver::class])]
 final class Dependency extends Model

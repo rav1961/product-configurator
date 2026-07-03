@@ -19,6 +19,7 @@ final class ProductData extends Data
         public ?string $sku,
         public ?string $description,
         public string $status,
+        public bool $is_configurable,
         public int $position,
         public ?CategoryData $category,
         public ?MediaData $cover,
@@ -33,6 +34,7 @@ final class ProductData extends Data
             sku: $product->sku,
             description: $product->description,
             status: $product->status->value,
+            is_configurable: $product->is_configurable,
             position: $product->position,
             category: $product->relationLoaded('category') && $product->category !== null
                 ? CategoryData::fromModel($product->category)

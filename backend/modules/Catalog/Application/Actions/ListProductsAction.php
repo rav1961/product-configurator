@@ -22,6 +22,7 @@ final readonly class ListProductsAction
     {
         return $this->products->paginateActive(
             categoryPublicId: $data->categoryPublicId,
+            configurableOnly: $data->configurableOnly,
             perPage: $data->perPage,
         );
     }

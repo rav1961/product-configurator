@@ -64,4 +64,20 @@ final class ListProductsActionTest extends TestCase
         $this->assertCount(2, $result->items());
         $this->assertSame(3, $result->total());
     }
+
+    public function test_execute_filters_configurable_products_when_requested(): void
+    {
+        Product::factory()->active()->configurable()->count(2)->create();
+        Product::factory()->active()->create();
+
+        $result = app(ListProductsAction::class)->execute(
+            new ProductIndexData(configurableOnly: true),
+        );
+
+        $this->assertCount(2, $result->items());
+
+        foreach ($result->items() as $product) {
+            $this->assertTrue($product->isConfigurable());
+        }
+    }
 }

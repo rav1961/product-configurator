@@ -14,8 +14,11 @@ final class EloquentProductRepository implements ProductRepositoryInterface
     /**
      * @return LengthAwarePaginator<int, Product>
      */
-    public function paginateActive(?string $categoryPublicId = null, int $perPage = 15): LengthAwarePaginator
-    {
+    public function paginateActive(
+        ?string $categoryPublicId = null,
+        ?bool $configurableOnly = null,
+        int $perPage = 15
+    ): LengthAwarePaginator {
         return Product::query()
             ->active()
             ->when(
@@ -26,6 +29,10 @@ final class EloquentProductRepository implements ProductRepositoryInterface
                             ->where('is_active', true);
                     });
                 },
+            )
+            ->when(
+                $configurableOnly === true,
+                static fn (Builder $query): Builder => $query->configurable()
             )
             ->with(['category', 'media'])
             ->orderBy('position')

@@ -27,6 +27,7 @@ final class ProductIndexRequest extends FormRequest
                 Rule::exists('catalog_categories', 'public_id')
                     ->where('is_active', true),
             ],
+            'configurable' => ['sometimes', 'boolean'],
             'per_page' => ['sometimes', 'integer', 'min:1', 'max:100'],
             'page' => ['sometimes', 'integer', 'min:1'],
         ];

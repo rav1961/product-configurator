@@ -66,6 +66,7 @@ final class ApiResponseShapeTest extends TestCase
                     'sku',
                     'description',
                     'status',
+                    'is_configurable',
                     'position',
                     'category',
                     'cover',

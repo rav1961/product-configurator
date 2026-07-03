@@ -12,6 +12,8 @@ final class ProductIndexData extends Data
     public function __construct(
         #[MapInputName('category')]
         public ?string $categoryPublicId = null,
+        #[MapInputName('configurable')]
+        public ?bool $configurableOnly = null,
         #[MapInputName('per_page')]
         public int $perPage = 15,
     ) {}

@@ -12,7 +12,11 @@ interface ProductRepositoryInterface
     /**
      * @return LengthAwarePaginator<int, Product>
      */
-    public function paginateActive(?string $categoryPublicId = null, int $perPage = 15): LengthAwarePaginator;
+    public function paginateActive(
+        ?string $categoryPublicId = null,
+        ?bool $configurableOnly = null,
+        int $perPage = 15
+    ): LengthAwarePaginator;
 
     public function findActiveByPublicId(string $publicId): Product;
 }

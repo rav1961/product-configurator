@@ -61,7 +61,18 @@ final class ProductApiTest extends TestCase
             ->assertJsonCount(2, 'data')
             ->assertJsonStructure([
                 'data' => [
-                    ['id', 'name', 'slug', 'sku', 'description', 'status', 'position', 'category', 'cover'],
+                    [
+                        'id',
+                        'name',
+                        'slug',
+                        'sku',
+                        'description',
+                        'status',
+                        'is_configurable',
+                        'position',
+                        'category',
+                        'cover',
+                    ],
                 ],
                 'meta',
             ])
@@ -227,5 +238,31 @@ final class ProductApiTest extends TestCase
                 'productId' => (string) Str::ulid(),
             ]))
             ->assertNotFound();
+    }
+
+    public function test_index_filters_configurable_products(): void
+    {
+        Product::factory()->active()->configurable()->create();
+        Product::factory()->active()->create();
+
+        $this->actingAs($this->user)
+            ->getJson(route('api.products.list', [
+                'configurable' => 1,
+            ]))
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.is_configurable', true);
+    }
+
+    public function test_show_includes_is_configurable_flag(): void
+    {
+        $product = Product::factory()->active()->configurable()->create();
+
+        $this->actingAs($this->user)
+            ->getJson(route('api.products.show', [
+                'productId' => $product->public_id,
+            ]))
+            ->assertOk()
+            ->assertJsonPath('data.is_configurable', true);
     }
 }

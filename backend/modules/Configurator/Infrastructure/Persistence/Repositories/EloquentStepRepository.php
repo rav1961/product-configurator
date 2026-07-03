@@ -11,7 +11,7 @@ use Modules\Configurator\Domain\Models\Step;
 final class EloquentStepRepository implements StepRepositoryInterface
 {
     /**
-     * {@inheritDoc}
+     * @return Collection<int, Step>
      */
     public function listOrderedForProduct(int $productId): Collection
     {

@@ -21,6 +21,7 @@ final class StepRepositoryTest extends TestCase
 
         Step::factory()->for($product)->create(['name' => 'Beta', 'position' => 2]);
         Step::factory()->for($product)->create(['name' => 'Alpha', 'position' => 1]);
+        Step::factory()->create();
 
         $result = app(StepRepositoryInterface::class)->listOrderedForProduct($product->id);
 

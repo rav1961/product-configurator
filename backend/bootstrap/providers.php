@@ -3,6 +3,7 @@
 use App\Providers\AppServiceProvider;
 use App\Providers\Filament\AdminPanelProvider;
 use Modules\Catalog\Infrastructure\Providers\CatalogServiceProvider;
+use Modules\Configurator\Infrastructure\Providers\ConfiguratorServiceProvider;
 use Modules\System\Infrastructure\Providers\SystemServiceProvider;
 use Modules\Users\Infrastructure\Providers\UsersServiceProvider;
 
@@ -12,4 +13,5 @@ return [
     SystemServiceProvider::class,
     UsersServiceProvider::class,
     CatalogServiceProvider::class,
+    ConfiguratorServiceProvider::class,
 ];

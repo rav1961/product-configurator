@@ -13,7 +13,7 @@ use Modules\Configurator\Domain\Models\AttributeValue;
 /**
  * @extends Factory<AttributeValue>
  */
-class AttributeValueFactory extends Factory
+final class AttributeValueFactory extends Factory
 {
     protected $model = AttributeValue::class;
 

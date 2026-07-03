@@ -13,7 +13,7 @@ use Modules\Configurator\Domain\Models\Step;
 /**
  * @extends Factory<Attribute>
  */
-class AttributeFactory extends Factory
+final class AttributeFactory extends Factory
 {
     protected $model = Attribute::class;
 

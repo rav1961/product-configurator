@@ -13,13 +13,16 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use Modules\Catalog\Domain\Enums\ProductStatus;
@@ -92,6 +95,9 @@ final class ProductResource extends Resource
                 ->options(self::statusOptions())
                 ->default(ProductStatus::Draft->value)
                 ->required(),
+            Toggle::make('is_configurable')
+                ->label(__('products.fields.is_configurable'))
+                ->helperText(__('products.fields.is_configurable_help')),
             Textarea::make('description')
                 ->label(__('products.fields.description'))
                 ->rows(5)
@@ -139,6 +145,11 @@ final class ProductResource extends Resource
                         ProductStatus::Active => 'success',
                         ProductStatus::Archived => 'warning',
                     }),
+                IconColumn::make('is_configurable')
+                    ->label(__('products.fields.is_configurable'))
+                    ->boolean()
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('position')
                     ->label(__('products.fields.position'))
                     ->numeric()
@@ -154,6 +165,8 @@ final class ProductResource extends Resource
                 SelectFilter::make('status')
                     ->label(__('products.fields.status'))
                     ->options(self::statusOptions()),
+                TernaryFilter::make('is_configurable')
+                    ->label(__('products.fields.is_configurable')),
                 SelectFilter::make('category')
                     ->label(__('products.fields.category'))
                     ->relationship('category', 'name')

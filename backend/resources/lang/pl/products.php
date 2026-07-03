@@ -17,9 +17,12 @@ return [
         'slug' => 'Slug',
         'sku' => 'SKU',
         'status' => 'Status',
+        'is_configurable' => 'Konfigurowalny',
+        'is_configurable_help' => 'Produkt dostępny w konfiguratorze SPA. Wymaga osobnej konfiguracji kroków i atrybutów (moduł Configurator).',
         'description' => 'Opis',
         'position' => 'Pozycja',
         'updated_at' => 'Zaktualizowano',
+        'cover' => 'Okładka',
     ],
     'status' => [
         'draft' => 'Szkic',

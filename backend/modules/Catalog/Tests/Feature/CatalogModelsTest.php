@@ -49,4 +49,20 @@ final class CatalogModelsTest extends TestCase
         $this->assertNotSame((string) $category->id, $category->public_id);
         $this->assertNotSame((string) $product->id, $product->public_id);
     }
+
+    public function test_product_is_configurable_flag_defaults_to_false(): void
+    {
+        $product = Product::factory()->create();
+
+        $this->assertFalse($product->is_configurable);
+        $this->assertFalse($product->isConfigurable());
+    }
+
+    public function test_product_factory_configurable_state(): void
+    {
+        $product = Product::factory()->configurable()->create();
+
+        $this->assertTrue($product->is_configurable);
+        $this->asserttrue($product->isConfigurable());
+    }
 }

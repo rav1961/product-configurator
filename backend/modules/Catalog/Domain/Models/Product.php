@@ -26,6 +26,7 @@ use Spatie\MediaLibrary\HasMedia;
  * @property string|null $sku
  * @property string|null $description
  * @property ProductStatus $status
+ * @property bool $is_configurable
  * @property int $position
  * @property-read Category|null $category
  */
@@ -49,6 +50,7 @@ final class Product extends Model implements HasMedia
         'sku',
         'description',
         'status',
+        'is_configurable',
         'position',
     ];
 
@@ -56,6 +58,7 @@ final class Product extends Model implements HasMedia
     {
         return [
             'status' => ProductStatus::class,
+            'is_configurable' => 'boolean',
             'position' => 'integer',
         ];
     }
@@ -83,6 +86,11 @@ final class Product extends Model implements HasMedia
         return $this->status === ProductStatus::Active;
     }
 
+    public function isConfigurable(): bool
+    {
+        return $this->is_configurable;
+    }
+
     /**
      * @param  Builder<Product>  $query
      * @return Builder<Product>
@@ -90,5 +98,14 @@ final class Product extends Model implements HasMedia
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('status', ProductStatus::Active->value);
+    }
+
+    /**
+     * @param  Builder<Product>  $query
+     * @return Builder<Product>
+     */
+    public function scopeConfigurable(Builder $query): Builder
+    {
+        return $query->where('is_configurable', true);
     }
 }

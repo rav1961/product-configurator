@@ -34,6 +34,7 @@ final class ProductFactory extends Factory
             'sku' => strtoupper(fake()->unique()->bothify('PRD-####')),
             'description' => fake()->optional()->sentence(),
             'status' => ProductStatus::Draft,
+            'is_configurable' => false,
             'position' => fake()->numberBetween(0, 100),
         ];
     }
@@ -49,6 +50,13 @@ final class ProductFactory extends Factory
     {
         return $this->state([
             'status' => ProductStatus::Archived,
+        ]);
+    }
+
+    public function configurable(): self
+    {
+        return $this->state([
+            'is_configurable' => true,
         ]);
     }
 }

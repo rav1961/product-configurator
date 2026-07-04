@@ -49,4 +49,32 @@ final class DependencyValidatorTest extends TestCase
 
         $this->assertSame(DependencyCondition::IsSet, $dependency->condition);
     }
+
+    public function test_rejects_not_equals_without_condition_value(): void
+    {
+        $dependency = new Dependency([
+            'condition' => DependencyCondition::NotEquals,
+            'condition_value' => null,
+        ]);
+
+        $this->expectException(InvalidDependencyScopeException::class);
+
+        $this->validator->validate($dependency);
+    }
+
+    public function test_accepts_is_not_set_without_condition_value_when_scope_unchanged(): void
+    {
+        $dependency = new Dependency([
+            'product_id' => 1,
+            'source_attribute_id' => 10,
+            'target_attribute_id' => 20,
+            'condition' => DependencyCondition::IsNotSet,
+            'condition_value' => null,
+        ]);
+        $dependency->syncOriginal();
+
+        $this->validator->validate($dependency);
+
+        $this->assertSame(DependencyCondition::IsNotSet, $dependency->condition);
+    }
 }

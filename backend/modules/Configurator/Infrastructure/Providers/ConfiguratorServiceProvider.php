@@ -23,6 +23,7 @@ use Modules\Configurator\Infrastructure\Persistence\Repositories\EloquentDepende
 use Modules\Configurator\Infrastructure\Persistence\Repositories\EloquentStepRepository;
 use Modules\Configurator\Presentation\Filament\Policies\ConfiguratorManagementPolicy;
 use Modules\Configurator\Presentation\Filament\RelationManagers\AttributeCollectionsRelationManager;
+use Modules\Configurator\Presentation\Filament\RelationManagers\DependenciesRelationManager;
 use Modules\Configurator\Presentation\Filament\RelationManagers\StepsRelationManager;
 use Modules\Configurator\Presentation\Filament\Resources\AttributeCollectionResource;
 use Modules\Configurator\Presentation\Filament\Resources\AttributeResource;
@@ -71,7 +72,9 @@ final class ConfiguratorServiceProvider extends ModuleServiceProvider
         Gate::policy(Dependency::class, ConfiguratorManagementPolicy::class);
 
         $registrar = $this->app->make(ProductRelationRegistrar::class);
+
         $registrar->register(StepsRelationManager::class);
         $registrar->register(AttributeCollectionsRelationManager::class);
+        $registrar->register(DependenciesRelationManager::class);
     }
 }

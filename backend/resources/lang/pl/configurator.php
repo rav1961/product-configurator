@@ -37,6 +37,11 @@ return [
         'label' => 'Etykieta',
         'value' => 'Wartość',
         'is_default' => 'Domyślna',
+        'source_attribute' => 'Atrybut źródłowy',
+        'target_attribute' => 'Atrybut docelowy',
+        'condition' => 'Warunek',
+        'condition_value' => 'Wartość warunku',
+        'action' => 'Akcja',
     ],
     'actions' => [
         'edit_step' => 'Edytuj krok',
@@ -47,6 +52,8 @@ return [
         'delete_collection' => 'Usuń kolekcję',
         'edit_value' => 'Edytuj wartość',
         'delete_value' => 'Usuń wartość',
+        'edit_dependency' => 'Edytuj zależność',
+        'delete_dependency' => 'Usuń zależność',
     ],
     'attribute_type' => [
         'text' => 'Tekst',

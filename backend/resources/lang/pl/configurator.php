@@ -20,6 +20,10 @@ return [
             'singular' => 'Atrybut',
             'plural' => 'Atrybuty',
         ],
+        'collection' => [
+            'singular' => 'Kolekcja',
+            'plural' => 'Kolekcje',
+        ],
     ],
     'fields' => [
         'name' => 'Nazwa',
@@ -30,12 +34,19 @@ return [
         'collection' => 'Kolekcja opcji',
         'collection_help' => 'Opcjonalnie: współdzielona lista wartości zamiast własnych opcji atrybutu.',
         'actions' => 'Akcje',
+        'label' => 'Etykieta',
+        'value' => 'Wartość',
+        'is_default' => 'Domyślna',
     ],
     'actions' => [
         'edit_step' => 'Edytuj krok',
         'delete_step' => 'Usuń krok',
         'edit_attribute' => 'Edytuj atrybut',
         'delete_attribute' => 'Usuń atrybut',
+        'edit_collection' => 'Edytuj kolekcję',
+        'delete_collection' => 'Usuń kolekcję',
+        'edit_value' => 'Edytuj wartość',
+        'delete_value' => 'Usuń wartość',
     ],
     'attribute_type' => [
         'text' => 'Tekst',
@@ -49,6 +60,7 @@ return [
         'not_equals' => 'Nie równa się',
         'is_set' => 'Jest ustawione',
         'is_empty' => 'Jest puste',
+        'is_not_set' => 'Nie jest ustawione',
     ],
     'dependency_action' => [
         'show' => 'Pokaż',

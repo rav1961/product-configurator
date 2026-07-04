@@ -3,6 +3,40 @@
 declare(strict_types=1);
 
 return [
+    'navigation' => [
+        'group' => 'Konfigurator',
+        'steps' => 'Kroki',
+        'attributes' => 'Atrybuty',
+        'collections' => 'Kolekcje',
+        'values' => 'Wartości',
+        'dependencies' => 'Zależności',
+    ],
+    'label' => [
+        'step' => [
+            'singular' => 'Krok',
+            'plural' => 'Kroki',
+        ],
+        'attribute' => [
+            'singular' => 'Atrybut',
+            'plural' => 'Atrybuty',
+        ],
+    ],
+    'fields' => [
+        'name' => 'Nazwa',
+        'key' => 'Klucz',
+        'position' => 'Pozycja',
+        'type' => 'Typ',
+        'is_required' => 'Wymagany',
+        'collection' => 'Kolekcja opcji',
+        'collection_help' => 'Opcjonalnie: współdzielona lista wartości zamiast własnych opcji atrybutu.',
+        'actions' => 'Akcje',
+    ],
+    'actions' => [
+        'edit_step' => 'Edytuj krok',
+        'delete_step' => 'Usuń krok',
+        'edit_attribute' => 'Edytuj atrybut',
+        'delete_attribute' => 'Usuń atrybut',
+    ],
     'attribute_type' => [
         'text' => 'Tekst',
         'number' => 'Liczba',

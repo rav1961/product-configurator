@@ -7,8 +7,13 @@ namespace Modules\Catalog\Domain\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Collection;
 use Modules\Catalog\Domain\Enums\ProductStatus;
 use Modules\Catalog\Infrastructure\Persistence\Factories\ProductFactory;
+use Modules\Configurator\Domain\Concerns\InteractsWithConfiguratorEntities;
+use Modules\Configurator\Domain\Models\AttributeCollection;
+use Modules\Configurator\Domain\Models\Dependency;
+use Modules\Configurator\Domain\Models\Step;
 use Modules\Shared\Domain\Concerns\HasConfiguredMedia;
 use Modules\Shared\Domain\Concerns\HasModuleFactory;
 use Modules\Shared\Domain\Concerns\HasPublicId;
@@ -29,6 +34,9 @@ use Spatie\MediaLibrary\HasMedia;
  * @property bool $is_configurable
  * @property int $position
  * @property-read Category|null $category
+ * @property-read Collection<int, Step> $steps
+ * @property-read Collection<int, AttributeCollection> $attributeCollections
+ * @property-read Collection<int, Dependency> $dependencies
  */
 final class Product extends Model implements HasMedia
 {
@@ -38,6 +46,7 @@ final class Product extends Model implements HasMedia
     use HasModuleFactory;
 
     use HasPublicId;
+    use InteractsWithConfiguratorEntities;
     use RegistersDefaultMediaCollection;
 
     protected $table = 'catalog_products';

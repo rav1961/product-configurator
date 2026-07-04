@@ -32,6 +32,7 @@ use Modules\Catalog\Presentation\Filament\Resources\ProductResource\Pages\EditPr
 use Modules\Catalog\Presentation\Filament\Resources\ProductResource\Pages\ListProducts;
 use Modules\Shared\Domain\Enums\MediaCollection;
 use Modules\Shared\Domain\Enums\MediaConversion;
+use Modules\Shared\Presentation\Filament\ProductRelationRegistrar;
 
 final class ProductResource extends Resource
 {
@@ -196,6 +197,11 @@ final class ProductResource extends Resource
         }
 
         return $options;
+    }
+
+    public static function getRelations(): array
+    {
+        return app(ProductRelationRegistrar::class)->all();
     }
 
     public static function getPages(): array

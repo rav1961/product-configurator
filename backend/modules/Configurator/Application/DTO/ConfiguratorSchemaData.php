@@ -7,17 +7,20 @@ namespace Modules\Configurator\Application\DTO;
 use Illuminate\Support\Collection;
 use Modules\Catalog\Application\DTO\ConfigurableProductData;
 use Modules\Configurator\Domain\Models\Step;
+use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\DataCollection;
 
 final class ConfiguratorSchemaData extends Data
 {
     /**
-     * @param  list<ConfigurationStepData>  $steps
+     * @param  DataCollection<int, ConfigurationStepData>  $steps
      */
     public function __construct(
         public string $productId,
         public string $productName,
-        public array $steps,
+        #[DataCollectionOf(ConfigurationStepData::class)]
+        public DataCollection $steps,
     ) {}
 
     /**
@@ -27,13 +30,18 @@ final class ConfiguratorSchemaData extends Data
         ConfigurableProductData $product,
         Collection $steps
     ): self {
-        return new self(
-            productId: $product->id,
-            productName: $product->name,
-            steps: $steps
+        $stepData = ConfigurationStepData::collect(
+            $steps
                 ->map(static fn (Step $step): ConfigurationStepData => ConfigurationStepData::fromModel($step))
                 ->values()
                 ->all(),
+            DataCollection::class,
+        )->withoutWrapping();
+
+        return new self(
+            productId: $product->id,
+            productName: $product->name,
+            steps: $stepData,
         );
     }
 
@@ -42,9 +50,15 @@ final class ConfiguratorSchemaData extends Data
      */
     public function allAttributes(): array
     {
-        return collect($this->steps)
-            ->flatMap(static fn (ConfigurationStepData $stepData): array => $stepData->attributes)
-            ->values()
-            ->all();
+        /** @var list<ConfigurationAttributeData> $attributes */
+        $attributes = [];
+
+        foreach ($this->steps as $step) {
+            foreach ($step->attributes as $attribute) {
+                $attributes[] = $attribute;
+            }
+        }
+
+        return $attributes;
     }
 }

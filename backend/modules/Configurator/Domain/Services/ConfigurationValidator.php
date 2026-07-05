@@ -141,9 +141,10 @@ final readonly class ConfigurationValidator
      */
     private function optionValues(ConfigurationAttributeData $attribute): array
     {
-        return array_map(
-            static fn (ConfigurationOptionData $option): string => $option->value,
-            $attribute->options,
-        );
+        return $attribute->options
+            ->toCollection()
+            ->map(static fn (ConfigurationOptionData $option): string => $option->value)
+            ->values()
+            ->all();
     }
 }

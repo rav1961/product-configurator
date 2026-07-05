@@ -6,12 +6,14 @@ namespace Modules\Configurator\Application\DTO;
 
 use Modules\Configurator\Domain\Models\Attribute;
 use Modules\Configurator\Domain\Models\AttributeValue;
+use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\DataCollection;
 
 final class ConfigurationAttributeData extends Data
 {
     /**
-     * @param  list<ConfigurationOptionData>  $options
+     * @param  DataCollection<int, ConfigurationOptionData>  $options
      */
     public function __construct(
         public string $id,
@@ -20,7 +22,8 @@ final class ConfigurationAttributeData extends Data
         public string $type,
         public int $position,
         public bool $isRequired,
-        public array $options,
+        #[DataCollectionOf(ConfigurationOptionData::class)]
+        public DataCollection $options,
     ) {}
 
     public static function fromModel(Attribute $attribute): self
@@ -29,6 +32,14 @@ final class ConfigurationAttributeData extends Data
             ? ($attribute->collection->values ?? collect())
             : $attribute->values;
 
+        $options = ConfigurationOptionData::collect(
+            $optionValues
+                ->map(static fn (AttributeValue $value): ConfigurationOptionData => ConfigurationOptionData::fromModel($value))
+                ->values()
+                ->all(),
+            DataCollection::class,
+        )->withoutWrapping();
+
         return new self(
             id: $attribute->public_id,
             key: $attribute->key,
@@ -36,10 +47,7 @@ final class ConfigurationAttributeData extends Data
             type: $attribute->type->value,
             position: $attribute->position,
             isRequired: $attribute->is_required,
-            options: $optionValues
-                ->map(static fn (AttributeValue $value): ConfigurationOptionData => ConfigurationOptionData::fromModel($value))
-                ->values()
-                ->all(),
+            options: $options,
         );
     }
 }

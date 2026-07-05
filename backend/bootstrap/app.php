@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Modules\Catalog\Domain\Exceptions\ProductNotConfigurableException;
 use Symfony\Component\HttpFoundation\Response;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -42,6 +43,16 @@ return Application::configure(basePath: dirname(__DIR__))
             return response()->json([
                 'message' => $exception->getMessage(),
                 'errors' => $exception->errors(),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        });
+
+        $exceptions->render(function (ProductNotConfigurableException $exception, Request $request) {
+            if (! $request->is('api/*')) {
+                return null;
+            }
+
+            return response()->json([
+                'message' => $exception->getMessage(),
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         });
     })->create();

@@ -45,4 +45,23 @@ final class DependencyRepositoryTest extends TestCase
 
         app(DependencyRepositoryInterface::class)->findByPublicId((string) Str::ulid());
     }
+
+    public function test_list_ordered_for_product_public_id(): void
+    {
+        $product = Product::factory()->create();
+        $dependency = Dependency::factory()->create([
+            'product_id' => $product->id,
+            'position' => 1,
+        ]);
+
+        Dependency::factory()->create(['position' => 5]);
+
+        $result = app(DependencyRepositoryInterface::class)
+            ->listOrderedForProductPublicId($product->public_id);
+
+        $this->assertCount(1, $result);
+        $this->assertTrue($result->first()->is($dependency));
+        $this->assertTrue($result->first()->relationLoaded('sourceAttribute'));
+        $this->assertTrue($result->first()->relationLoaded('targetAttribute'));
+    }
 }

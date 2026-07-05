@@ -15,4 +15,9 @@ interface DependencyRepositoryInterface
     public function listOrderedForProduct(int $productId): Collection;
 
     public function findByPublicId(string $publicId): Dependency;
+
+    /**
+     * @return Collection<int, Dependency>
+     */
+    public function listOrderedForProductPublicId(string $productPublicId): Collection;
 }

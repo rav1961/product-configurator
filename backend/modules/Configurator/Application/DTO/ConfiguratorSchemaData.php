@@ -36,4 +36,15 @@ final class ConfiguratorSchemaData extends Data
                 ->all(),
         );
     }
+
+    /**
+     * @return list<ConfigurationAttributeData>
+     */
+    public function allAttributes(): array
+    {
+        return collect($this->steps)
+            ->flatMap(static fn (ConfigurationStepData $stepData): array => $stepData->attributes)
+            ->values()
+            ->all();
+    }
 }

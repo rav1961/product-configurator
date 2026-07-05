@@ -25,4 +25,20 @@ final readonly class ConfigurationSelection
     {
         return new self($values);
     }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function all(): array
+    {
+        return $this->values;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function keys(): array
+    {
+        return array_keys($this->values);
+    }
 }

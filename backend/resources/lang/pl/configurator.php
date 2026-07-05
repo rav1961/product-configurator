@@ -75,4 +75,9 @@ return [
         'require' => 'Wymagaj',
         'disable' => 'Wyłącz',
     ],
+    'validation' => [
+        'required' => 'Pole :attribute jest wymagane.',
+        'invalid_value' => 'Nieprawidłowa wartość pola :attribute.',
+        'unknown_attribute' => 'Nieznany atrybut: :attribute.',
+    ],
 ];

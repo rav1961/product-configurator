@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Gate;
 use Modules\Configurator\Domain\Contracts\AttributeCollectionRepositoryInterface;
 use Modules\Configurator\Domain\Contracts\AttributeRepositoryInterface;
 use Modules\Configurator\Domain\Contracts\AttributeValueRepositoryInterface;
+use Modules\Configurator\Domain\Contracts\ConfiguratorGraphRepositoryInterface;
 use Modules\Configurator\Domain\Contracts\DependencyRepositoryInterface;
 use Modules\Configurator\Domain\Contracts\StepRepositoryInterface;
 use Modules\Configurator\Domain\Models\Attribute;
@@ -19,6 +20,7 @@ use Modules\Configurator\Domain\Models\Step;
 use Modules\Configurator\Infrastructure\Persistence\Repositories\EloquentAttributeCollectionRepository;
 use Modules\Configurator\Infrastructure\Persistence\Repositories\EloquentAttributeRepository;
 use Modules\Configurator\Infrastructure\Persistence\Repositories\EloquentAttributeValueRepository;
+use Modules\Configurator\Infrastructure\Persistence\Repositories\EloquentConfiguratorGraphRepository;
 use Modules\Configurator\Infrastructure\Persistence\Repositories\EloquentDependencyRepository;
 use Modules\Configurator\Infrastructure\Persistence\Repositories\EloquentStepRepository;
 use Modules\Configurator\Presentation\Filament\Policies\ConfiguratorManagementPolicy;
@@ -47,6 +49,7 @@ final class ConfiguratorServiceProvider extends ModuleServiceProvider
         $this->app->bind(AttributeCollectionRepositoryInterface::class, EloquentAttributeCollectionRepository::class);
         $this->app->bind(AttributeValueRepositoryInterface::class, EloquentAttributeValueRepository::class);
         $this->app->bind(DependencyRepositoryInterface::class, EloquentDependencyRepository::class);
+        $this->app->bind(ConfiguratorGraphRepositoryInterface::class, EloquentConfiguratorGraphRepository::class);
 
         Panel::configureUsing(static function (Panel $panel): void {
             if ($panel->getId() !== 'admin') {

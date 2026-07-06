@@ -21,20 +21,34 @@ final readonly class ConfigurationValidator
     ): ConfigurationValidationResult {
         /** @var array<string, list<string>> $errors */
         $errors = [];
-        $knownKeys = [];
+        /** @var array<string, true> $knownIds */
+        $knownIds = [];
 
         foreach ($schema->allAttributes() as $attribute) {
-            $knownKeys[$attribute->key] = true;
-            $state = $evaluation->attributes[$attribute->key] ?? null;
+            $knownIds[$attribute->id] = true;
+            $state = $evaluation->attributes[$attribute->id] ?? null;
+            $value = $selection->get($attribute->id);
 
             if ($state === null || ! $state->visible) {
+                if (! $this->isEmpty($value, $attribute->type)) {
+                    $errors[$attribute->id][] = __('configurator.validation.not_applicable', [
+                        'attribute' => $attribute->name,
+                    ]);
+                }
+
                 continue;
             }
 
-            $value = $selection->get($attribute->key);
-
             if ($state->required && $this->isEmpty($value, $attribute->type)) {
-                $errors[$attribute->key][] = __('configurator.validation.required', [
+                $errors[$attribute->id][] = __('configurator.validation.required', [
+                    'attribute' => $attribute->name,
+                ]);
+
+                continue;
+            }
+
+            if ($state->disabled && ! $this->isEmpty($value, $attribute->type)) {
+                $errors[$attribute->id][] = __('configurator.validation.disabled', [
                     'attribute' => $attribute->name,
                 ]);
 
@@ -46,19 +60,19 @@ final readonly class ConfigurationValidator
             }
 
             if (! $this->isValidValue($value, $attribute)) {
-                $errors[$attribute->key][] = __('configurator.validation.invalid_value', [
+                $errors[$attribute->id][] = __('configurator.validation.invalid_value', [
                     'attribute' => $attribute->name,
                 ]);
             }
         }
 
-        foreach ($selection->keys() as $key) {
-            if (isset($knownKeys[$key])) {
+        foreach ($selection->keys() as $id) {
+            if (isset($knownIds[$id])) {
                 continue;
             }
 
-            $errors[$key][] = __('configurator.validation.unknown_attribute', [
-                'attribute' => $key,
+            $errors[$id][] = __('configurator.validation.unknown_attribute', [
+                'attribute' => $id,
             ]);
         }
 

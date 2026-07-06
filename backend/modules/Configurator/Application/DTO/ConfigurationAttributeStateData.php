@@ -9,6 +9,7 @@ use Spatie\LaravelData\Data;
 final class ConfigurationAttributeStateData extends Data
 {
     public function __construct(
+        public string $id,
         public string $key,
         public bool $visible,
         public bool $required,

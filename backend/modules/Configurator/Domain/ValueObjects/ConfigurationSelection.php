@@ -7,15 +7,15 @@ namespace Modules\Configurator\Domain\ValueObjects;
 final readonly class ConfigurationSelection
 {
     /**
-     * @param  array<string, mixed>  $values  keyed by attribute.key
+     * @param  array<string, mixed>  $values  keyed by public_id
      */
     public function __construct(
         private array $values,
     ) {}
 
-    public function get(string $attributeKey): mixed
+    public function get(string $attributePublicId): mixed
     {
-        return $this->values[$attributeKey] ?? null;
+        return $this->values[$attributePublicId] ?? null;
     }
 
     /**

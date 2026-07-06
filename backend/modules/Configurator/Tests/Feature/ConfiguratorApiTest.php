@@ -8,6 +8,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
 use Illuminate\Testing\TestResponse;
 use Modules\Catalog\Domain\Models\Product;
+use Modules\Configurator\Domain\Models\Attribute;
+use Modules\Configurator\Domain\Models\AttributeValue;
+use Modules\Configurator\Domain\Models\Step;
 use Modules\Configurator\Tests\Concerns\BuildsConfiguratorFixtures;
 use Modules\Users\Domain\Models\User;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -64,36 +67,65 @@ final class ConfiguratorApiTest extends TestCase
 
     public function test_evaluate_and_validate_follow_show_dependency(): void
     {
-        ['product' => $product] = $this->colorFinishShowWhenRed();
+        ['product' => $product, 'color' => $color, 'finish' => $finish] = $this->colorFinishShowWhenRed();
 
         $this->actingAs($this->user)
             ->configuratorRequest('api.products.configurator.evaluate', $product->public_id, 'POST', [
-                'selection' => ['color' => 'blue'],
+                'selection' => [$color->public_id => 'blue'],
             ])
             ->assertOk()
-            ->assertJsonPath('data.attributes.finish.visible', false);
+            ->assertJsonPath("data.attributes.{$finish->public_id}.visible", false);
 
         $this->actingAs($this->user)
             ->configuratorRequest('api.products.configurator.evaluate', $product->public_id, 'POST', [
-                'selection' => ['color' => 'red'],
+                'selection' => [$color->public_id => 'red'],
             ])
             ->assertOk()
-            ->assertJsonPath('data.attributes.finish.visible', true);
+            ->assertJsonPath("data.attributes.{$finish->public_id}.visible", true);
 
         $this->actingAs($this->user)
             ->configuratorRequest('api.products.configurator.validate', $product->public_id, 'POST', [
-                'selection' => ['color' => 'red'],
+                'selection' => [$color->public_id => 'red'],
             ])
             ->assertOk()
             ->assertJsonPath('data.valid', false)
-            ->assertJsonStructure(['data' => ['errors' => ['finish']]]);
+            ->assertJsonStructure(['data' => ['errors' => [$finish->public_id]]]);
 
         $this->actingAs($this->user)
             ->configuratorRequest('api.products.configurator.validate', $product->public_id, 'POST', [
-                'selection' => ['color' => 'red', 'finish' => 'matte'],
+                'selection' => [
+                    $color->public_id => 'red',
+                    $finish->public_id => 'matte',
+                ],
             ])
             ->assertOk()
             ->assertJsonPath('data.valid', true);
+    }
+
+    public function test_duplicate_keys_across_steps_are_handled_independently(): void
+    {
+        $product = $this->configurableProduct();
+        $step1 = Step::factory()->for($product)->create(['position' => 0]);
+        $step2 = Step::factory()->for($product)->create(['position' => 1]);
+
+        $colorStep1 = Attribute::factory()->for($step1)->select()->create(['key' => 'color']);
+        $colorStep2 = Attribute::factory()->for($step2)->select()->create(['key' => 'color']);
+
+        AttributeValue::factory()->for($colorStep1)->create(['value' => 'red']);
+        AttributeValue::factory()->for($colorStep2)->create(['value' => 'blue']);
+
+        $this->actingAs($this->user)
+            ->configuratorRequest('api.products.configurator.evaluate', $product->public_id, 'POST', [
+                'selection' => [
+                    $colorStep1->public_id => 'red',
+                    $colorStep2->public_id => 'blue',
+                ],
+            ])
+            ->assertOk()
+            ->assertJsonPath("data.attributes.{$colorStep1->public_id}.visible", true)
+            ->assertJsonPath("data.attributes.{$colorStep2->public_id}.visible", true)
+            ->assertJsonPath("data.attributes.{$colorStep1->public_id}.key", 'color')
+            ->assertJsonPath("data.attributes.{$colorStep2->public_id}.key", 'color');
     }
 
     public function test_non_configurable_product_returns_422(): void

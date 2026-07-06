@@ -61,4 +61,18 @@ final class ConfiguratorSchemaData extends Data
 
         return $attributes;
     }
+
+    /**
+     * @return array<string, ConfigurationAttributeData>
+     */
+    public function getAttributeById(): array
+    {
+        $indexed = [];
+
+        foreach ($this->allAttributes() as $attribute) {
+            $indexed[$attribute->id] = $attribute;
+        }
+
+        return $indexed;
+    }
 }

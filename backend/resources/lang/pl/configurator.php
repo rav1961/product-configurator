@@ -79,5 +79,7 @@ return [
         'required' => 'Pole :attribute jest wymagane.',
         'invalid_value' => 'Nieprawidłowa wartość pola :attribute.',
         'unknown_attribute' => 'Nieznany atrybut: :attribute.',
+        'not_applicable' => 'Pole :attribute nie jest dostępne w bieżącej konfiguracji.',
+        'disabled' => 'Pole :attribute jest wyłączone.',
     ],
 ];

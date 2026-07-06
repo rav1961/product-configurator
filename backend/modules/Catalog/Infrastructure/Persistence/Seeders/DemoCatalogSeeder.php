@@ -26,14 +26,16 @@ final class DemoCatalogSeeder extends Seeder
 {
     public function run(): void
     {
-        /** @var array{categories: list<array<string, mixed>>} $catalog */
         $catalog = config('demo-catalog');
 
-        if (! is_array($catalog['categories'] ?? null)) {
+        if (! is_array($catalog) || ! is_array($catalog['categories'] ?? null)) {
             throw new RuntimeException('Demo catalog configuration is missing or invalid.');
         }
 
-        foreach ($catalog['categories'] as $categoryDefinition) {
+        /** @var list<array<string, mixed>> $categories */
+        $categories = $catalog['categories'];
+
+        foreach ($categories as $categoryDefinition) {
             $this->seedCategory($categoryDefinition);
         }
     }

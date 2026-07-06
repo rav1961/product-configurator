@@ -84,7 +84,11 @@ class AttributeResource extends Resource
                         FilamentOwnerContext::step($livewire)->product_id,
                     ),
                 )
-                ->visible(fn (Get $get): bool => AttributeType::from((string) $get('type'))->hasOptions())
+                ->visible(function (Get $get): bool {
+                    $type = AttributeType::tryFrom((string) $get('type'));
+
+                    return $type?->hasOptions() ?? false;
+                })
                 ->searchable()
                 ->preload()
                 ->nullable(),

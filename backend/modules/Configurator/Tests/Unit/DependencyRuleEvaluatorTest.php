@@ -27,14 +27,13 @@ final class DependencyRuleEvaluatorTest extends TestCase
 
     public function test_show_target_is_hidden_until_condition_matches(): void
     {
-        $schema = $this->schemaWithAttributes(
-            $this->schemaAttribute('color'),
-            $this->schemaAttribute('finish'),
-        );
+        $color = $this->schemaAttribute('color');
+        $finish = $this->schemaAttribute('finish');
+        $schema = $this->schemaWithAttributes($color, $finish);
         $dependencies = collect([
             $this->schemaDependency(
-                sourceKey: 'color',
-                targetKey: 'finish',
+                source: $color,
+                target: $finish,
                 condition: DependencyCondition::Equals,
                 conditionValue: 'red',
                 action: DependencyAction::Show,
@@ -43,37 +42,36 @@ final class DependencyRuleEvaluatorTest extends TestCase
 
         $hidden = $this->evaluator->evaluate(
             $schema,
-            ConfigurationSelection::fromArray(['color' => 'blue']),
+            ConfigurationSelection::fromArray([$color->id => 'blue']),
             $dependencies,
         );
-        $this->assertFalse($hidden->attributes['finish']->visible);
+        $this->assertFalse($hidden->attributes[$finish->id]->visible);
 
         $visible = $this->evaluator->evaluate(
             $schema,
-            ConfigurationSelection::fromArray(['color' => 'red']),
+            ConfigurationSelection::fromArray([$color->id => 'red']),
             $dependencies,
         );
-        $this->assertTrue($visible->attributes['finish']->visible);
+        $this->assertTrue($visible->attributes[$finish->id]->visible);
     }
 
     public function test_later_dependency_overrides_earlier_for_same_target(): void
     {
-        $schema = $this->schemaWithAttributes(
-            $this->schemaAttribute('color'),
-            $this->schemaAttribute('finish'),
-        );
+        $color = $this->schemaAttribute('color');
+        $finish = $this->schemaAttribute('finish');
+        $schema = $this->schemaWithAttributes($color, $finish);
         $dependencies = collect([
             $this->schemaDependency(
-                sourceKey: 'color',
-                targetKey: 'finish',
+                source: $color,
+                target: $finish,
                 condition: DependencyCondition::Equals,
                 conditionValue: 'red',
                 action: DependencyAction::Show,
                 position: 0,
             ),
             $this->schemaDependency(
-                sourceKey: 'color',
-                targetKey: 'finish',
+                source: $color,
+                target: $finish,
                 condition: DependencyCondition::Equals,
                 conditionValue: 'red',
                 action: DependencyAction::Hide,
@@ -83,10 +81,10 @@ final class DependencyRuleEvaluatorTest extends TestCase
 
         $evaluation = $this->evaluator->evaluate(
             $schema,
-            ConfigurationSelection::fromArray(['color' => 'red']),
+            ConfigurationSelection::fromArray([$color->id => 'red']),
             $dependencies,
         );
 
-        $this->assertFalse($evaluation->attributes['finish']->visible);
+        $this->assertFalse($evaluation->attributes[$finish->id]->visible);
     }
 }

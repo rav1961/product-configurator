@@ -84,6 +84,21 @@ trait BuildsConfiguratorSchema
         );
     }
 
+    protected function schemaAttributeState(
+        ConfigurationAttributeData $attribute,
+        bool $visible,
+        bool $required,
+        bool $disabled = false,
+    ): ConfigurationAttributeStateData {
+        return new ConfigurationAttributeStateData(
+            id: $attribute->id,
+            key: $attribute->key,
+            visible: $visible,
+            required: $required,
+            disabled: $disabled,
+        );
+    }
+
     /**
      * @param  array<string, ConfigurationAttributeStateData>  $attributes
      */
@@ -96,8 +111,8 @@ trait BuildsConfiguratorSchema
     }
 
     protected function schemaDependency(
-        string $sourceKey,
-        string $targetKey,
+        ConfigurationAttributeData $source,
+        ConfigurationAttributeData $target,
         DependencyCondition $condition,
         ?string $conditionValue,
         DependencyAction $action,
@@ -110,8 +125,14 @@ trait BuildsConfiguratorSchema
             'position' => $position,
         ]);
 
-        $dependency->setRelation('sourceAttribute', new Attribute(['key' => $sourceKey]));
-        $dependency->setRelation('targetAttribute', new Attribute(['key' => $targetKey]));
+        $dependency->setRelation('sourceAttribute', new Attribute([
+            'key' => $source->key,
+            'public_id' => $source->id,
+        ]));
+        $dependency->setRelation('targetAttribute', new Attribute([
+            'key' => $target->key,
+            'public_id' => $target->id,
+        ]));
 
         return $dependency;
     }

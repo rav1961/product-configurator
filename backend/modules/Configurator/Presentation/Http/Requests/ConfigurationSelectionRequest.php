@@ -20,7 +20,8 @@ final class ConfigurationSelectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'selection' => ['present', 'array'],
+            'selection' => ['present', 'array', 'max:100'],
+            'selection.*' => ['nullable'],
         ];
     }
 

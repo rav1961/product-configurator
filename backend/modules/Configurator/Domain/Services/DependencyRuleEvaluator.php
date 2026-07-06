@@ -26,11 +26,12 @@ final readonly class DependencyRuleEvaluator
         ConfigurationSelection $selection,
         Collection $dependencies,
     ): ConfigurationEvaluationData {
-        /** @var array<string, array{visible: bool, required: bool, disabled: bool}> $states */
+        /** @var array<string, array{key: string, visible: bool, required: bool, disabled: bool}> $states */
         $states = [];
 
         foreach ($schema->allAttributes() as $attribute) {
-            $states[$attribute->key] = [
+            $states[$attribute->id] = [
+                'key' => $attribute->key,
                 'visible' => true,
                 'required' => $attribute->isRequired,
                 'disabled' => false,
@@ -42,37 +43,38 @@ final readonly class DependencyRuleEvaluator
                 continue;
             }
 
-            $targetKey = $dependency->targetAttribute->key;
+            $targetId = $dependency->targetAttribute->public_id;
 
-            if (isset($states[$targetKey])) {
-                $states[$targetKey]['visible'] = false;
+            if (isset($states[$targetId])) {
+                $states[$targetId]['visible'] = false;
             }
         }
 
         foreach ($dependencies as $dependency) {
-            $sourceKey = $dependency->sourceAttribute->key;
-            $targetKey = $dependency->targetAttribute->key;
+            $sourceId = $dependency->sourceAttribute->public_id;
+            $targetId = $dependency->targetAttribute->public_id;
 
-            if (! isset($states[$sourceKey], $states[$targetKey])) {
+            if (! isset($states[$sourceId], $states[$targetId])) {
                 continue;
             }
 
             if (! $this->matcher->matches(
-                $selection->get($sourceKey),
+                $selection->get($sourceId),
                 $dependency->condition,
                 $dependency->condition_value,
             )) {
                 continue;
             }
 
-            $this->applyAction($states[$targetKey], $dependency->action);
+            $this->applyAction($states[$targetId], $dependency->action);
         }
 
         $attributes = [];
 
-        foreach ($states as $key => $state) {
-            $attributes[$key] = new ConfigurationAttributeStateData(
-                key: $key,
+        foreach ($states as $id => $state) {
+            $attributes[$id] = new ConfigurationAttributeStateData(
+                id: $id,
+                key: $state['key'],
                 visible: $state['visible'],
                 required: $state['required'],
                 disabled: $state['disabled'],
@@ -86,7 +88,7 @@ final readonly class DependencyRuleEvaluator
     }
 
     /**
-     * @param  array{visible: bool, required: bool, disabled: bool}  $state
+     * @param  array{key: string, visible: bool, required: bool, disabled: bool}  $state
      */
     private function applyAction(array &$state, DependencyAction $action): void
     {

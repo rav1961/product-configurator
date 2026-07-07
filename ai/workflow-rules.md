@@ -123,10 +123,16 @@ A slice is done only when:
 
 * Return a DTO when the default status fits (GET -> 200, POST -> 201) — e.g. `RegisterController`,
   `ProfileController`.
-* To override the status, declare the method return type `Symfony\Component\HttpFoundation\Response`
-  and chain `->toResponse($request)->setStatusCode(...)` — e.g. `LoginController` (POST -> 200).
-  Rationale: `Responsable::toResponse()` is typed as `Symfony Response`, so PHPStan rejects a
-  narrowed `JsonResponse` return.
+* POST endpoints that **do not create a resource** (e.g. Configurator `evaluate`, `validate`)
+  return **200** — use `JsonResponse` or `->toResponse($request)->setStatusCode(200)` explicitly;
+  do not rely on the default POST -> 201 from Spatie Data.
+* When an API response must expose an **associative map keyed by ULID** (e.g. `evaluate` →
+  `attributes.{public_id}`), build the JSON envelope in the controller if Spatie Data
+  serialization would flatten keys to a numeric list.
+* To override the status on a DTO response, declare the method return type
+  `Symfony\Component\HttpFoundation\Response` and chain `->toResponse($request)->setStatusCode(...)`
+  — e.g. `LoginController` (POST -> 200). Rationale: `Responsable::toResponse()` is typed as
+  `Symfony Response`, so PHPStan rejects a narrowed `JsonResponse` return.
 
 ## Filament Conventions
 

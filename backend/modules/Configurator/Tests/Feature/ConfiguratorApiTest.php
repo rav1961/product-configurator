@@ -7,9 +7,14 @@ namespace Modules\Configurator\Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
 use Illuminate\Testing\TestResponse;
+use Modules\Catalog\Domain\Enums\ProductStatus;
 use Modules\Catalog\Domain\Models\Product;
+use Modules\Configurator\Domain\Enums\AttributeType;
+use Modules\Configurator\Domain\Enums\DependencyAction;
+use Modules\Configurator\Domain\Enums\DependencyCondition;
 use Modules\Configurator\Domain\Models\Attribute;
 use Modules\Configurator\Domain\Models\AttributeValue;
+use Modules\Configurator\Domain\Models\Dependency;
 use Modules\Configurator\Domain\Models\Step;
 use Modules\Configurator\Tests\Concerns\BuildsConfiguratorFixtures;
 use Modules\Users\Domain\Models\User;
@@ -152,5 +157,114 @@ final class ConfiguratorApiTest extends TestCase
         return $method === 'GET'
             ? $this->getJson($url)
             : $this->postJson($url, $payload);
+    }
+
+    public function test_unverified_user_is_forbidden_on_all_configurator_routes(): void
+    {
+        $product = $this->configurableProduct();
+
+        foreach (self::configuratorRouteProvider() as [$routeName, $method]) {
+            $this->actingAs(User::factory()->unverified()->create())
+                ->configuratorRequest($routeName, $product->public_id, $method)
+                ->assertForbidden();
+        }
+    }
+
+    #[DataProvider('configuratorRouteProvider')]
+    public function test_unknown_product_returns_not_found(string $routeName, string $method): void
+    {
+        $this->actingAs($this->user)
+            ->configuratorRequest(
+                $routeName,
+                '01JAAAAAAAAAAAAAAAAAAAAAAAAA',
+                $method,
+            )
+            ->assertNotFound();
+    }
+
+    #[DataProvider('configuratorRouteProvider')]
+    public function test_inactive_configurable_product_returns_not_found(string $routeName, string $method): void
+    {
+        $product = Product::factory()->configurable()->create([
+            'status' => ProductStatus::Draft,
+        ]);
+
+        $this->actingAs($this->user)
+            ->configuratorRequest($routeName, $product->public_id, $method)
+            ->assertNotFound();
+    }
+
+    public function test_evaluate_applies_require_action(): void
+    {
+        $product = $this->configurableProduct();
+        $step = Step::factory()->for($product)->create();
+        $color = Attribute::factory()->for($step)->select()->create(['key' => 'color']);
+        $notes = Attribute::factory()->for($step)->create([
+            'key' => 'notes',
+            'type' => AttributeType::Text,
+            'is_required' => false,
+        ]);
+
+        AttributeValue::factory()->for($color)->create(['value' => 'red']);
+
+        Dependency::factory()->create([
+            'product_id' => $product->id,
+            'source_attribute_id' => $color->id,
+            'target_attribute_id' => $notes->id,
+            'condition' => DependencyCondition::Equals,
+            'condition_value' => 'red',
+            'action' => DependencyAction::Require,
+        ]);
+
+        $this->actingAs($this->user)
+            ->configuratorRequest('api.products.configurator.evaluate', $product->public_id, 'POST', [
+                'selection' => [$color->public_id => 'red'],
+            ])
+            ->assertOk()
+            ->assertJsonPath("data.attributes.{$notes->public_id}.required", true);
+    }
+
+    public function test_disable_action_blocks_values_on_validate(): void
+    {
+        $product = $this->configurableProduct();
+        $step = Step::factory()->for($product)->create();
+        $color = Attribute::factory()->for($step)->select()->create(['key' => 'color']);
+        $finish = Attribute::factory()->for($step)->create([
+            'key' => 'finish',
+            'type' => AttributeType::Text,
+            'is_required' => false,
+        ]);
+
+        AttributeValue::factory()->for($color)->create(['value' => 'red']);
+
+        Dependency::factory()->create([
+            'product_id' => $product->id,
+            'source_attribute_id' => $color->id,
+            'target_attribute_id' => $finish->id,
+            'condition' => DependencyCondition::Equals,
+            'condition_value' => 'red',
+            'action' => DependencyAction::Disable,
+        ]);
+
+        $this->actingAs($this->user)
+            ->configuratorRequest('api.products.configurator.evaluate', $product->public_id, 'POST', [
+                'selection' => [
+                    $color->public_id => 'red',
+                    $finish->public_id => 'matte',
+                ],
+            ])
+            ->assertOk()
+            ->assertJsonPath("data.attributes.{$finish->public_id}.disabled", true);
+
+        $this->actingAs($this->user)
+            ->configuratorRequest('api.products.configurator.validate', $product->public_id, 'POST', [
+                'selection' => [
+                    $color->public_id => 'red',
+                    $finish->public_id => 'matte',
+                ],
+            ])
+            ->assertOk()
+            ->assertJsonPath('data.valid', false)
+            ->assertJsonStructure(['data' => ['errors' => [$finish->public_id]]]);
     }
 }

@@ -30,6 +30,10 @@
 * Own thin controllers + FormRequest + Actions + DTOs in the `Users` module (register, login, logout, me)
 * Native framework primitives: `Auth::attempt`, session regeneration, `RateLimiter`, Password broker, email verification
 * Authenticated-only API: every domain endpoint sits behind `auth:sanctum`; the only public exceptions are `register`, `login`, `forgot-password`, `reset-password`, `email/verify/{id}/{hash}` (signed) and `health`
+* Sensitive public endpoints (`register`, `forgot-password`, `reset-password`, signed `email/verify`, resend verification): `ApiRouteMiddleware::SENSITIVE_THROTTLE` (`throttle:6,1`). Login throttling stays in `LoginRequest` (per email + IP), not on the route
+* Business API (Catalog, Configurator, …): `ApiRouteMiddleware::VERIFIED` (`auth:sanctum` + `verified`). Account endpoints (`logout`, `profile`, resend verification): `auth:sanctum` only
+* API routes per module in `Presentation/Routes/api.php`; `backend/routes/api.php` stays empty; stacks in `Modules\Shared\Presentation\Http\ApiRouteMiddleware`
+* Public health (`GET /api/health`): returns `status` + `timestamp`; `environment` only when `APP_DEBUG` / `config('app.debug')` is true
 * Catalog endpoints (`categories`, `products`) require authentication; auth is applied per-module in `Presentation/Routes/api.php`, never globally
 * Email verification required: business endpoints add `verified` (`EnsureEmailIsVerified`) on top of `auth:sanctum`. Account endpoints (`logout`, `profile`, resend verification) intentionally do NOT require `verified`
 * Email verification + password reset use native primitives (`MustVerifyEmail`, Password broker, events `Registered`/`Verified`/`PasswordReset`) wrapped in our controller + FormRequest + DTO + Action pattern
@@ -56,7 +60,7 @@
 
 * All user-facing strings go through translations (`__()`), never hardcoded.
 * Location: `resources/lang/{locale}/{domain}.php`; one file per Filament resource
-  (`users.php`, `catalog.php`, `products.php`).
+  (`users.php`, `catalog.php`, `products.php`, `configurator.php`).
 * Key convention: `domain.section.key` (e.g. `users.fields.roles`, `users.role.admin`,
   `products.status.draft`). Enum display labels expose `label()` returning `__()`.
 * Primary language is `pl`; `en` deferred to the Multilanguage stage.
@@ -71,6 +75,7 @@
 * Public identifiers: ULID via `HasPublicId` (`public_id`); numeric ids never exposed
 * Module factories via `HasModuleFactory` convention
 * Module-owned seeders/factories; `DatabaseSeeder` only orchestrates
+* Demo/bootstrap data: `DemoConfiguratorSeeder` (Configurator module) reads `config/demo-catalog.php` (catalog + product configuration for local/demo seeding)
 * Module-owned migrations for domain tables (e.g. Users owns `users`, `password_reset_tokens`); only `sessions`, `cache`, `jobs` + package migrations stay in `database/migrations`
 
 ## Frontend

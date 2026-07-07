@@ -10,8 +10,7 @@ final class HealthStatusData extends Data
 {
     public function __construct(
         public string $status,
-        public string $app,
-        public string $environment,
         public string $timestamp,
+        public ?string $environment = null,
     ) {}
 }

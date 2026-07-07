@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Modules\Catalog\Infrastructure\Persistence\Seeders;
+namespace Modules\Configurator\Infrastructure\Persistence\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Http\UploadedFile;
@@ -22,7 +22,7 @@ use Modules\Shared\Domain\Enums\MediaCollection;
 use RuntimeException;
 use Spatie\MediaLibrary\HasMedia;
 
-final class DemoCatalogSeeder extends Seeder
+final class DemoConfiguratorSeeder extends Seeder
 {
     public function run(): void
     {

@@ -15,14 +15,19 @@ final class HealthTest extends TestCase
         $response
             ->assertOk()
             ->assertJsonPath('data.status', 'ok')
-            ->assertJsonPath('data.app', config('app.name'))
             ->assertJsonStructure([
                 'data' => [
                     'status',
-                    'app',
-                    'environment',
                     'timestamp',
                 ],
             ]);
+
+        if (config('app.debug')) {
+            $response->assertJsonStructure([
+                'data' => ['environment'],
+            ]);
+        } else {
+            $response->assertJsonMissingPath('data.environment');
+        }
     }
 }

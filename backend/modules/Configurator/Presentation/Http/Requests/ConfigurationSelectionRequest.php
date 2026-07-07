@@ -22,6 +22,7 @@ final class ConfigurationSelectionRequest extends FormRequest
         return [
             'selection' => ['present', 'array', 'max:100'],
             'selection.*' => ['nullable'],
+            'selection.*.*' => ['nullable', 'string', 'max:255'],
         ];
     }
 

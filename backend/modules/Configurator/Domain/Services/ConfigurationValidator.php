@@ -112,7 +112,7 @@ final readonly class ConfigurationValidator
 
     private function isValidText(mixed $value): bool
     {
-        return is_string($value) || (is_scalar($value) && ! is_bool($value));
+        return is_string($value);
     }
 
     private function isValidBoolean(mixed $value): bool

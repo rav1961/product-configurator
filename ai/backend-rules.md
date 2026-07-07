@@ -37,6 +37,20 @@ Thin (invokable) controllers, DTOs, Actions, Events, Form Requests.
   Do NOT place factories for module models in `database/factories`.
 - Seeders live in `Modules\{Module}\Infrastructure\Persistence\Seeders`; `DatabaseSeeder`
   only orchestrates module seeders.
+- Demo/bootstrap data may read from `config/*.php` (e.g. `config/demo-catalog.php` consumed by
+  `DemoConfiguratorSeeder` in the Configurator module).
+
+## API Routing & Middleware
+
+- Route files: `modules/{Module}/Presentation/Routes/api.php` (see `architecture-rules.md`).
+- Business endpoints (Catalog, Configurator, …): `ApiRouteMiddleware::VERIFIED`
+  (`auth:sanctum` + `verified`).
+- Account endpoints (`logout`, `profile`, resend verification): `auth:sanctum` only — no `verified`.
+- Sensitive public endpoints (`register`, `forgot-password`, `reset-password`, signed
+  `email/verify`, resend verification): `ApiRouteMiddleware::SENSITIVE_THROTTLE` (`throttle:6,1`).
+  Login throttling stays in `LoginRequest` (per email + IP), not on the route.
+- Public health: `GET /api/health` returns `status` + `timestamp`; expose `environment` only
+  when `config('app.debug')` is true.
 
 ## Code Style
 

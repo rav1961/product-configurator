@@ -72,4 +72,51 @@ final class ConfigurationValidatorTest extends TestCase
         );
         $this->assertArrayHasKey($color->id, $invalidOption->errors);
     }
+
+    public function test_accepts_numeric_values_for_number_attributes(): void
+    {
+        $width = $this->schemaAttribute('width', name: 'Width', isRequired: true, type: 'number');
+        $schema = $this->schemaWithAttributes($width);
+        $evaluation = $this->schemaEvaluation([
+            $width->id => $this->schemaAttributeState($width, visible: true, required: true),
+        ]);
+
+        $integer = $this->validator->validate(
+            $schema,
+            $evaluation,
+            ConfigurationSelection::fromArray([$width->id => 120]),
+        );
+        $this->assertTrue($integer->isValid());
+
+        $decimal = $this->validator->validate(
+            $schema,
+            $evaluation,
+            ConfigurationSelection::fromArray([$width->id => 199.99]),
+        );
+        $this->assertTrue($decimal->isValid());
+
+        $stringNumeric = $this->validator->validate(
+            $schema,
+            $evaluation,
+            ConfigurationSelection::fromArray([$width->id => '120']),
+        );
+        $this->assertTrue($stringNumeric->isValid());
+    }
+
+    public function test_rejects_non_string_values_for_text_attributes(): void
+    {
+        $label = $this->schemaAttribute('label', name: 'Label', isRequired: true, type: 'text');
+        $schema = $this->schemaWithAttributes($label);
+        $evaluation = $this->schemaEvaluation([
+            $label->id => $this->schemaAttributeState($label, visible: true, required: true),
+        ]);
+
+        $result = $this->validator->validate(
+            $schema,
+            $evaluation,
+            ConfigurationSelection::fromArray([$label->id => 120]),
+        );
+
+        $this->assertArrayHasKey($label->id, $result->errors);
+    }
 }

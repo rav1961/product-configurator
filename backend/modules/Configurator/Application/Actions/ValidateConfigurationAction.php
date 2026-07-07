@@ -21,7 +21,11 @@ final readonly class ValidateConfigurationAction
         ConfigurationSelection $selection,
     ): ConfigurationValidationResult {
         $schema = $this->getConfiguratorSchema->execute($productPublicId);
-        $evaluation = $this->evaluateConfiguration->execute($productPublicId, $selection);
+        $evaluation = $this->evaluateConfiguration->executeForSchema(
+            $schema,
+            $productPublicId,
+            $selection,
+        );
 
         return $this->validator->validate($schema, $evaluation, $selection);
     }

@@ -68,4 +68,27 @@ final class RegisterTest extends TestCase
             ->assertStatus(422)
             ->assertJsonValidationErrors(['email']);
     }
+
+    public function test_registration_is_rate_limited(): void
+    {
+        Event::fake([Registered::class]);
+
+        $basePayload = [
+            'name' => 'Test User',
+            'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
+        ];
+
+        foreach (range(1, 6) as $index) {
+            $this->postJson(route('api.register'), [
+                ...$basePayload,
+                'email' => "register-{$index}@example.test",
+            ])->assertCreated();
+        }
+
+        $this->postJson(route('api.register'), [
+            ...$basePayload,
+            'email' => 'register-7@example.test',
+        ])->assertTooManyRequests();
+    }
 }

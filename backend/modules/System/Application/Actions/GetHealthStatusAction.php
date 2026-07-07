@@ -12,9 +12,8 @@ final readonly class GetHealthStatusAction
     {
         return new HealthStatusData(
             status: 'ok',
-            app: (string) config('app.name'),
-            environment: app()->environment(),
             timestamp: now()->toISOString(),
+            environment: config('app.debug') ? app()->environment() : null,
         );
     }
 }

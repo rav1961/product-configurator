@@ -9,6 +9,9 @@ Sanctum, HttpOnly Cookies, Spatie Permission, Audit Log.
   the `Users` module (`register`, `login`, `logout`, `me`). They use the framework natively
   (`Auth::attempt`, session regeneration, `RateLimiter`, Password broker, email verification).
 - Login throttling (per email + IP) lives in `LoginRequest` (Breeze-style), firing `Lockout`.
+- Rate limiting on sensitive public endpoints (`register`, `forgot-password`, `reset-password`,
+  signed `email/verify`, resend verification): `throttle:6,1` via
+  `ApiRouteMiddleware::SENSITIVE_THROTTLE` in module route files.
 - CSRF handshake via `/sanctum/csrf-cookie` before mutating requests from the SPA.
 
 ## Authorization (RBAC)
@@ -30,6 +33,15 @@ Sanctum, HttpOnly Cookies, Spatie Permission, Audit Log.
 - Catalog (`categories`, `products`) is **not** public — browsing requires an authenticated,
   verified user. Each module enforces this in its own `Presentation/Routes/api.php`
   (mirroring `Users`), not globally, so per-route exceptions stay explicit.
+- Configurator endpoints (`schema`, `evaluate`, `validate`) use the same verified-only policy.
+- Shared middleware stacks: `Modules\Shared\Presentation\Http\ApiRouteMiddleware`
+  (`VERIFIED` = `auth:sanctum` + `verified`; `SENSITIVE_THROTTLE` = `throttle:6,1`).
+  Domain routes live per module — `backend/routes/api.php` stays empty.
+
+## Health & data exposure (public endpoints)
+
+- `GET /api/health` is public (uptime probe). Response includes `status` and `timestamp`.
+  The `environment` field is exposed **only** when `config('app.debug')` is true.
 
 ## Account flows (verification & reset)
 

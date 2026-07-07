@@ -15,16 +15,20 @@ final class ApiResponseShapeTest extends TestCase
 
     public function test_health_endpoint_uses_data_envelope(): void
     {
-        $this->getJson('/api/health')
+        $response = $this->getJson('/api/health')
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     'status',
-                    'app',
-                    'environment',
                     'timestamp',
                 ],
             ]);
+
+        if (config('app.debug')) {
+            $response->assertJsonStructure(['data' => ['environment']]);
+        } else {
+            $response->assertJsonMissingPath('data.environment');
+        }
     }
 
     public function test_categories_endpoint_uses_data_envelope(): void

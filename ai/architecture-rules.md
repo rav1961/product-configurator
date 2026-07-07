@@ -16,6 +16,7 @@ Laravel API + Next.js. Modular Monolith (Laravel).
 - Factories are wired by convention via the `HasModuleFactory` behavior (no global resolver).
 - Inter-module communication only through public contracts (Actions, DTOs, Events).
 - Cross-cutting, framework-level building blocks live in the `Shared` kernel module.
+  Example: `Modules\Shared\Presentation\Http\ApiRouteMiddleware` — shared route middleware stacks.
 - No DDD-Lite shortcuts: each module owns its domain, persistence, presentation and tests.
 - Repository pattern: `Domain/Contracts/{Entity}RepositoryInterface` + `Infrastructure/Persistence/Repositories/Eloquent{Entity}Repository`.
 - All domain contracts (interfaces) use the `Interface` suffix (e.g. `UserRepositoryInterface`, not `UserRepository`).
@@ -38,3 +39,15 @@ Laravel API + Next.js. Modular Monolith (Laravel).
 - Only framework runtime tables that belong to no bounded context stay in `database/migrations`
   (`sessions`, `cache`, `jobs`), together with third-party package migrations
   (spatie/permission, activitylog).
+
+## API Routing
+
+- Domain API routes live in each module's `Presentation/Routes/api.php` — **not** in
+  `backend/routes/api.php` (that file stays empty).
+- `ModuleServiceProvider` loads module routes with middleware `api` and prefix `/api`.
+- Reusable middleware stacks are defined in
+  `Modules\Shared\Presentation\Http\ApiRouteMiddleware` (e.g. `VERIFIED`,
+  `SENSITIVE_THROTTLE`). Modules reference these constants in their route files — do not
+  duplicate `['auth:sanctum', 'verified']` literals across modules.
+- Per-module routing keeps public exceptions explicit (e.g. `register` / `login` in Users vs
+  verified-only Catalog/Configurator endpoints).

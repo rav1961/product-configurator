@@ -11,15 +11,16 @@ tool, not a web shop.
 
 ## Currently working on
 
-- **Configurator** module (domain foundation) — next after Catalog admin completeness.
+- **Configurator** module — dokumentacja i dalsze usprawnienia; następny krok: Rule Engine.
 
 ## Conventions in place
 
 - Translations: `resources/lang/pl/{domain}.php` (one file per Filament resource), used via `__()`.
-  Polish is the primary app language; `en` added later (Multilanguage). Applied to Users + Catalog.
+  Polish is the primary app language; `en` added later (Multilanguage). Applied to Users + Catalog + Configurator.
 - Repository contracts: `Domain/Contracts/{Entity}RepositoryInterface.php`; Eloquent implementations
   in `Infrastructure/Persistence/Repositories/Eloquent{Entity}Repository.php`.
 - Layer boundaries: Application (Actions) has no HTTP dependencies; Presentation maps to HTTP.
+- **API route middleware stacks:** `Modules\Shared\Presentation\Http\ApiRouteMiddleware` (`VERIFIED`, `SENSITIVE_THROTTLE`).
 - **Media (Shared kernel):** Spatie Media Library v11 + Filament plugin. Enums in
   `Shared/Domain/Enums/` (`MediaCollection`, `MediaConversion`, `MediaProfile`). Profile-specific
   dimensions via `MediaProfile::definitions()`; registration via `MediaConversionRegistrar` +
@@ -69,14 +70,20 @@ tool, not a web shop.
       (`admin`, `manager` only); Gate registration in `CatalogServiceProvider`. Tests: `CatalogPolicyTest`.
 - [x] **Demo users seeder:** `DemoUsersSeeder` + `config/demo-users.php` (replaces `AdminSeeder`); idempotent
       `updateOrCreateByEmail` + `syncRoles`; shared password via `DEMO_USERS_PASSWORD` / `ADMIN_PASSWORD`.
-- [ ] Link products to configurable attributes (bridge to Configurator).
+- [x] Bridge to Configurator: `Product.is_configurable`, `GetConfigurableProductAction`, relacje kroków/zależności na produkcie.
 
 ### 4. Configurator
-- [ ] Domain: Steps, Attributes, Attribute Values, Collections, Dependencies.
-- [ ] Admin (Filament): manage steps / attributes / values / dependencies per product.
-- [ ] Engine: build a configuration session, validate dependencies, expose dynamic form schema.
-- [ ] API for SPA: fetch configurator schema + submit/validate a configuration.
-- [ ] Tests: dependency resolution + schema generation.
+- [x] Domain: `Step`, `Attribute`, `AttributeValue`, `AttributeCollection`, `Dependency`; enums `AttributeType`, `DependencyAction`, `DependencyCondition`; VO `ConfigurationSelection`.
+- [x] Persistence: migrations, factories, 6× repository contracts + Eloquent implementations, `ConfiguratorGraphRepository`, `DependencyObserver` + `DependencyValidator`.
+- [x] Domain services: `DependencyConditionMatcher`, `DependencyRuleEvaluator`, `ConfigurationValidator`.
+- [x] Admin (Filament): nested resources (`StepResource`, `AttributeResource`, `AttributeCollectionResource`) + relation managers na produkcie/kroku; `ConfiguratorManagementPolicy` (admin/manager).
+- [x] Engine: schema z grafu produktu, ewaluacja zależności (2-fazowa semantyka `show`), walidacja selekcji.
+- [x] API for SPA: `schema`, `evaluate`, `validate` — `auth:sanctum` + `verified`; ULID w trasach i `selection`.
+- [x] PL translations (`resources/lang/pl/configurator.php`).
+- [x] Demo data: `DemoConfiguratorSeeder` + `config/demo-catalog.php` (katalog + konfiguracja produktów demo).
+- [x] Tests: unit (matcher, evaluator, validator, dependency validator) + feature (API, repositories, models, policies, schema action).
+- [ ] Saved configuration session (persistencja wyboru użytkownika) — przed Cart.
+- [ ] Pełny CRUD kroków/atrybutów poza relation managers (opcjonalne usprawnienia UX admina).
 
 ### 5. Rule Engine
 - [ ] Domain: `Rule -> Group -> Conditions -> Actions`.

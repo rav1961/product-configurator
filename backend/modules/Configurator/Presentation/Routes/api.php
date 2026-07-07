@@ -6,8 +6,9 @@ use Illuminate\Support\Facades\Route;
 use Modules\Configurator\Presentation\Http\Controllers\ConfiguratorEvaluateController;
 use Modules\Configurator\Presentation\Http\Controllers\ConfiguratorSchemaShowController;
 use Modules\Configurator\Presentation\Http\Controllers\ConfiguratorValidateController;
+use Modules\Shared\Presentation\Http\ApiRouteMiddleware;
 
-Route::middleware(['auth:sanctum', 'verified'])
+Route::middleware(ApiRouteMiddleware::VERIFIED)
     ->group(function (): void {
         Route::get('/products/{productId}/configurator/schema', ConfiguratorSchemaShowController::class)
             ->name('api.products.configurator.schema');

@@ -6,8 +6,9 @@ use Illuminate\Support\Facades\Route;
 use Modules\Catalog\Presentation\Http\Controllers\CategoryListController;
 use Modules\Catalog\Presentation\Http\Controllers\ProductListController;
 use Modules\Catalog\Presentation\Http\Controllers\ProductShowController;
+use Modules\Shared\Presentation\Http\ApiRouteMiddleware;
 
-Route::middleware(['auth:sanctum', 'verified'])
+Route::middleware(ApiRouteMiddleware::VERIFIED)
     ->group(function (): void {
         Route::get('/categories', CategoryListController::class)
             ->name('api.categories.list');

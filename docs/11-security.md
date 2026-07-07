@@ -37,6 +37,9 @@ Sanctum, HttpOnly Cookies, Spatie Permission, Audit Log.
 - Shared middleware stacks: `Modules\Shared\Presentation\Http\ApiRouteMiddleware`
   (`VERIFIED` = `auth:sanctum` + `verified`; `SENSITIVE_THROTTLE` = `throttle:6,1`).
   Domain routes live per module — `backend/routes/api.php` stays empty.
+- Global API rate limit: named limiter `api` on all module routes (`throttle:api` in
+  `ModuleServiceProvider`). Default 60 requests/minute per user id or IP; disabled in `testing`.
+  Sensitive public routes keep their additional `SENSITIVE_THROTTLE` (`throttle:6,1`).
 
 ## Health & data exposure (public endpoints)
 

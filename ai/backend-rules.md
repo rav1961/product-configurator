@@ -51,6 +51,9 @@ Thin (invokable) controllers, DTOs, Actions, Events, Form Requests.
   Login throttling stays in `LoginRequest` (per email + IP), not on the route.
 - Public health: `GET /api/health` returns `status` + `timestamp`; expose `environment` only
   when `config('app.debug')` is true.
+- Global API rate limit: named limiter `api` (`throttle:api` on all module routes via
+  `ModuleServiceProvider`). Default: 60 requests/minute per authenticated user id or IP.
+  Disabled in `testing` (`Limit::none()`). Sensitive routes keep their own `SENSITIVE_THROTTLE`.
 
 ## Code Style
 

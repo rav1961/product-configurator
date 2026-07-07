@@ -133,12 +133,13 @@ final class ConfiguratorApiTest extends TestCase
             ->assertJsonPath("data.attributes.{$colorStep2->public_id}.key", 'color');
     }
 
-    public function test_non_configurable_product_returns_422(): void
+    #[DataProvider('configuratorRouteProvider')]
+    public function test_non_configurable_product_returns_422(string $routeName, string $method): void
     {
         $product = Product::factory()->active()->create(['is_configurable' => false]);
 
         $this->actingAs($this->user)
-            ->configuratorRequest('api.products.configurator.schema', $product->public_id, 'GET')
+            ->configuratorRequest($routeName, $product->public_id, $method)
             ->assertUnprocessable();
     }
 
@@ -266,5 +267,35 @@ final class ConfiguratorApiTest extends TestCase
             ->assertOk()
             ->assertJsonPath('data.valid', false)
             ->assertJsonStructure(['data' => ['errors' => [$finish->public_id]]]);
+    }
+
+    public function test_evaluate_applies_hide_action(): void
+    {
+        $product = $this->configurableProduct();
+        $step = Step::factory()->for($product)->create();
+        $color = Attribute::factory()->for($step)->select()->create(['key' => 'color']);
+        $finish = Attribute::factory()->for($step)->create([
+            'key' => 'finish',
+            'type' => AttributeType::Text,
+            'is_required' => false,
+        ]);
+
+        AttributeValue::factory()->for($color)->create(['value' => 'red']);
+
+        Dependency::factory()->create([
+            'product_id' => $product->id,
+            'source_attribute_id' => $color->id,
+            'target_attribute_id' => $finish->id,
+            'condition' => DependencyCondition::Equals,
+            'condition_value' => 'red',
+            'action' => DependencyAction::Hide,
+        ]);
+
+        $this->actingAs($this->user)
+            ->configuratorRequest('api.products.configurator.evaluate', $product->public_id, 'POST', [
+                'selection' => [$color->public_id => 'red'],
+            ])
+            ->assertOk()
+            ->assertJsonPath("data.attributes.{$finish->public_id}.visible", false);
     }
 }

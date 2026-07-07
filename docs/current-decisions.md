@@ -34,6 +34,7 @@
 * Business API (Catalog, Configurator, …): `ApiRouteMiddleware::VERIFIED` (`auth:sanctum` + `verified`). Account endpoints (`logout`, `profile`, resend verification): `auth:sanctum` only
 * API routes per module in `Presentation/Routes/api.php`; `backend/routes/api.php` stays empty; stacks in `Modules\Shared\Presentation\Http\ApiRouteMiddleware`
 * Public health (`GET /api/health`): returns `status` + `timestamp`; `environment` only when `APP_DEBUG` / `config('app.debug')` is true
+* Global API rate limit: `throttle:api` on all module routes (60 req/min per user or IP; disabled in `testing`)
 * Catalog endpoints (`categories`, `products`) require authentication; auth is applied per-module in `Presentation/Routes/api.php`, never globally
 * Email verification required: business endpoints add `verified` (`EnsureEmailIsVerified`) on top of `auth:sanctum`. Account endpoints (`logout`, `profile`, resend verification) intentionally do NOT require `verified`
 * Email verification + password reset use native primitives (`MustVerifyEmail`, Password broker, events `Registered`/`Verified`/`PasswordReset`) wrapped in our controller + FormRequest + DTO + Action pattern

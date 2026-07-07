@@ -15,4 +15,23 @@ final class ConfigurationEvaluationData extends Data
         public string $productId,
         public array $attributes,
     ) {}
+
+    /**
+     * API shape: attributes keyed by public_id (ULID), not a numeric list.
+     *
+     * @return array{productId: string, attributes: array<string, array<string, mixed>>}
+     */
+    public function toResponseArray(): array
+    {
+        $attributes = [];
+
+        foreach ($this->attributes as $id => $state) {
+            $attributes[$id] = $state->toArray();
+        }
+
+        return [
+            'productId' => $this->productId,
+            'attributes' => $attributes,
+        ];
+    }
 }

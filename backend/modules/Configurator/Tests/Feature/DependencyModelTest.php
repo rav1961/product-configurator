@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Modules\Configurator\Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Modules\Configurator\Domain\Enums\DependencyCondition;
 use Modules\Configurator\Domain\Exceptions\InvalidDependencyScopeException;
 use Modules\Configurator\Domain\Models\Attribute;
 use Modules\Configurator\Domain\Models\Dependency;
 use Modules\Configurator\Domain\Models\Step;
+use Modules\Shared\Domain\Enums\SelectionCondition;
 use Tests\TestCase;
 
 final class DependencyModelTest extends TestCase
@@ -31,7 +31,7 @@ final class DependencyModelTest extends TestCase
         $this->expectException(InvalidDependencyScopeException::class);
 
         Dependency::factory()->create([
-            'condition' => DependencyCondition::Equals,
+            'condition' => SelectionCondition::Equals,
             'condition_value' => null,
         ]);
     }

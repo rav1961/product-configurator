@@ -11,11 +11,12 @@ use Modules\Configurator\Application\DTO\ConfiguratorSchemaData;
 use Modules\Configurator\Domain\Enums\DependencyAction;
 use Modules\Configurator\Domain\Models\Dependency;
 use Modules\Configurator\Domain\ValueObjects\ConfigurationSelection;
+use Modules\Shared\Domain\Services\SelectionConditionMatcher;
 
 final readonly class DependencyRuleEvaluator
 {
     public function __construct(
-        private DependencyConditionMatcher $matcher,
+        private SelectionConditionMatcher $matcher,
     ) {}
 
     /**

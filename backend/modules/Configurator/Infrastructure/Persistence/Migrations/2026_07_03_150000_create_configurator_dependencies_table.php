@@ -9,8 +9,8 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Modules\Catalog\Domain\Models\Product;
 use Modules\Configurator\Domain\Enums\DependencyAction;
-use Modules\Configurator\Domain\Enums\DependencyCondition;
 use Modules\Configurator\Domain\Models\Attribute;
+use Modules\Shared\Domain\Enums\SelectionCondition;
 
 return new class extends Migration
 {
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->foreignIdFor(Attribute::class, 'source_attribute_id')
                 ->constrained('configurator_attributes')
                 ->cascadeOnDelete();
-            $table->string('condition')->default(DependencyCondition::Equals->value);
+            $table->string('condition')->default(SelectionCondition::Equals->value);
             $table->string('condition_value')->nullable();
             $table->foreignIdFor(Attribute::class, 'target_attribute_id')
                 ->constrained()

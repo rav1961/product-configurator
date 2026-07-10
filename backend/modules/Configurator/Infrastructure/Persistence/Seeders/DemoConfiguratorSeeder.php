@@ -12,13 +12,13 @@ use Modules\Catalog\Domain\Models\Category;
 use Modules\Catalog\Domain\Models\Product;
 use Modules\Configurator\Domain\Enums\AttributeType;
 use Modules\Configurator\Domain\Enums\DependencyAction;
-use Modules\Configurator\Domain\Enums\DependencyCondition;
 use Modules\Configurator\Domain\Models\Attribute;
 use Modules\Configurator\Domain\Models\AttributeCollection;
 use Modules\Configurator\Domain\Models\AttributeValue;
 use Modules\Configurator\Domain\Models\Dependency;
 use Modules\Configurator\Domain\Models\Step;
 use Modules\Shared\Domain\Enums\MediaCollection;
+use Modules\Shared\Domain\Enums\SelectionCondition;
 use RuntimeException;
 use Spatie\MediaLibrary\HasMedia;
 
@@ -180,7 +180,7 @@ final class DemoConfiguratorSeeder extends Seeder
                 'product_id' => $product->id,
                 'source_attribute_id' => $attributesByKey[$sourceKey]->id,
                 'target_attribute_id' => $attributesByKey[$targetKey]->id,
-                'condition' => DependencyCondition::from((string) $dependencyDefinition['condition']),
+                'condition' => SelectionCondition::from((string) $dependencyDefinition['condition']),
                 'condition_value' => $dependencyDefinition['condition_value'] ?? null,
                 'action' => DependencyAction::from((string) $dependencyDefinition['action']),
                 'position' => (int) ($dependencyDefinition['position'] ?? 0),

@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Modules\Configurator\Domain\Services;
+namespace Modules\Shared\Domain\Services;
 
-use Modules\Configurator\Domain\Enums\DependencyCondition;
+use Modules\Shared\Domain\Enums\SelectionCondition;
 
-final readonly class DependencyConditionMatcher
+final readonly class SelectionConditionMatcher
 {
     public function matches(
         mixed $sourceValue,
-        DependencyCondition $condition,
+        SelectionCondition $condition,
         ?string $conditionValue,
     ): bool {
         return match ($condition) {
-            DependencyCondition::Equals => $this->equals($sourceValue, $conditionValue),
-            DependencyCondition::NotEquals => ! $this->equals($sourceValue, $conditionValue),
-            DependencyCondition::IsSet => $this->isSet($sourceValue),
-            DependencyCondition::IsEmpty => $this->isEmpty($sourceValue),
-            DependencyCondition::IsNotSet => $this->isNotSet($sourceValue),
+            SelectionCondition::Equals => $this->equals($sourceValue, $conditionValue),
+            SelectionCondition::NotEquals => ! $this->equals($sourceValue, $conditionValue),
+            SelectionCondition::IsSet => $this->isSet($sourceValue),
+            SelectionCondition::IsEmpty => $this->isEmpty($sourceValue),
+            SelectionCondition::IsNotSet => $this->isNotSet($sourceValue),
         };
     }
 

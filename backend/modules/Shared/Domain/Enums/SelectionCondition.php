@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Modules\Configurator\Domain\Enums;
+namespace Modules\Shared\Domain\Enums;
 
-enum DependencyCondition: string
+enum SelectionCondition: string
 {
     case Equals = 'equals';
     case NotEquals = 'not_equals';
@@ -15,11 +15,11 @@ enum DependencyCondition: string
     public function label(): string
     {
         return match ($this) {
-            self::Equals => __('configurator.dependency_condition.equals'),
-            self::NotEquals => __('configurator.dependency_condition.not_equals'),
-            self::IsEmpty => __('configurator.dependency_condition.is_empty'),
-            self::IsSet => __('configurator.dependency_condition.is_set'),
-            self::IsNotSet => __('configurator.dependency_condition.is_not_set'),
+            self::Equals => __('shared.selection_condition.equals'),
+            self::NotEquals => __('shared.selection_condition.not_equals'),
+            self::IsEmpty => __('shared.selection_condition.is_empty'),
+            self::IsSet => __('shared.selection_condition.is_set'),
+            self::IsNotSet => __('shared.selection_condition.is_not_set'),
         };
     }
 

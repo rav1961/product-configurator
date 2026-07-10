@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Modules\Configurator\Tests\Unit;
 
 use Modules\Configurator\Domain\Enums\DependencyAction;
-use Modules\Configurator\Domain\Enums\DependencyCondition;
-use Modules\Configurator\Domain\Services\DependencyConditionMatcher;
 use Modules\Configurator\Domain\Services\DependencyRuleEvaluator;
 use Modules\Configurator\Domain\ValueObjects\ConfigurationSelection;
 use Modules\Configurator\Tests\Concerns\BuildsConfiguratorSchema;
+use Modules\Shared\Domain\Enums\SelectionCondition;
+use Modules\Shared\Domain\Services\SelectionConditionMatcher;
 use Tests\TestCase;
 
 final class DependencyRuleEvaluatorTest extends TestCase
@@ -22,7 +22,7 @@ final class DependencyRuleEvaluatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->evaluator = new DependencyRuleEvaluator(new DependencyConditionMatcher);
+        $this->evaluator = new DependencyRuleEvaluator(new SelectionConditionMatcher);
     }
 
     public function test_show_target_is_hidden_until_condition_matches(): void
@@ -34,7 +34,7 @@ final class DependencyRuleEvaluatorTest extends TestCase
             $this->schemaDependency(
                 source: $color,
                 target: $finish,
-                condition: DependencyCondition::Equals,
+                condition: SelectionCondition::Equals,
                 conditionValue: 'red',
                 action: DependencyAction::Show,
             ),
@@ -64,7 +64,7 @@ final class DependencyRuleEvaluatorTest extends TestCase
             $this->schemaDependency(
                 source: $color,
                 target: $finish,
-                condition: DependencyCondition::Equals,
+                condition: SelectionCondition::Equals,
                 conditionValue: 'red',
                 action: DependencyAction::Show,
                 position: 0,
@@ -72,7 +72,7 @@ final class DependencyRuleEvaluatorTest extends TestCase
             $this->schemaDependency(
                 source: $color,
                 target: $finish,
-                condition: DependencyCondition::Equals,
+                condition: SelectionCondition::Equals,
                 conditionValue: 'red',
                 action: DependencyAction::Hide,
                 position: 1,

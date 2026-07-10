@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Modules\Configurator\Tests\Unit;
+namespace Modules\Shared\Tests\Unit;
 
-use Modules\Configurator\Domain\Enums\DependencyCondition;
-use Modules\Configurator\Domain\Services\DependencyConditionMatcher;
+use Modules\Shared\Domain\Enums\SelectionCondition;
+use Modules\Shared\Domain\Services\SelectionConditionMatcher;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
-final class DependencyConditionMatcherTest extends TestCase
+final class SelectionConditionMatcherTest extends TestCase
 {
-    private DependencyConditionMatcher $matcher;
+    private SelectionConditionMatcher $matcher;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->matcher = new DependencyConditionMatcher;
+        $this->matcher = new SelectionConditionMatcher;
     }
 
     #[DataProvider('equalsProvider')]
@@ -25,7 +25,7 @@ final class DependencyConditionMatcherTest extends TestCase
     {
         $this->assertSame(
             $expected,
-            $this->matcher->matches($sourceValue, DependencyCondition::Equals, $conditionValue),
+            $this->matcher->matches($sourceValue, SelectionCondition::Equals, $conditionValue),
         );
     }
 
@@ -49,7 +49,7 @@ final class DependencyConditionMatcherTest extends TestCase
     {
         $this->assertSame(
             $expected,
-            $this->matcher->matches($sourceValue, DependencyCondition::NotEquals, $conditionValue),
+            $this->matcher->matches($sourceValue, SelectionCondition::NotEquals, $conditionValue),
         );
     }
 
@@ -69,7 +69,7 @@ final class DependencyConditionMatcherTest extends TestCase
     {
         $this->assertSame(
             $expected,
-            $this->matcher->matches($sourceValue, DependencyCondition::IsSet, null),
+            $this->matcher->matches($sourceValue, SelectionCondition::IsSet, null),
         );
     }
 
@@ -93,7 +93,7 @@ final class DependencyConditionMatcherTest extends TestCase
     {
         $this->assertSame(
             $expected,
-            $this->matcher->matches($sourceValue, DependencyCondition::IsEmpty, null),
+            $this->matcher->matches($sourceValue, SelectionCondition::IsEmpty, null),
         );
     }
 
@@ -115,7 +115,7 @@ final class DependencyConditionMatcherTest extends TestCase
     {
         $this->assertSame(
             $expected,
-            $this->matcher->matches($sourceValue, DependencyCondition::IsNotSet, null),
+            $this->matcher->matches($sourceValue, SelectionCondition::IsNotSet, null),
         );
     }
 

@@ -7,10 +7,10 @@ namespace Modules\Configurator\Infrastructure\Persistence\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Modules\Configurator\Domain\Enums\DependencyAction;
-use Modules\Configurator\Domain\Enums\DependencyCondition;
 use Modules\Configurator\Domain\Models\Attribute;
 use Modules\Configurator\Domain\Models\Dependency;
 use Modules\Configurator\Domain\Models\Step;
+use Modules\Shared\Domain\Enums\SelectionCondition;
 
 /**
  * @extends Factory<Dependency>
@@ -51,7 +51,7 @@ final class DependencyFactory extends Factory
     {
         return [
             'public_id' => (string) Str::ulid(),
-            'condition' => DependencyCondition::Equals,
+            'condition' => SelectionCondition::Equals,
             'condition_value' => 'red',
             'action' => DependencyAction::Show,
             'position' => fake()->numberBetween(0, 100),
@@ -61,7 +61,7 @@ final class DependencyFactory extends Factory
     public function whenSet(): static
     {
         return $this->state([
-            'condition' => DependencyCondition::IsSet,
+            'condition' => SelectionCondition::IsSet,
             'condition_value' => null,
         ]);
     }

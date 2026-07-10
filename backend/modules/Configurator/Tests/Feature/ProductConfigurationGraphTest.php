@@ -7,12 +7,12 @@ namespace Modules\Configurator\Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Catalog\Domain\Models\Product;
 use Modules\Configurator\Domain\Enums\DependencyAction;
-use Modules\Configurator\Domain\Enums\DependencyCondition;
 use Modules\Configurator\Domain\Models\Attribute;
 use Modules\Configurator\Domain\Models\AttributeCollection;
 use Modules\Configurator\Domain\Models\AttributeValue;
 use Modules\Configurator\Domain\Models\Dependency;
 use Modules\Configurator\Domain\Models\Step;
+use Modules\Shared\Domain\Enums\SelectionCondition;
 use Tests\TestCase;
 
 final class ProductConfigurationGraphTest extends TestCase
@@ -61,7 +61,7 @@ final class ProductConfigurationGraphTest extends TestCase
             'product_id' => $product->id,
             'source_attribute_id' => $color->id,
             'target_attribute_id' => $finish->id,
-            'condition' => DependencyCondition::Equals,
+            'condition' => SelectionCondition::Equals,
             'condition_value' => 'red',
             'action' => DependencyAction::Show,
             'position' => 0,

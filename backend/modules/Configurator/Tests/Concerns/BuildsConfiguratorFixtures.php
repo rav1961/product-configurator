@@ -7,11 +7,11 @@ namespace Modules\Configurator\Tests\Concerns;
 use Modules\Catalog\Domain\Models\Product;
 use Modules\Configurator\Domain\Enums\AttributeType;
 use Modules\Configurator\Domain\Enums\DependencyAction;
-use Modules\Configurator\Domain\Enums\DependencyCondition;
 use Modules\Configurator\Domain\Models\Attribute;
 use Modules\Configurator\Domain\Models\AttributeValue;
 use Modules\Configurator\Domain\Models\Dependency;
 use Modules\Configurator\Domain\Models\Step;
+use Modules\Shared\Domain\Enums\SelectionCondition;
 
 trait BuildsConfiguratorFixtures
 {
@@ -51,7 +51,7 @@ trait BuildsConfiguratorFixtures
             'product_id' => $product->id,
             'source_attribute_id' => $color->id,
             'target_attribute_id' => $finish->id,
-            'condition' => DependencyCondition::Equals,
+            'condition' => SelectionCondition::Equals,
             'condition_value' => 'red',
             'action' => DependencyAction::Show,
             'position' => 0,

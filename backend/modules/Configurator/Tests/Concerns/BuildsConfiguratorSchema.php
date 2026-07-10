@@ -11,9 +11,9 @@ use Modules\Configurator\Application\DTO\ConfigurationOptionData;
 use Modules\Configurator\Application\DTO\ConfigurationStepData;
 use Modules\Configurator\Application\DTO\ConfiguratorSchemaData;
 use Modules\Configurator\Domain\Enums\DependencyAction;
-use Modules\Configurator\Domain\Enums\DependencyCondition;
 use Modules\Configurator\Domain\Models\Attribute;
 use Modules\Configurator\Domain\Models\Dependency;
+use Modules\Shared\Domain\Enums\SelectionCondition;
 use Spatie\LaravelData\DataCollection;
 
 trait BuildsConfiguratorSchema
@@ -113,7 +113,7 @@ trait BuildsConfiguratorSchema
     protected function schemaDependency(
         ConfigurationAttributeData $source,
         ConfigurationAttributeData $target,
-        DependencyCondition $condition,
+        SelectionCondition $condition,
         ?string $conditionValue,
         DependencyAction $action,
         int $position = 0,

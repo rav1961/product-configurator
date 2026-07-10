@@ -19,9 +19,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Catalog\Domain\Models\Product;
 use Modules\Configurator\Domain\Enums\DependencyAction;
-use Modules\Configurator\Domain\Enums\DependencyCondition;
 use Modules\Configurator\Domain\Models\Attribute;
 use Modules\Configurator\Domain\Models\Dependency;
+use Modules\Shared\Domain\Enums\SelectionCondition;
 
 final class DependenciesRelationManager extends RelationManager
 {
@@ -97,7 +97,7 @@ final class DependenciesRelationManager extends RelationManager
                     ->sortable(),
                 TextColumn::make('condition')
                     ->label(__('configurator.fields.condition'))
-                    ->formatStateUsing(fn (DependencyCondition $state): string => $state->label())
+                    ->formatStateUsing(fn (SelectionCondition $state): string => $state->label())
                     ->sortable(),
                 TextColumn::make('condition_value')
                     ->label(__('configurator.fields.condition_value'))
@@ -163,7 +163,7 @@ final class DependenciesRelationManager extends RelationManager
     {
         $options = [];
 
-        foreach (DependencyCondition::cases() as $case) {
+        foreach (SelectionCondition::cases() as $case) {
             $options[$case->value] = $case->label();
         }
 
@@ -190,6 +190,6 @@ final class DependenciesRelationManager extends RelationManager
             return false;
         }
 
-        return DependencyCondition::tryFrom($condition)?->requiredValue() ?? false;
+        return SelectionCondition::tryFrom($condition)?->requiredValue() ?? false;
     }
 }

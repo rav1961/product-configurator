@@ -10,11 +10,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Catalog\Domain\Models\Product;
 use Modules\Configurator\Domain\Enums\DependencyAction;
-use Modules\Configurator\Domain\Enums\DependencyCondition;
 use Modules\Configurator\Infrastructure\Observers\DependencyObserver;
 use Modules\Configurator\Infrastructure\Persistence\Factories\DependencyFactory;
 use Modules\Shared\Domain\Concerns\HasModuleFactory;
 use Modules\Shared\Domain\Concerns\HasPublicId;
+use Modules\Shared\Domain\Enums\SelectionCondition;
 
 /**
  * @property int $id
@@ -22,7 +22,7 @@ use Modules\Shared\Domain\Concerns\HasPublicId;
  * @property int $product_id
  * @property int $source_attribute_id
  * @property int $target_attribute_id
- * @property DependencyCondition $condition
+ * @property SelectionCondition $condition
  * @property string|null $condition_value
  * @property DependencyAction $action
  * @property int $position
@@ -56,7 +56,7 @@ final class Dependency extends Model
     protected function casts(): array
     {
         return [
-            'condition' => DependencyCondition::class,
+            'condition' => SelectionCondition::class,
             'action' => DependencyAction::class,
             'position' => 'integer',
         ];

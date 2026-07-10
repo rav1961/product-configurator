@@ -11,12 +11,12 @@ use Modules\Catalog\Domain\Enums\ProductStatus;
 use Modules\Catalog\Domain\Models\Product;
 use Modules\Configurator\Domain\Enums\AttributeType;
 use Modules\Configurator\Domain\Enums\DependencyAction;
-use Modules\Configurator\Domain\Enums\DependencyCondition;
 use Modules\Configurator\Domain\Models\Attribute;
 use Modules\Configurator\Domain\Models\AttributeValue;
 use Modules\Configurator\Domain\Models\Dependency;
 use Modules\Configurator\Domain\Models\Step;
 use Modules\Configurator\Tests\Concerns\BuildsConfiguratorFixtures;
+use Modules\Shared\Domain\Enums\SelectionCondition;
 use Modules\Users\Domain\Models\User;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
@@ -212,7 +212,7 @@ final class ConfiguratorApiTest extends TestCase
             'product_id' => $product->id,
             'source_attribute_id' => $color->id,
             'target_attribute_id' => $notes->id,
-            'condition' => DependencyCondition::Equals,
+            'condition' => SelectionCondition::Equals,
             'condition_value' => 'red',
             'action' => DependencyAction::Require,
         ]);
@@ -242,7 +242,7 @@ final class ConfiguratorApiTest extends TestCase
             'product_id' => $product->id,
             'source_attribute_id' => $color->id,
             'target_attribute_id' => $finish->id,
-            'condition' => DependencyCondition::Equals,
+            'condition' => SelectionCondition::Equals,
             'condition_value' => 'red',
             'action' => DependencyAction::Disable,
         ]);
@@ -286,7 +286,7 @@ final class ConfiguratorApiTest extends TestCase
             'product_id' => $product->id,
             'source_attribute_id' => $color->id,
             'target_attribute_id' => $finish->id,
-            'condition' => DependencyCondition::Equals,
+            'condition' => SelectionCondition::Equals,
             'condition_value' => 'red',
             'action' => DependencyAction::Hide,
         ]);

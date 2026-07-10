@@ -7,11 +7,11 @@ namespace Modules\Configurator\Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Catalog\Domain\Models\Product;
 use Modules\Configurator\Domain\Enums\DependencyAction;
-use Modules\Configurator\Domain\Enums\DependencyCondition;
 use Modules\Configurator\Domain\Exceptions\InvalidDependencyScopeException;
 use Modules\Configurator\Domain\Models\Attribute;
 use Modules\Configurator\Domain\Models\Dependency;
 use Modules\Configurator\Domain\Models\Step;
+use Modules\Shared\Domain\Enums\SelectionCondition;
 use Tests\TestCase;
 
 final class ProductDependencyRelationTest extends TestCase
@@ -28,7 +28,7 @@ final class ProductDependencyRelationTest extends TestCase
         $dependency = $product->dependencies()->create([
             'source_attribute_id' => $source->id,
             'target_attribute_id' => $target->id,
-            'condition' => DependencyCondition::Equals,
+            'condition' => SelectionCondition::Equals,
             'condition_value' => 'red',
             'action' => DependencyAction::Show,
             'position' => 0,
@@ -51,7 +51,7 @@ final class ProductDependencyRelationTest extends TestCase
         $product->dependencies()->create([
             'source_attribute_id' => $source->id,
             'target_attribute_id' => $target->id,
-            'condition' => DependencyCondition::IsSet,
+            'condition' => SelectionCondition::IsSet,
             'condition_value' => null,
             'action' => DependencyAction::Hide,
             'position' => 0,
@@ -70,7 +70,7 @@ final class ProductDependencyRelationTest extends TestCase
         $product->dependencies()->create([
             'source_attribute_id' => $source->id,
             'target_attribute_id' => $target->id,
-            'condition' => DependencyCondition::Equals,
+            'condition' => SelectionCondition::Equals,
             'condition_value' => null,
             'action' => DependencyAction::Require,
             'position' => 0,

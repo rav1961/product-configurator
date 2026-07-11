@@ -11,12 +11,12 @@ tool, not a web shop.
 
 ## Currently working on
 
-- **RulesEngine** — Porcja **R3** (API): `POST /api/products/{productId}/rules/evaluate`.
+- **RulesEngine** — Porcja **R4** (Filament admin): CRUD reguł / grup / warunków / akcji (`admin`, `manager`).
 
 ## Conventions in place
 
 - Translations: `resources/lang/pl/{domain}.php` (one file per Filament resource), used via `__()`.
-  Polish is the primary app language; `en` added later (Multilanguage). Applied to Users + Catalog + Configurator.
+  Polish is the primary app language; `en` added later (Multilanguage). Applied to Users + Catalog + Configurator + RulesEngine.
 - Repository contracts: `Domain/Contracts/{Entity}RepositoryInterface.php`; Eloquent implementations
   in `Infrastructure/Persistence/Repositories/Eloquent{Entity}Repository.php`.
 - Layer boundaries: Application (Actions) has no HTTP dependencies; Presentation maps to HTTP.
@@ -94,8 +94,8 @@ tool, not a web shop.
 - [x] **Porcja R0 — Shared selection kernel** (współdzielone z Configurator; patrz sekcja Configurator powyżej).
 - [x] **Porcja R1 — Domain + Persistence:** `Rule`, `RuleGroup`, `RuleCondition`, `RuleAction`; `MatchMode`, `RuleActionType`; repositories + `RuleGraphRepository`; validators; `Product.rules()`; PL `rules_engine.php`; 25 testów; `composer check` green (228 testów).
 - [x] **Porcja R2 — Evaluation engine:** `RuleEvaluator` + `EvaluateRulesAction` + DTO efektów (`modifiers`, `overrides`, `excludedOptions`, `messages`); PHPStan L6 green.
-- [~] **Porcja R3 — API:** `POST /api/products/{productId}/rules/evaluate`.
-- [ ] **Porcja R4 — Filament admin.**
+- [x] **Porcja R3 — API:** `POST /api/products/{productId}/rules/evaluate` (`auth:sanctum` + `verified`); reuse `ConfigurationSelectionRequest`.
+- [~] **Porcja R4 — Filament admin:** `RuleResource`, relation managery na produkcie i regule, `RuleManagementPolicy`.
 - [ ] **Porcja R5 — Demo seed + `docs/08-rule-engine.md`.**
 
 ### 6. Pricing

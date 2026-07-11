@@ -8,6 +8,7 @@ use Modules\Catalog\Presentation\Filament\Resources\ProductResource;
 use Modules\Configurator\Presentation\Filament\RelationManagers\AttributeCollectionsRelationManager;
 use Modules\Configurator\Presentation\Filament\RelationManagers\DependenciesRelationManager;
 use Modules\Configurator\Presentation\Filament\RelationManagers\StepsRelationManager;
+use Modules\RulesEngine\Presentation\Filament\RelationManagers\RulesRelationManager;
 use Modules\Shared\Presentation\Filament\ProductRelationRegistrar;
 use Tests\TestCase;
 
@@ -23,6 +24,7 @@ final class ProductRelationRegistrarTest extends TestCase
                 StepsRelationManager::class,
                 AttributeCollectionsRelationManager::class,
                 DependenciesRelationManager::class,
+                RulesRelationManager::class,
             ],
             $registrar->all(),
         );

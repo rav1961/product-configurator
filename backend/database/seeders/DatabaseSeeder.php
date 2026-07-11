@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Modules\Configurator\Infrastructure\Persistence\Seeders\DemoConfiguratorSeeder;
+use Modules\RulesEngine\Infrastructure\Persistence\Seeders\DemoRulesSeeder;
 use Modules\Users\Infrastructure\Persistence\Seeders\DemoUsersSeeder;
 use Modules\Users\Infrastructure\Persistence\Seeders\RoleSeeder;
 
@@ -18,6 +19,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             DemoUsersSeeder::class,
             DemoConfiguratorSeeder::class,
+            DemoRulesSeeder::class,
         ]);
     }
 }

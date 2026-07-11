@@ -11,7 +11,7 @@ tool, not a web shop.
 
 ## Currently working on
 
-- **RulesEngine** — Porcja **R4** (Filament admin): CRUD reguł / grup / warunków / akcji (`admin`, `manager`).
+- **RulesEngine** — Porcja **R5** (demo seed + `docs/08-rule-engine.md`).
 
 ## Conventions in place
 
@@ -95,8 +95,8 @@ tool, not a web shop.
 - [x] **Porcja R1 — Domain + Persistence:** `Rule`, `RuleGroup`, `RuleCondition`, `RuleAction`; `MatchMode`, `RuleActionType`; repositories + `RuleGraphRepository`; validators; `Product.rules()`; PL `rules_engine.php`; 25 testów; `composer check` green (228 testów).
 - [x] **Porcja R2 — Evaluation engine:** `RuleEvaluator` + `EvaluateRulesAction` + DTO efektów (`modifiers`, `overrides`, `excludedOptions`, `messages`); PHPStan L6 green.
 - [x] **Porcja R3 — API:** `POST /api/products/{productId}/rules/evaluate` (`auth:sanctum` + `verified`); reuse `ConfigurationSelectionRequest`.
-- [~] **Porcja R4 — Filament admin:** `RuleResource`, relation managery na produkcie i regule, `RuleManagementPolicy`.
-- [ ] **Porcja R5 — Demo seed + `docs/08-rule-engine.md`.**
+- [x] **Porcja R4 — Filament admin:** `RuleResource`, `RuleGroupResource`, relation managery, `RuleManagementPolicy`; PHPStan L6 green.
+- [~] **Porcja R5 — Demo seed + `docs/08-rule-engine.md`.**
 
 ### 6. Pricing
 - [ ] Engine: base price + modifiers + overrides.

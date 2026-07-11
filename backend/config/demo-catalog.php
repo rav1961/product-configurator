@@ -569,6 +569,78 @@ return [
                             ],
                         ],
                         'dependencies' => [],
+                        'rules' => [
+                            [
+                                'name' => 'Dopłata za blat szklany',
+                                'description' => 'Dopłata materiałowa i komunikat przy wyborze szkła hartowanego.',
+                                'groups_match_mode' => 'all',
+                                'position' => 0,
+                                'is_active' => true,
+                                'groups' => [
+                                    [
+                                        'conditions_match_mode' => 'all',
+                                        'position' => 0,
+                                        'conditions' => [
+                                            [
+                                                'source' => 'top_material',
+                                                'condition' => 'equals',
+                                                'condition_value' => 'glass',
+                                                'position' => 0,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                                'actions' => [
+                                    [
+                                        'type' => 'add_modifier',
+                                        'payload' => [
+                                            'amount' => '450.00',
+                                            'label' => 'Blat szklany hartowany',
+                                        ],
+                                        'position' => 0,
+                                    ],
+                                    [
+                                        'type' => 'add_message',
+                                        'payload' => [
+                                            'level' => 'warning',
+                                            'message' => 'Blat szklany wydłuża czas realizacji o ok. 2 tygodnie.',
+                                        ],
+                                        'position' => 1,
+                                    ],
+                                ],
+                            ],
+                            [
+                                'name' => 'Organizer kablowy',
+                                'description' => 'Dopłata za przelot kablowy.',
+                                'groups_match_mode' => 'any',
+                                'position' => 1,
+                                'is_active' => true,
+                                'groups' => [
+                                    [
+                                        'conditions_match_mode' => 'all',
+                                        'position' => 0,
+                                        'conditions' => [
+                                            [
+                                                'source' => 'cable_tray',
+                                                'condition' => 'is_set',
+                                                'condition_value' => null,
+                                                'position' => 0,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                                'actions' => [
+                                    [
+                                        'type' => 'add_modifier',
+                                        'payload' => [
+                                            'amount' => '89.00',
+                                            'label' => 'Przelot kablowy',
+                                        ],
+                                        'position' => 0,
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ],

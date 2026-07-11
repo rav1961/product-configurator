@@ -14,6 +14,8 @@ use Modules\Configurator\Domain\Concerns\InteractsWithConfiguratorEntities;
 use Modules\Configurator\Domain\Models\AttributeCollection;
 use Modules\Configurator\Domain\Models\Dependency;
 use Modules\Configurator\Domain\Models\Step;
+use Modules\RulesEngine\Domain\Concerns\InteractsWithRules;
+use Modules\RulesEngine\Domain\Models\Rule;
 use Modules\Shared\Domain\Concerns\HasConfiguredMedia;
 use Modules\Shared\Domain\Concerns\HasModuleFactory;
 use Modules\Shared\Domain\Concerns\HasPublicId;
@@ -37,8 +39,9 @@ use Spatie\MediaLibrary\HasMedia;
  * @property-read Collection<int, Step> $steps
  * @property-read Collection<int, AttributeCollection> $attributeCollections
  * @property-read Collection<int, Dependency> $dependencies
+ * @property-read Collection<int, Rule> $rules
  */
-final class Product extends Model implements HasMedia
+class Product extends Model implements HasMedia
 {
     use HasConfiguredMedia;
 
@@ -47,6 +50,7 @@ final class Product extends Model implements HasMedia
 
     use HasPublicId;
     use InteractsWithConfiguratorEntities;
+    use InteractsWithRules;
     use RegistersDefaultMediaCollection;
 
     protected $table = 'catalog_products';

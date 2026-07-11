@@ -11,7 +11,7 @@ tool, not a web shop.
 
 ## Currently working on
 
-- **Configurator** module — dokumentacja i dalsze usprawnienia; następny krok: Rule Engine.
+- **RulesEngine** — Porcja **R3** (API): `POST /api/products/{productId}/rules/evaluate`.
 
 ## Conventions in place
 
@@ -20,6 +20,10 @@ tool, not a web shop.
 - Repository contracts: `Domain/Contracts/{Entity}RepositoryInterface.php`; Eloquent implementations
   in `Infrastructure/Persistence/Repositories/Eloquent{Entity}Repository.php`.
 - Layer boundaries: Application (Actions) has no HTTP dependencies; Presentation maps to HTTP.
+- **Assistant workflow:** kod aplikacji (`backend/`, `frontend/`) — ręcznie przez developera; auto-edycja tylko `ai/` + `docs/` (patrz `ai/workflow-rules.md`).
+- **Selection conditions (Shared kernel):** `SelectionCondition` enum + `SelectionConditionMatcher`
+  in `Shared/Domain/`; used by Configurator (`Dependency`) and RulesEngine (`RuleCondition`).
+  Labels in `resources/lang/pl/shared.php`.
 - **API route middleware stacks:** `Modules\Shared\Presentation\Http\ApiRouteMiddleware` (`VERIFIED`, `SENSITIVE_THROTTLE`).
 - **Media (Shared kernel):** Spatie Media Library v11 + Filament plugin. Enums in
   `Shared/Domain/Enums/` (`MediaCollection`, `MediaConversion`, `MediaProfile`). Profile-specific
@@ -73,9 +77,10 @@ tool, not a web shop.
 - [x] Bridge to Configurator: `Product.is_configurable`, `GetConfigurableProductAction`, relacje kroków/zależności na produkcie.
 
 ### 4. Configurator
-- [x] Domain: `Step`, `Attribute`, `AttributeValue`, `AttributeCollection`, `Dependency`; enums `AttributeType`, `DependencyAction`, `DependencyCondition`; VO `ConfigurationSelection`.
+- [x] Domain: `Step`, `Attribute`, `AttributeValue`, `AttributeCollection`, `Dependency`; enums `AttributeType`, `DependencyAction`; conditions via Shared `SelectionCondition`; VO `ConfigurationSelection`.
 - [x] Persistence: migrations, factories, 6× repository contracts + Eloquent implementations, `ConfiguratorGraphRepository`, `DependencyObserver` + `DependencyValidator`.
-- [x] Domain services: `DependencyConditionMatcher`, `DependencyRuleEvaluator`, `ConfigurationValidator`.
+- [x] Domain services: Shared `SelectionConditionMatcher`, `DependencyRuleEvaluator`, `ConfigurationValidator`.
+- [x] **Porcja R0 — Shared selection kernel:** `SelectionCondition` + `SelectionConditionMatcher` in Shared; Configurator migrated off `DependencyCondition`; tests in `Shared/Tests/Unit`.
 - [x] Admin (Filament): nested resources (`StepResource`, `AttributeResource`, `AttributeCollectionResource`) + relation managers na produkcie/kroku; `ConfiguratorManagementPolicy` (admin/manager).
 - [x] Engine: schema z grafu produktu, ewaluacja zależności (2-fazowa semantyka `show`), walidacja selekcji.
 - [x] API for SPA: `schema`, `evaluate`, `validate` — `auth:sanctum` + `verified`; ULID w trasach i `selection`.
@@ -85,11 +90,13 @@ tool, not a web shop.
 - [ ] Saved configuration session (persistencja wyboru użytkownika) — przed Cart.
 - [ ] Pełny CRUD kroków/atrybutów poza relation managers (opcjonalne usprawnienia UX admina).
 
-### 5. Rule Engine
-- [ ] Domain: `Rule -> Group -> Conditions -> Actions`.
-- [ ] Evaluation engine (conditions matching, actions applying) integrated with Configurator.
-- [ ] Admin (Filament): CRUD for rules / groups / conditions / actions.
-- [ ] Tests: condition/action evaluation matrix.
+### 5. RulesEngine
+- [x] **Porcja R0 — Shared selection kernel** (współdzielone z Configurator; patrz sekcja Configurator powyżej).
+- [x] **Porcja R1 — Domain + Persistence:** `Rule`, `RuleGroup`, `RuleCondition`, `RuleAction`; `MatchMode`, `RuleActionType`; repositories + `RuleGraphRepository`; validators; `Product.rules()`; PL `rules_engine.php`; 25 testów; `composer check` green (228 testów).
+- [x] **Porcja R2 — Evaluation engine:** `RuleEvaluator` + `EvaluateRulesAction` + DTO efektów (`modifiers`, `overrides`, `excludedOptions`, `messages`); PHPStan L6 green.
+- [~] **Porcja R3 — API:** `POST /api/products/{productId}/rules/evaluate`.
+- [ ] **Porcja R4 — Filament admin.**
+- [ ] **Porcja R5 — Demo seed + `docs/08-rule-engine.md`.**
 
 ### 6. Pricing
 - [ ] Engine: base price + modifiers + overrides.

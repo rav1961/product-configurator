@@ -39,11 +39,11 @@ final class RuleEvaluationData extends Data
             ),
             'effects' => [
                 'modifiers' => array_map(
-                    static fn (RuleModifierEffectData $effect): array => $effect->toArray(),
+                    static fn (RuleModifierEffectData $effect): array => $effect->toResponseArray(),
                     $this->effects->modifiers,
                 ),
                 'overrides' => array_map(
-                    static fn (RuleOverrideEffectData $effect): array => $effect->toArray(),
+                    static fn (RuleOverrideEffectData $effect): array => $effect->toResponseArray(),
                     $this->effects->overrides,
                 ),
                 'excludedOptions' => array_map(

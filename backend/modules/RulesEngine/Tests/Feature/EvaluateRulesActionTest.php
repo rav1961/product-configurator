@@ -34,7 +34,7 @@ final class EvaluateRulesActionTest extends TestCase
         ]);
         RuleAction::factory()->for($rule)->create([
             'type' => RuleActionType::AddModifier,
-            'payload' => ['amount' => '199.99', 'label' => 'Glass'],
+            'payload' => ['amount' => 19999, 'operation' => 'add', 'label' => 'Glass'],
         ]);
         Rule::factory()->for($product)->inactive()->create();
 
@@ -45,7 +45,9 @@ final class EvaluateRulesActionTest extends TestCase
 
         $this->assertSame($product->public_id, $result->productId);
         $this->assertCount(1, $result->matchedRules);
-        $this->assertSame('199.99', $result->effects->modifiers[0]->amount);
+        $this->assertSame('199.99', $result->effects->modifiers[0]->toResponseArray()['amount']);
+        $this->assertSame(19999, $result->effects->modifiers[0]->amountMinor);
+        $this->assertSame('add', $result->effects->modifiers[0]->operation->value);
     }
 
     public function test_execute_returns_empty_when_no_rules_match(): void

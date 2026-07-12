@@ -27,6 +27,15 @@ Thin (invokable) controllers, DTOs, Actions, Events, Form Requests.
 - Public/external identifiers are ULIDs via the `HasPublicId` concern, exposed as `public_id`
   (mapped to `id` in DTOs). NEVER expose the numeric primary key in APIs.
 
+## Money
+
+- Shared VO: `Modules\Shared\Domain\ValueObjects\Money` (non-negative minor units, PLN).
+- Modifiers: `MoneyAdjustment` = `amount` (int, grosze) + `operation` (`add` | `subtract`). Never negative amounts.
+- Overrides: `amount` only (absolute positive price).
+- **Payload JSON key:** always `amount` (int). Legacy decimal string `amount` is parsed on read and normalized to int on save.
+- **Forms / Filament:** `Money::fromUserInput()` or `MoneyAmountInput` (Shared Presentation).
+- **API:** `toApiFields()` → `amountMinor` + `amount` (decimal display); modifiers also expose `operation`.
+
 ## Persistence Conventions
 
 - Repository contract: `Domain/Contracts/{Entity}RepositoryInterface.php` (always `Interface` suffix).

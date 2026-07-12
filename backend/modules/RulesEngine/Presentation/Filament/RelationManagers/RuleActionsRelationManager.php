@@ -24,6 +24,10 @@ use Modules\RulesEngine\Domain\Enums\RuleActionType;
 use Modules\RulesEngine\Domain\Models\Rule;
 use Modules\RulesEngine\Domain\Models\RuleAction;
 use Modules\RulesEngine\Presentation\Filament\Concerns\FilamentRulesContext;
+use Modules\Shared\Domain\Enums\MoneyOperation;
+use Modules\Shared\Domain\ValueObjects\Money;
+use Modules\Shared\Domain\ValueObjects\MoneyAdjustment;
+use Modules\Shared\Presentation\Filament\Forms\MoneyAmountInput;
 
 final class RuleActionsRelationManager extends RelationManager
 {
@@ -43,11 +47,16 @@ final class RuleActionsRelationManager extends RelationManager
                 ->required()
                 ->live()
                 ->native(false),
-            TextInput::make('payload_amount')
-                ->label(__('rules_engine.fields.payload_amount'))
-                ->maxLength(32)
+            MoneyAmountInput::make('payload_amount', __('rules_engine.fields.payload_amount'))
                 ->required(fn (Get $get): bool => self::requiresAmount($get('type')))
                 ->visible(fn (Get $get): bool => self::requiresAmount($get('type'))),
+            Select::make('payload_operation')
+                ->label(__('rules_engine.fields.payload_operation'))
+                ->options(self::moneyOperationOptions())
+                ->default(MoneyOperation::Add->value)
+                ->required(fn (Get $get): bool => $get('type') === RuleActionType::AddModifier->value)
+                ->visible(fn (Get $get): bool => $get('type') === RuleActionType::AddModifier->value)
+                ->native(false),
             TextInput::make('payload_label')
                 ->label(__('rules_engine.fields.payload_label'))
                 ->maxLength(255)
@@ -179,6 +188,20 @@ final class RuleActionsRelationManager extends RelationManager
     /**
      * @return array<string, string>
      */
+    private static function moneyOperationOptions(): array
+    {
+        $options = [];
+
+        foreach (MoneyOperation::cases() as $case) {
+            $options[$case->value] = $case->label();
+        }
+
+        return $options;
+    }
+
+    /**
+     * @return array<string, string>
+     */
     private static function messageLevelOptions(): array
     {
         return [
@@ -210,14 +233,18 @@ final class RuleActionsRelationManager extends RelationManager
 
         return match ($type) {
             RuleActionType::AddModifier => array_filter([
-                'amount' => (string) $data['payload_amount'],
+                ...(new MoneyAdjustment(
+                    MoneyAmountInput::parseOrFail('payload_amount', (string) $data['payload_amount']),
+                    MoneyOperation::from((string) ($data['payload_operation'] ?? MoneyOperation::Add->value)),
+                ))->toPayload(),
                 'label' => isset($data['payload_label']) && $data['payload_label'] !== ''
                     ? (string) $data['payload_label']
                     : null,
             ], static fn (mixed $value): bool => $value !== null),
-            RuleActionType::SetOverride => [
-                'amount' => (string) $data['payload_amount'],
-            ],
+            RuleActionType::SetOverride => MoneyAmountInput::parseOrFail(
+                'payload_amount',
+                (string) $data['payload_amount'],
+            )->toPayloadAmount(),
             RuleActionType::ExcludeOption => [
                 'attribute_id' => (string) $data['payload_attribute_id'],
                 'value' => (string) $data['payload_value'],
@@ -239,7 +266,8 @@ final class RuleActionsRelationManager extends RelationManager
         return [
             'type' => $record->type->value,
             'position' => $record->position,
-            'payload_amount' => $payload['amount'] ?? null,
+            'payload_amount' => self::formatAmountForForm($record),
+            'payload_operation' => $payload[MoneyAdjustment::OPERATION_KEY] ?? MoneyOperation::Add->value,
             'payload_label' => $payload['label'] ?? null,
             'payload_attribute_id' => $payload['attribute_id'] ?? null,
             'payload_value' => $payload['value'] ?? null,
@@ -248,19 +276,22 @@ final class RuleActionsRelationManager extends RelationManager
         ];
     }
 
+    private static function formatAmountForForm(RuleAction $record): ?string
+    {
+        return match ($record->type) {
+            RuleActionType::AddModifier => MoneyAdjustment::tryFromPayload($record->payload)?->money->toDecimal(),
+            RuleActionType::SetOverride => Money::tryFromPayloadAmount($record->payload)?->toDecimal(),
+            default => null,
+        };
+    }
+
     private static function formatPayloadSummary(RuleAction $record): string
     {
         $payload = $record->payload;
 
         return match ($record->type) {
-            RuleActionType::AddModifier => trim(sprintf(
-                '%s%s',
-                $payload['amount'] ?? '—',
-                isset($payload['label']) && $payload['label'] !== ''
-                    ? ' · '.$payload['label']
-                    : '',
-            )),
-            RuleActionType::SetOverride => (string) ($payload['amount'] ?? '—'),
+            RuleActionType::AddModifier => self::formatAdjustmentSummary($payload),
+            RuleActionType::SetOverride => Money::tryFromPayloadAmount($payload)?->toDecimal() ?? '—',
             RuleActionType::ExcludeOption => sprintf(
                 '%s = %s',
                 $payload['attribute_id'] ?? '—',
@@ -272,5 +303,28 @@ final class RuleActionsRelationManager extends RelationManager
                 $payload['message'] ?? '—',
             ),
         };
+    }
+
+    /**
+     * @param  array<string, mixed>  $payload
+     */
+    private static function formatAdjustmentSummary(array $payload): string
+    {
+        $adjustment = MoneyAdjustment::tryFromPayload($payload);
+
+        if ($adjustment === null) {
+            return '—';
+        }
+
+        $label = isset($payload['label']) && $payload['label'] !== ''
+            ? ' · '.$payload['label']
+            : '';
+
+        return sprintf(
+            '%s %s%s',
+            $adjustment->displayPrefix(),
+            $adjustment->money->toDecimal(),
+            $label,
+        );
     }
 }

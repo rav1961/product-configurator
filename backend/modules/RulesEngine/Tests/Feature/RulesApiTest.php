@@ -90,7 +90,7 @@ final class RulesApiTest extends TestCase
         ]);
         RuleAction::factory()->for($rule)->create([
             'type' => RuleActionType::AddModifier,
-            'payload' => ['amount' => '199.99', 'label' => 'Szkło'],
+            'payload' => ['amount' => 19999, 'operation' => 'add', 'label' => 'Szkło'],
             'position' => 0,
         ]);
 
@@ -107,7 +107,7 @@ final class RulesApiTest extends TestCase
                     ],
                     'effects' => [
                         'modifiers' => [
-                            ['ruleId', 'amount', 'label', 'position'],
+                            ['ruleId', 'amountMinor', 'amount', 'operation', 'label', 'position'],
                         ],
                         'overrides',
                         'excludedOptions',
@@ -117,7 +117,9 @@ final class RulesApiTest extends TestCase
             ])
             ->assertJsonPath('data.productId', $product->public_id)
             ->assertJsonPath('data.matchedRules.0.name', 'Szkło premium')
+            ->assertJsonPath('data.effects.modifiers.0.amountMinor', 19999)
             ->assertJsonPath('data.effects.modifiers.0.amount', '199.99')
+            ->assertJsonPath('data.effects.modifiers.0.operation', 'add')
             ->assertJsonPath('data.effects.modifiers.0.label', 'Szkło');
     }
 
@@ -168,7 +170,7 @@ final class RulesApiTest extends TestCase
         ]);
         RuleAction::factory()->for($rule)->create([
             'type' => RuleActionType::AddModifier,
-            'payload' => ['amount' => '50.00'],
+            'payload' => ['amount' => 5000, 'operation' => 'add'],
         ]);
 
         $this->actingAs($this->user)

@@ -124,7 +124,8 @@ return [
                                     [
                                         'type' => 'add_modifier',
                                         'payload' => [
-                                            'amount' => '450.00',
+                                            'amount' => 45000,
+                                            'operation' => 'add',
                                             'label' => 'Blat szklany hartowany',
                                         ],
                                         'position' => 0,
@@ -163,7 +164,8 @@ return [
                                     [
                                         'type' => 'add_modifier',
                                         'payload' => [
-                                            'amount' => '89.00',
+                                            'amount' => 8900,
+                                            'operation' => 'add',
                                             'label' => 'Przelot kablowy',
                                         ],
                                         'position' => 0,
@@ -666,7 +668,8 @@ return [
                                     [
                                         'type' => 'add_modifier',
                                         'payload' => [
-                                            'amount' => '120.00',
+                                            'amount' => 12000,
+                                            'operation' => 'add',
                                             'label' => 'Dodatkowa szuflada',
                                         ],
                                         'position' => 0,
@@ -697,7 +700,8 @@ return [
                                     [
                                         'type' => 'add_modifier',
                                         'payload' => [
-                                            'amount' => '199.00',
+                                            'amount' => 19900,
+                                            'operation' => 'add',
                                             'label' => 'Domykanie miękkie',
                                         ],
                                         'position' => 0,

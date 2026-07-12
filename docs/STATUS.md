@@ -11,7 +11,7 @@ tool, not a web shop.
 
 ## Currently working on
 
-- **Pricing** — Porcja **P0** (domain model + integracja z `effects` RulesEngine).
+- **Pricing** — Porcja **P0** (moduł + `ProductPrice` + `PricingCalculator`), po **M0 + RE-Money** ✅.
 
 ## Conventions in place
 
@@ -24,6 +24,7 @@ tool, not a web shop.
 - **Selection conditions (Shared kernel):** `SelectionCondition` enum + `SelectionConditionMatcher`
   in `Shared/Domain/`; used by Configurator (`Dependency`) and RulesEngine (`RuleCondition`).
   Labels in `resources/lang/pl/shared.php`.
+- **Money (Shared kernel):** `Money` + `MoneyAdjustment` + `MoneyOperation` — payload `amount` (int, grosze); modyfikatory z `operation` (`add`/`subtract`); API `amountMinor` + `amount` (display).
 - **API route middleware stacks:** `Modules\Shared\Presentation\Http\ApiRouteMiddleware` (`VERIFIED`, `SENSITIVE_THROTTLE`).
 - **Media (Shared kernel):** Spatie Media Library v11 + Filament plugin. Enums in
   `Shared/Domain/Enums/` (`MediaCollection`, `MediaConversion`, `MediaProfile`). Profile-specific

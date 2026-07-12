@@ -15,11 +15,15 @@ use Modules\RulesEngine\Application\DTO\RuleModifierEffectData;
 use Modules\RulesEngine\Application\DTO\RuleOverrideEffectData;
 use Modules\RulesEngine\Domain\Enums\MatchMode;
 use Modules\RulesEngine\Domain\Enums\RuleActionType;
+use Modules\RulesEngine\Domain\Exceptions\InvalidRuleScopeException;
 use Modules\RulesEngine\Domain\Models\Rule;
 use Modules\RulesEngine\Domain\Models\RuleAction;
 use Modules\RulesEngine\Domain\Models\RuleCondition;
 use Modules\RulesEngine\Domain\Models\RuleGroup;
+use Modules\Shared\Domain\Exceptions\InvalidMoneyException;
 use Modules\Shared\Domain\Services\SelectionConditionMatcher;
+use Modules\Shared\Domain\ValueObjects\Money;
+use Modules\Shared\Domain\ValueObjects\MoneyAdjustment;
 
 final readonly class RuleEvaluator
 {
@@ -109,17 +113,8 @@ final readonly class RuleEvaluator
         $payload = $action->payload;
 
         match ($action->type) {
-            RuleActionType::AddModifier => $effects->modifiers[] = new RuleModifierEffectData(
-                ruleId: $rulePublicId,
-                amount: $payload['amount'],
-                label: $payload['label'] ?? null,
-                position: $action->position,
-            ),
-            RuleActionType::SetOverride => $effects->overrides[] = new RuleOverrideEffectData(
-                ruleId: $rulePublicId,
-                amount: $payload['amount'],
-                position: $action->position,
-            ),
+            RuleActionType::AddModifier => $effects->modifiers[] = $this->modifierEffect($rulePublicId, $payload, $action->position),
+            RuleActionType::SetOverride => $effects->overrides[] = $this->overrideEffect($rulePublicId, $payload, $action->position),
             RuleActionType::ExcludeOption => $effects->excludedOptions[] = new RuleExcludedOptionEffectData(
                 ruleId: $rulePublicId,
                 attributeId: $payload['attribute_id'],
@@ -133,5 +128,59 @@ final readonly class RuleEvaluator
                 position: $action->position,
             ),
         };
+    }
+
+    /**
+     * @param  array<string, mixed>  $payload
+     */
+    private function modifierEffect(string $rulePublicId, array $payload, int $position): RuleModifierEffectData
+    {
+        $adjustment = $this->parseAdjustment($payload);
+
+        return new RuleModifierEffectData(
+            ruleId: $rulePublicId,
+            amountMinor: $adjustment->money->amountMinor,
+            operation: $adjustment->operation,
+            label: $payload['label'] ?? null,
+            position: $position,
+        );
+    }
+
+    /**
+     * @param  array<string, mixed>  $payload
+     */
+    private function overrideEffect(string $rulePublicId, array $payload, int $position): RuleOverrideEffectData
+    {
+        $money = $this->parseAmount($payload);
+
+        return new RuleOverrideEffectData(
+            ruleId: $rulePublicId,
+            amountMinor: $money->amountMinor,
+            position: $position,
+        );
+    }
+
+    /**
+     * @param  array<string, mixed>  $payload
+     */
+    private function parseAmount(array $payload): Money
+    {
+        try {
+            return Money::fromPayloadAmount($payload);
+        } catch (InvalidMoneyException $e) {
+            throw InvalidRuleScopeException::invalidActionPayload($e->getMessage());
+        }
+    }
+
+    /**
+     * @param  array<string, mixed>  $payload
+     */
+    private function parseAdjustment(array $payload): MoneyAdjustment
+    {
+        try {
+            return MoneyAdjustment::fromPayload($payload);
+        } catch (InvalidMoneyException $e) {
+            throw InvalidRuleScopeException::invalidActionPayload($e->getMessage());
+        }
     }
 }

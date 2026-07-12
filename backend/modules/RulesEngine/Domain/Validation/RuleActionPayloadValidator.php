@@ -6,6 +6,9 @@ namespace Modules\RulesEngine\Domain\Validation;
 
 use Modules\RulesEngine\Domain\Enums\RuleActionType;
 use Modules\RulesEngine\Domain\Exceptions\InvalidRuleScopeException;
+use Modules\Shared\Domain\Exceptions\InvalidMoneyException;
+use Modules\Shared\Domain\ValueObjects\Money;
+use Modules\Shared\Domain\ValueObjects\MoneyAdjustment;
 
 final readonly class RuleActionPayloadValidator
 {
@@ -27,7 +30,8 @@ final readonly class RuleActionPayloadValidator
      */
     private function validateAddModifier(array $payload): void
     {
-        $this->requireNumericAmount($payload, 'amount');
+        $this->parseMoneyAdjustment($payload);
+
         if (array_key_exists('label', $payload) && ! is_string($payload['label'])) {
             throw InvalidRuleScopeException::invalidActionPayload('label must be a string.');
         }
@@ -38,7 +42,7 @@ final readonly class RuleActionPayloadValidator
      */
     private function validateSetOverride(array $payload): void
     {
-        $this->requireNumericAmount($payload, 'amount');
+        $this->parseMoneyAmount($payload);
     }
 
     /**
@@ -73,10 +77,24 @@ final readonly class RuleActionPayloadValidator
     /**
      * @param  array<string, mixed>  $payload
      */
-    private function requireNumericAmount(array $payload, string $key): void
+    private function parseMoneyAmount(array $payload): void
     {
-        if (! isset($payload[$key]) || ! is_string($payload[$key]) || ! is_numeric($payload[$key])) {
-            throw InvalidRuleScopeException::invalidActionPayload($key.' must be a numeric string.');
+        try {
+            Money::fromPayloadAmount($payload);
+        } catch (InvalidMoneyException $e) {
+            throw InvalidRuleScopeException::invalidActionPayload($e->getMessage());
+        }
+    }
+
+    /**
+     * @param  array<string, mixed>  $payload
+     */
+    private function parseMoneyAdjustment(array $payload): void
+    {
+        try {
+            MoneyAdjustment::fromPayload($payload);
+        } catch (InvalidMoneyException $e) {
+            throw InvalidRuleScopeException::invalidActionPayload($e->getMessage());
         }
     }
 }

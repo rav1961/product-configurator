@@ -38,8 +38,8 @@ Prefiks tabel: `rules_engine_*`. Warunki używają `SelectionCondition` z Shared
 
 | Typ | Payload | Efekt (dla SPA / Pricing) |
 |-----|---------|---------------------------|
-| `add_modifier` | `{ "amount": "199.99", "label": "..."? }` | Dopłata do ceny bazowej |
-| `set_override` | `{ "amount": "2499.00" }` | Nadpisanie ceny końcowej |
+| `add_modifier` | `{ "amount": 45000, "operation": "add"\|"subtract", "label": "..."? }` | Modyfikator ceny (grosze, zawsze dodatni; znak przez `operation`) |
+| `set_override` | `{ "amount": 249900 }` | Nadpisanie ceny końcowej (grosze) |
 | `exclude_option` | `{ "attribute_id": "<ULID>", "value": "glass" }` | Wykluczenie opcji (SPA filtruje) |
 | `add_message` | `{ "level": "info"\|"warning"\|"error", "message": "..." }` | Komunikat dla użytkownika |
 
@@ -77,7 +77,7 @@ Response **200**:
     ],
     "effects": {
       "modifiers": [
-        { "ruleId": "01K...", "amount": "450.00", "label": "Blat szklany", "position": 0 }
+        { "ruleId": "01K...", "amountMinor": 45000, "amount": "450.00", "operation": "add", "label": "Blat szklany", "position": 0 }
       ],
       "overrides": [],
       "excludedOptions": [],

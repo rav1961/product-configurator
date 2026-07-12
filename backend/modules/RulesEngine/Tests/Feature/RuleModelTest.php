@@ -74,10 +74,10 @@ final class RuleModelTest extends TestCase
     {
         $action = RuleAction::factory()->create([
             'type' => RuleActionType::SetOverride,
-            'payload' => ['amount' => '1000.00'],
+            'payload' => ['amount' => 100000],
         ]);
 
         $this->assertSame(RuleActionType::SetOverride, $action->type);
-        $this->assertSame('1000.00', $action->payload['amount']);
+        $this->assertSame(100000, $action->payload['amount']);
     }
 }

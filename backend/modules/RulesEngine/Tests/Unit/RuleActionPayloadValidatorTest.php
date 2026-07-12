@@ -22,8 +22,19 @@ final class RuleActionPayloadValidatorTest extends TestCase
     public function test_accepts_valid_add_modifier_payload(): void
     {
         $this->validator->validate(RuleActionType::AddModifier, [
-            'amount' => '199.99',
+            'amount' => 19999,
+            'operation' => 'add',
             'label' => 'Glass',
+        ]);
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function test_accepts_legacy_decimal_amount_on_add_modifier(): void
+    {
+        $this->validator->validate(RuleActionType::AddModifier, [
+            'amount' => '199.99',
+            'operation' => 'subtract',
         ]);
 
         $this->addToAssertionCount(1);
@@ -41,7 +52,7 @@ final class RuleActionPayloadValidatorTest extends TestCase
     public function test_accepts_valid_set_override_payload(): void
     {
         $this->validator->validate(RuleActionType::SetOverride, [
-            'amount' => '2499.00',
+            'amount' => 249900,
         ]);
         $this->addToAssertionCount(1);
     }

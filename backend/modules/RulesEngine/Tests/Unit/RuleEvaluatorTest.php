@@ -48,7 +48,7 @@ final class RuleEvaluatorTest extends TestCase
             $product,
             groups: [$group],
             actions: [
-                $this->modifierAction($rule, '150.00', 'Glass'),
+                $this->modifierAction($rule, 15000, label: 'Glass'),
             ]);
 
         $result = $this->evaluator->evaluate(
@@ -60,8 +60,9 @@ final class RuleEvaluatorTest extends TestCase
         $this->assertCount(1, $result->matchedRules);
         $this->assertSame($rule->public_id, $result->matchedRules[0]->id);
         $this->assertCount(1, $result->effects->modifiers);
-        $this->assertSame('150.00', $result->effects->modifiers[0]->amount);
+        $this->assertSame(15000, $result->effects->modifiers[0]->amountMinor);
         $this->assertSame('Glass', $result->effects->modifiers[0]->label);
+        $this->assertSame('add', $result->effects->modifiers[0]->operation->value);
     }
 
     public function test_rule_does_not_match_when_condition_fails(): void
@@ -192,7 +193,7 @@ final class RuleEvaluatorTest extends TestCase
         $ruleA = $this->ruleGraph(
             $product,
             groups: [$this->ruleGroup(Rule::factory()->for($product)->make(), $color, SelectionCondition::Equals, 'red')],
-            actions: [$this->modifierAction(Rule::factory()->for($product)->make(), '50.00')],
+            actions: [$this->modifierAction(Rule::factory()->for($product)->make(), 5000)],
             position: 0,
         );
         $ruleB = $this->ruleGraph(
@@ -241,10 +242,10 @@ final class RuleEvaluatorTest extends TestCase
 
         $group = $this->ruleGroup($rule, $color, SelectionCondition::IsSet, null);
         $rule = $this->ruleGraph($product, groups: [$group], actions: [
-            $this->modifierAction($rule, '10.00'),
+            $this->modifierAction($rule, 1000),
             RuleAction::factory()->for($rule)->make([
                 'type' => RuleActionType::SetOverride,
-                'payload' => ['amount' => '999.00'],
+                'payload' => ['amount' => 99900],
                 'position' => 1,
             ]),
             RuleAction::factory()->for($rule)->make([
@@ -267,6 +268,7 @@ final class RuleEvaluatorTest extends TestCase
 
         $this->assertCount(1, $result->effects->modifiers);
         $this->assertCount(1, $result->effects->overrides);
+        $this->assertSame(99900, $result->effects->overrides[0]->amountMinor);
         $this->assertCount(1, $result->effects->excludedOptions);
         $this->assertCount(1, $result->effects->messages);
         $this->assertSame($color->public_id, $result->effects->excludedOptions[0]->attributeId);

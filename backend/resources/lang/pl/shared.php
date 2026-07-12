@@ -10,4 +10,13 @@ return [
         'is_empty' => 'Jest puste',
         'is_not_set' => 'Nie jest ustawione',
     ],
+    'money' => [
+        'field_label' => 'Kwota',
+        'input_hint' => 'Podaj kwotę dodatnią, np. 450,00',
+        'invalid_input' => 'Nieprawidłowy format kwoty.',
+        'operation' => [
+            'add' => 'Dodaj (+)',
+            'subtract' => 'Odejmij (−)',
+        ],
+    ],
 ];

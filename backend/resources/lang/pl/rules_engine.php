@@ -32,6 +32,7 @@ return [
         'condition_value' => 'Wartość warunku',
         'type' => 'Typ akcji',
         'payload_amount' => 'Kwota',
+        'payload_operation' => 'Operacja',
         'payload_label' => 'Etykieta',
         'payload_attribute' => 'Atrybut',
         'payload_value' => 'Wartość opcji',

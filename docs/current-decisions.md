@@ -97,7 +97,7 @@
 
 ## Pricing Engine
 
-Base Price + Modifiers + Overrides
+Base Price + Modifiers + Overrides. Wszystkie kwoty wewnętrznie jako **grosze** (`int`, klucz payload `amount`) przez Shared `Money` VO. Modyfikatory: `MoneyAdjustment` z `operation` (`add` | `subtract`) — kwoty nigdy ujemne. API zwraca `amountMinor` + `amount` (decimal string) + `operation` (modifiers).
 
 ## Configurator
 

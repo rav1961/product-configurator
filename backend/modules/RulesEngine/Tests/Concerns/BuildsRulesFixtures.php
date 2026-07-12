@@ -14,6 +14,7 @@ use Modules\RulesEngine\Domain\Models\Rule;
 use Modules\RulesEngine\Domain\Models\RuleAction;
 use Modules\RulesEngine\Domain\Models\RuleCondition;
 use Modules\RulesEngine\Domain\Models\RuleGroup;
+use Modules\Shared\Domain\Enums\MoneyOperation;
 use Modules\Shared\Domain\Enums\SelectionCondition;
 
 trait BuildsRulesFixtures
@@ -99,7 +100,8 @@ trait BuildsRulesFixtures
 
     protected function modifierAction(
         Rule $rule,
-        string $amount = '99.99',
+        int $amount = 9999,
+        MoneyOperation $operation = MoneyOperation::Add,
         ?string $label = 'Dopłata',
         int $position = 0,
     ): RuleAction {
@@ -107,6 +109,7 @@ trait BuildsRulesFixtures
             'type' => RuleActionType::AddModifier,
             'payload' => [
                 'amount' => $amount,
+                'operation' => $operation->value,
                 'label' => $label,
             ],
             'position' => $position,

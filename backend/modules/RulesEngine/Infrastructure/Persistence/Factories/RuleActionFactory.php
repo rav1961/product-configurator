@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Modules\RulesEngine\Domain\Enums\RuleActionType;
 use Modules\RulesEngine\Domain\Models\Rule;
 use Modules\RulesEngine\Domain\Models\RuleAction;
+use Modules\Shared\Domain\Enums\MoneyOperation;
 
 /**
  * @extends Factory<RuleAction>
@@ -27,7 +28,8 @@ final class RuleActionFactory extends Factory
             'rule_id' => Rule::factory(),
             'type' => RuleActionType::AddModifier,
             'payload' => [
-                'amount' => '99.99',
+                'amount' => 9999,
+                'operation' => MoneyOperation::Add->value,
                 'label' => 'Surcharge',
             ],
             'position' => fake()->numberBetween(0, 100),
@@ -39,7 +41,7 @@ final class RuleActionFactory extends Factory
         return $this->state([
             'type' => RuleActionType::SetOverride,
             'payload' => [
-                'amount' => '2499.00',
+                'amount' => 249900,
             ],
         ]);
     }

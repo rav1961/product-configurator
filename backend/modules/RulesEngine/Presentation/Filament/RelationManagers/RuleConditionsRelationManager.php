@@ -28,14 +28,14 @@ final class RuleConditionsRelationManager extends RelationManager
 
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
-        return __('rules_engine.navidation.conditions');
+        return __('rules_engine.navigation.conditions');
     }
 
     public function form(Schema $schema): Schema
     {
         return $schema->components([
             Select::make('source_attribute_id')
-                ->label(__('rules_engine.fields.sourc_attribute'))
+                ->label(__('rules_engine.fields.source_attribute'))
                 ->options(fn (): array => $this->productAttributeOptions())
                 ->searchable()
                 ->required()
@@ -71,7 +71,7 @@ final class RuleConditionsRelationManager extends RelationManager
                     ->sortable(),
                 TextColumn::make('condition')
                     ->label(__('rules_engine.fields.condition'))
-                    ->formatStateUsing(fn (SelectionCondition $state): string => $state->label())
+                    ->getStateUsing(fn (RuleCondition $record): string => $record->condition->label())
                     ->sortable(),
                 TextColumn::make('condition_value')
                     ->label(__('rules_engine.fields.condition_value'))

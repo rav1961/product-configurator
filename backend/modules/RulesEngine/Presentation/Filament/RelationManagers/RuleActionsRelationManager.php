@@ -90,11 +90,12 @@ final class RuleActionsRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('type')
                     ->label(__('rules_engine.fields.type'))
-                    ->formatStateUsing(fn (RuleActionType $state): string => $state->label())
+                    ->getStateUsing(fn (RuleAction $record): string => $record->type->label())
                     ->sortable(),
-                TextColumn::make('payload')
-                    ->label('Payload')
-                    ->formatStateUsing(fn (array $state): string => json_encode($state, JSON_UNESCAPED_UNICODE) ?: '')
+                TextColumn::make('payload_summary')
+                    ->label(__('rules_engine.fields.payload'))
+                    ->getStateUsing(fn (RuleAction $record): string => self::formatPayloadSummary($record))
+                    ->wrap()
                     ->toggleable(),
                 TextColumn::make('position')
                     ->label(__('rules_engine.fields.position'))
@@ -245,5 +246,31 @@ final class RuleActionsRelationManager extends RelationManager
             'payload_level' => $payload['level'] ?? null,
             'payload_message' => $payload['message'] ?? null,
         ];
+    }
+
+    private static function formatPayloadSummary(RuleAction $record): string
+    {
+        $payload = $record->payload;
+
+        return match ($record->type) {
+            RuleActionType::AddModifier => trim(sprintf(
+                '%s%s',
+                $payload['amount'] ?? '—',
+                isset($payload['label']) && $payload['label'] !== ''
+                    ? ' · '.$payload['label']
+                    : '',
+            )),
+            RuleActionType::SetOverride => (string) ($payload['amount'] ?? '—'),
+            RuleActionType::ExcludeOption => sprintf(
+                '%s = %s',
+                $payload['attribute_id'] ?? '—',
+                $payload['value'] ?? '—',
+            ),
+            RuleActionType::AddMessage => sprintf(
+                '[%s] %s',
+                $payload['level'] ?? '—',
+                $payload['message'] ?? '—',
+            ),
+        };
     }
 }

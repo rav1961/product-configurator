@@ -25,7 +25,7 @@ final class FilamentRulesContext
             }
 
             if ($owner instanceof RuleGroup) {
-                return (int) $owner->rule()->value('product_id');
+                return (int) $owner->loadMissing('rule')->rule->product_id;
             }
         }
 
@@ -71,5 +71,16 @@ final class FilamentRulesContext
         }
 
         throw new LogicException('Cannot resolve rule ID from Filament rules context.');
+    }
+
+    /**
+     * @return array{product: int, rule: int}
+     */
+    public static function ruleRouteParameters(object $livewire): array
+    {
+        return [
+            'product' => self::productId($livewire),
+            'rule' => self::ruleId($livewire),
+        ];
     }
 }

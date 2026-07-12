@@ -36,23 +36,11 @@ final class RulesEngineServiceProvider extends ModuleServiceProvider
 
     public function register(): void
     {
-        $this->app->singleton(ProductRelationRegistrar::class);
-
         $this->app->bind(RuleRepositoryInterface::class, EloquentRuleRepository::class);
         $this->app->bind(RuleGroupRepositoryInterface::class, EloquentRuleGroupRepository::class);
         $this->app->bind(RuleConditionRepositoryInterface::class, EloquentRuleConditionRepository::class);
         $this->app->bind(RuleActionRepositoryInterface::class, EloquentRuleActionRepository::class);
         $this->app->bind(RuleGraphRepositoryInterface::class, EloquentRuleGraphRepository::class);
-    }
-
-    public function boot(): void
-    {
-        parent::boot();
-
-        Gate::policy(Rule::class, RuleManagementPolicy::class);
-        Gate::policy(RuleGroup::class, RuleManagementPolicy::class);
-        Gate::policy(RuleCondition::class, RuleManagementPolicy::class);
-        Gate::policy(RuleAction::class, RuleManagementPolicy::class);
 
         Panel::configureUsing(static function (Panel $panel) {
             if ($panel->getId() !== 'admin') {
@@ -64,6 +52,16 @@ final class RulesEngineServiceProvider extends ModuleServiceProvider
                 RuleGroupResource::class,
             ]);
         });
+    }
+
+    public function boot(): void
+    {
+        parent::boot();
+
+        Gate::policy(Rule::class, RuleManagementPolicy::class);
+        Gate::policy(RuleGroup::class, RuleManagementPolicy::class);
+        Gate::policy(RuleCondition::class, RuleManagementPolicy::class);
+        Gate::policy(RuleAction::class, RuleManagementPolicy::class);
 
         $this->app->make(ProductRelationRegistrar::class)
             ->register(RulesRelationManager::class);

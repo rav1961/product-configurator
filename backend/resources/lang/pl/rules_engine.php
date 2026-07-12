@@ -38,6 +38,7 @@ return [
         'payload_level' => 'Poziom',
         'payload_message' => 'Komunikat',
         'actions' => 'Akcje',
+        'payload' => 'Szczegóły',
     ],
     'actions' => [
         'edit_rule' => 'Edytuj regułę',

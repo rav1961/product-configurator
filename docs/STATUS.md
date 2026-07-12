@@ -11,7 +11,7 @@ tool, not a web shop.
 
 ## Currently working on
 
-- **RulesEngine** — Porcja **R5** (demo seed + `docs/08-rule-engine.md`).
+- **Pricing** — Porcja **P0** (domain model + integracja z `effects` RulesEngine).
 
 ## Conventions in place
 
@@ -96,7 +96,8 @@ tool, not a web shop.
 - [x] **Porcja R2 — Evaluation engine:** `RuleEvaluator` + `EvaluateRulesAction` + DTO efektów (`modifiers`, `overrides`, `excludedOptions`, `messages`); PHPStan L6 green.
 - [x] **Porcja R3 — API:** `POST /api/products/{productId}/rules/evaluate` (`auth:sanctum` + `verified`); reuse `ConfigurationSelectionRequest`.
 - [x] **Porcja R4 — Filament admin:** `RuleResource`, `RuleGroupResource`, relation managery, `RuleManagementPolicy`; PHPStan L6 green.
-- [~] **Porcja R5 — Demo seed + `docs/08-rule-engine.md`.**
+- [x] **Porcja R5 — Demo seed + `docs/08-rule-engine.md`:** `DemoRulesSeeder`, reguły w `demo-catalog.php` (Biurko Nova Pro + Komoda Nordic); poprawki Filament (nested URL params, kolumny tabel `getStateUsing`).
+- [x] Module complete (domain, API, admin, demo data, 252 testów w `composer check`).
 
 ### 6. Pricing
 - [ ] Engine: base price + modifiers + overrides.

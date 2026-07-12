@@ -99,6 +99,78 @@ return [
                                 'position' => 0,
                             ],
                         ],
+                        'rules' => [
+                            [
+                                'name' => 'Dopłata za blat szklany',
+                                'description' => 'Dopłata materiałowa i komunikat przy wyborze szkła hartowanego.',
+                                'groups_match_mode' => 'all',
+                                'position' => 0,
+                                'is_active' => true,
+                                'groups' => [
+                                    [
+                                        'conditions_match_mode' => 'all',
+                                        'position' => 0,
+                                        'conditions' => [
+                                            [
+                                                'source' => 'top_material',
+                                                'condition' => 'equals',
+                                                'condition_value' => 'glass',
+                                                'position' => 0,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                                'actions' => [
+                                    [
+                                        'type' => 'add_modifier',
+                                        'payload' => [
+                                            'amount' => '450.00',
+                                            'label' => 'Blat szklany hartowany',
+                                        ],
+                                        'position' => 0,
+                                    ],
+                                    [
+                                        'type' => 'add_message',
+                                        'payload' => [
+                                            'level' => 'warning',
+                                            'message' => 'Blat szklany wydłuża czas realizacji o ok. 2 tygodnie.',
+                                        ],
+                                        'position' => 1,
+                                    ],
+                                ],
+                            ],
+                            [
+                                'name' => 'Organizer kablowy',
+                                'description' => 'Dopłata za przelot kablowy.',
+                                'groups_match_mode' => 'any',
+                                'position' => 1,
+                                'is_active' => true,
+                                'groups' => [
+                                    [
+                                        'conditions_match_mode' => 'all',
+                                        'position' => 0,
+                                        'conditions' => [
+                                            [
+                                                'source' => 'cable_tray',
+                                                'condition' => 'is_set',
+                                                'condition_value' => null,
+                                                'position' => 0,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                                'actions' => [
+                                    [
+                                        'type' => 'add_modifier',
+                                        'payload' => [
+                                            'amount' => '89.00',
+                                            'label' => 'Przelot kablowy',
+                                        ],
+                                        'position' => 0,
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                 ],
                 [
@@ -571,8 +643,8 @@ return [
                         'dependencies' => [],
                         'rules' => [
                             [
-                                'name' => 'Dopłata za blat szklany',
-                                'description' => 'Dopłata materiałowa i komunikat przy wyborze szkła hartowanego.',
+                                'name' => 'Dopłata za 4 szuflady',
+                                'description' => 'Większa komoda — dopłata za dodatkową szufladę.',
                                 'groups_match_mode' => 'all',
                                 'position' => 0,
                                 'is_active' => true,
@@ -582,9 +654,9 @@ return [
                                         'position' => 0,
                                         'conditions' => [
                                             [
-                                                'source' => 'top_material',
+                                                'source' => 'drawers',
                                                 'condition' => 'equals',
-                                                'condition_value' => 'glass',
+                                                'condition_value' => '4',
                                                 'position' => 0,
                                             ],
                                         ],
@@ -594,25 +666,17 @@ return [
                                     [
                                         'type' => 'add_modifier',
                                         'payload' => [
-                                            'amount' => '450.00',
-                                            'label' => 'Blat szklany hartowany',
+                                            'amount' => '120.00',
+                                            'label' => 'Dodatkowa szuflada',
                                         ],
                                         'position' => 0,
-                                    ],
-                                    [
-                                        'type' => 'add_message',
-                                        'payload' => [
-                                            'level' => 'warning',
-                                            'message' => 'Blat szklany wydłuża czas realizacji o ok. 2 tygodnie.',
-                                        ],
-                                        'position' => 1,
                                     ],
                                 ],
                             ],
                             [
-                                'name' => 'Organizer kablowy',
-                                'description' => 'Dopłata za przelot kablowy.',
-                                'groups_match_mode' => 'any',
+                                'name' => 'Domykanie miękkie',
+                                'description' => 'Dopłata za mechanizm soft-close.',
+                                'groups_match_mode' => 'all',
                                 'position' => 1,
                                 'is_active' => true,
                                 'groups' => [
@@ -621,7 +685,7 @@ return [
                                         'position' => 0,
                                         'conditions' => [
                                             [
-                                                'source' => 'cable_tray',
+                                                'source' => 'soft_close',
                                                 'condition' => 'is_set',
                                                 'condition_value' => null,
                                                 'position' => 0,
@@ -633,8 +697,8 @@ return [
                                     [
                                         'type' => 'add_modifier',
                                         'payload' => [
-                                            'amount' => '89.00',
-                                            'label' => 'Przelot kablowy',
+                                            'amount' => '199.00',
+                                            'label' => 'Domykanie miękkie',
                                         ],
                                         'position' => 0,
                                     ],

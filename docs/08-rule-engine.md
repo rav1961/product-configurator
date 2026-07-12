@@ -109,6 +109,12 @@ Na produkcie konfigurowalnym: zakładka **Reguły** → edycja reguły → **Gru
 
 Dostęp: role `admin`, `manager` (`RuleManagementPolicy`).
 
+Zagnieżdżone resources: `Product → Rule → RuleGroup`. Przy `Resource::getUrl()` zawsze przekazuj **wszystkie** parametry rodziców (`product`, `rule`, `record`) — wzorzec jak `AttributesRelationManager` w Configuratorze. `shouldGuessMissingParameters` nie wystarcza przy 3 poziomach.
+
+W tabelach Filament nie typuj `$state` w `formatStateUsing` dla castów JSON/enum — używaj `getStateUsing(fn (Model $record) => $record->field)` (cast Eloquent).
+
+Rejestracja zasobów Filament w `RulesEngineServiceProvider::register()` (nie `boot()`), analogicznie do Configuratora.
+
 ## Demo data
 
 Reguły demo w `config/demo-catalog.php` (sekcja `configuration.rules`); seed: `DemoRulesSeeder` (po `DemoConfiguratorSeeder`).

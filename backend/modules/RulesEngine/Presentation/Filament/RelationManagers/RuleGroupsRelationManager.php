@@ -29,10 +29,10 @@ final class RuleGroupsRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
-        $ruleId = FilamentRulesContext::ruleId($this);
+        $routeParameters = FilamentRulesContext::ruleRouteParameters($this);
 
         $editUrl = fn (RuleGroup $record): string => RuleGroupResource::getUrl('edit', [
-            'rule' => $ruleId,
+            ...$routeParameters,
             'record' => $record,
         ]);
 
@@ -40,7 +40,7 @@ final class RuleGroupsRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('conditions_match_mode')
                     ->label(__('rules_engine.fields.conditions_match_mode'))
-                    ->formatStateUsing(fn ($state) => $state->label())
+                    ->getStateUsing(fn (RuleGroup $record): string => $record->conditions_match_mode->label())
                     ->sortable(),
                 TextColumn::make('conditions_count')
                     ->label(__('rules_engine.navigation.conditions'))

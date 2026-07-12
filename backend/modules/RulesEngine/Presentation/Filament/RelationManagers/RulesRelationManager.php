@@ -58,7 +58,7 @@ final class RulesRelationManager extends RelationManager
                     ->sortable(),
                 TextColumn::make('groups_match_mode')
                     ->label(__('rules_engine.fields.groups_match_mode'))
-                    ->formatStateUsing(fn ($state): string => $state->label())
+                    ->getStateUsing(fn (Rule $record): string => $record->groups_match_mode->label())
                     ->sortable(),
                 IconColumn::make('is_active')
                     ->label(__('rules_engine.fields.is_active'))

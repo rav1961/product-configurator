@@ -1,0 +1,34 @@
+---
+description: Project-wide — never auto-edit application code; always show copyable code unless explicitly asked to apply changes
+alwaysApply: true
+---
+
+# Application code — show, do not auto-edit
+
+**Global project rule. Applies in every session.**
+
+## Default
+
+- **Never** auto-modify `backend/` or `frontend/` unless the user explicitly asks to apply a patch, implement in repo, or similar.
+- **Always** return complete, copy-paste-ready code in the response for application work.
+- Phrases like **„przygotuj kod”**, **„pokaż implementację”**, **„daj kod”** mean **show code in chat** — NOT write files.
+
+## Auto-edit allowed without extra confirmation
+
+- `docs/` and `ai/` only (documentation, rules, STATUS, decisions).
+
+## Non-trivial tasks (before any application code)
+
+1. Assumptions
+2. Plan
+3. Impacted files
+4. Risks
+5. Wait for approval — then **show** code (still no auto-edit unless user says apply/patch/wdróż)
+
+## Explicit permission required to edit application files
+
+User must clearly request one of: patch, diff, wdróż, zastosuj zmiany, zaimplementuj w repozytorium, commit, etc.
+
+## Forbidden
+
+Auto-editing application code when the user only asked to prepare or show code.

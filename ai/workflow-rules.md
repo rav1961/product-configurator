@@ -101,10 +101,17 @@ A slice is done only when:
 
 ## Working With the Assistant (delivery model)
 
-* Work is delivered in small reviewable batches ("porcja"): plan -> approval -> code.
-* Never auto-edit project files; provide complete, copy-paste-ready code unless a patch/diff
-  (or documentation work) is explicitly delegated.
-* For non-trivial tasks first state: assumptions, plan, impacted files, risks.
+**Project-wide rule — always, every session, no exceptions.**
+
+* Work is delivered in small reviewable batches ("porcja"): plan -> approval -> **code shown in chat**.
+* **Never auto-edit** `backend/` or `frontend/` unless the user explicitly asks to apply a patch,
+  implement in the repo, or similar (e.g. „wdróż”, „zastosuj”, „patch”).
+* **Always** provide complete, copy-paste-ready application code in the response.
+* Phrases like **„przygotuj kod”**, **„pokaż implementację”**, **„daj kod”** mean **show code in chat**
+  — **not** write or modify files.
+* Auto-edit without extra confirmation: **`docs/` and `ai/` only**.
+* For non-trivial tasks first state: assumptions, plan, impacted files, risks — then wait for
+  approval before showing implementation code.
 
 ## Quality Gates (authoritative)
 

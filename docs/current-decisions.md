@@ -97,7 +97,11 @@
 
 ## Pricing Engine
 
-Base Price + Modifiers + Overrides. Wszystkie kwoty wewnętrznie jako **grosze** (`int`, klucz payload `amount`) przez Shared `Money` VO. Modyfikatory: `MoneyAdjustment` z `operation` (`add` | `subtract`) — kwoty nigdy ujemne. API zwraca `amountMinor` + `amount` (decimal string) + `operation` (modifiers).
+Base Price + Modifiers + Overrides. Wszystkie kwoty wewnętrznie jako **grosze** (`int`) przez Shared `Money` VO.
+
+- **Persistencja / payload:** klucz `amount` (int, grosze); modyfikatory przez `MoneyAdjustment` + `operation` (`add` | `subtract`).
+- **API RulesEngine (efekty):** `amountMinor` + `amount` (decimal display) + `operation` — szczegóły dla SPA.
+- **API Pricing (wynik):** `basePrice` + `total` (int, grosze) + `hasOverride` — bez pól display; formatowanie po stronie klienta.
 
 ## Configurator
 

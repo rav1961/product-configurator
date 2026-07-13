@@ -7,6 +7,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Modules\Catalog\Domain\Exceptions\ProductNotConfigurableException;
+use Modules\Pricing\Domain\Exceptions\ProductPriceNotConfiguredException;
 use Symfony\Component\HttpFoundation\Response;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -47,6 +48,16 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         $exceptions->render(function (ProductNotConfigurableException $exception, Request $request) {
+            if (! $request->is('api/*')) {
+                return null;
+            }
+
+            return response()->json([
+                'message' => $exception->getMessage(),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        });
+
+        $exceptions->render(function (ProductPriceNotConfiguredException $exception, Request $request) {
             if (! $request->is('api/*')) {
                 return null;
             }

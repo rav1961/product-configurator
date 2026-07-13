@@ -14,6 +14,7 @@ use Modules\Configurator\Domain\Concerns\InteractsWithConfiguratorEntities;
 use Modules\Configurator\Domain\Models\AttributeCollection;
 use Modules\Configurator\Domain\Models\Dependency;
 use Modules\Configurator\Domain\Models\Step;
+use Modules\Pricing\Domain\Concerns\InteractsWithPricing;
 use Modules\RulesEngine\Domain\Concerns\InteractsWithRules;
 use Modules\RulesEngine\Domain\Models\Rule;
 use Modules\Shared\Domain\Concerns\HasConfiguredMedia;
@@ -50,6 +51,7 @@ class Product extends Model implements HasMedia
 
     use HasPublicId;
     use InteractsWithConfiguratorEntities;
+    use InteractsWithPricing;
     use InteractsWithRules;
     use RegistersDefaultMediaCollection;
 

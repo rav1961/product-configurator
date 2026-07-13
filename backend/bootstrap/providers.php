@@ -4,6 +4,7 @@ use App\Providers\AppServiceProvider;
 use App\Providers\Filament\AdminPanelProvider;
 use Modules\Catalog\Infrastructure\Providers\CatalogServiceProvider;
 use Modules\Configurator\Infrastructure\Providers\ConfiguratorServiceProvider;
+use Modules\Pricing\Infrastructure\Providers\PricingServiceProvider;
 use Modules\RulesEngine\Infrastructure\Providers\RulesEngineServiceProvider;
 use Modules\System\Infrastructure\Providers\SystemServiceProvider;
 use Modules\Users\Infrastructure\Providers\UsersServiceProvider;
@@ -16,4 +17,5 @@ return [
     CatalogServiceProvider::class,
     ConfiguratorServiceProvider::class,
     RulesEngineServiceProvider::class,
+    PricingServiceProvider::class,
 ];

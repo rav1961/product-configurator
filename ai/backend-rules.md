@@ -34,7 +34,8 @@ Thin (invokable) controllers, DTOs, Actions, Events, Form Requests.
 - Overrides: `amount` only (absolute positive price).
 - **Payload JSON key:** always `amount` (int). Legacy decimal string `amount` is parsed on read and normalized to int on save.
 - **Forms / Filament:** `Money::fromUserInput()` or `MoneyAmountInput` (Shared Presentation).
-- **API:** `toApiFields()` → `amountMinor` + `amount` (decimal display); modifiers also expose `operation`.
+- **API:** `toApiFields()` → `amountMinor` + `amount` (decimal display); modifiers also expose `operation`. Used by **RulesEngine** effects.
+- **API Pricing:** `basePrice` + `total` as int (minor units/grosze) only — no duplicate display strings; client formats for UI.
 
 ## Persistence Conventions
 

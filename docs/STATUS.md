@@ -11,7 +11,7 @@ tool, not a web shop.
 
 ## Currently working on
 
-- **Pricing** — Porcja **P0** (moduł + `ProductPrice` + `PricingCalculator`), po **M0 + RE-Money** ✅.
+- **Cart** — następna porcja po Pricing P0 ✅.
 
 ## Conventions in place
 
@@ -101,10 +101,12 @@ tool, not a web shop.
 - [x] Module complete (domain, API, admin, demo data, 252 testów w `composer check`).
 
 ### 6. Pricing
-- [ ] Engine: base price + modifiers + overrides.
-- [ ] Admin: configure modifiers / overrides.
-- [ ] Integration: price a configuration deterministically (with rule-engine effects).
-- [ ] Tests: pricing scenarios (base / modifier / override precedence).
+- [x] **Porcja P0 — moduł + `ProductPrice` + `PricingCalculator` + API `price/calculate`.**
+- [x] Admin: cena bazowa per produkt (Filament; admin/manager).
+- [x] Integracja: `CalculatePriceAction` + `EvaluateRulesAction`; response `basePrice` + `total` (int, grosze).
+- [x] Demo: `base_price` w `demo-catalog.php` + `DemoPricingSeeder`.
+- [x] Testy: kalkulator (base / modifier / override / floor) + API (happy path, 422 bez ceny).
+- [ ] Poza P0: ceny per atrybut, VAT, eventy, breakdown w API.
 
 ### 7. Cart
 - [ ] Domain: cart + line items built from a saved configuration.

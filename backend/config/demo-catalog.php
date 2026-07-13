@@ -18,6 +18,7 @@ return [
                     'description' => 'Regulowane biurko z blatem kompozytowym lub szklanym. Idealne do pracy stojąco-siedząco. Opcjonalny przelot kablowy i organizer.',
                     'position' => 1,
                     'image_seed' => 'demo-desk-nova',
+                    'base_price' => 199900,
                     'configuration' => [
                         'steps' => [
                             [
@@ -182,6 +183,7 @@ return [
                     'description' => 'Krzesło biurowe z regulacją wysokości, oparciem siatkowym i wyborem tapicerki z kolekcji tkanin premium.',
                     'position' => 2,
                     'image_seed' => 'demo-chair-aero',
+                    'base_price' => 89900,
                     'configuration' => [
                         'collections' => [
                             [
@@ -259,6 +261,7 @@ return [
                     'description' => 'Szafka na dokumenty z czterema szufladami. Opcja zamka i systemu antyprzewróceniowego.',
                     'position' => 3,
                     'image_seed' => 'demo-cabinet-classic',
+                    'base_price' => 129900,
                     'configuration' => [
                         'steps' => [
                             [
@@ -316,6 +319,7 @@ return [
                     'description' => 'Okrągły stół konferencyjny z wyborem średnicy i wykończenia blatu. Nogi w stylu industrial lub minimalistycznym.',
                     'position' => 1,
                     'image_seed' => 'demo-table-round',
+                    'base_price' => 459900,
                     'configuration' => [
                         'steps' => [
                             [
@@ -376,6 +380,7 @@ return [
                     'description' => 'Rodzinny stół z litego drewna. Regulowana długość i opcjonalna dokładka (leaf).',
                     'position' => 2,
                     'image_seed' => 'demo-table-oak',
+                    'base_price' => 329900,
                     'configuration' => [
                         'steps' => [
                             [
@@ -446,6 +451,7 @@ return [
                     'description' => 'Wygodne krzesło do jadalni z wyborem tkaniny i opcjonalnym przeszyciem guzikowym.',
                     'position' => 3,
                     'image_seed' => 'demo-chair-lounge',
+                    'base_price' => 119900,
                     'configuration' => [
                         'steps' => [
                             [
@@ -493,6 +499,7 @@ return [
                     'description' => 'System regałów łączonych w linie. Wybierz liczbę modułów i wysokość półek.',
                     'position' => 1,
                     'image_seed' => 'demo-shelf-flex',
+                    'base_price' => 89900,
                     'configuration' => [
                         'steps' => [
                             [
@@ -530,6 +537,7 @@ return [
                     'description' => 'Szafa dwudrzwiowa z opcją wnętrza biurowego lub archiwalnego.',
                     'position' => 2,
                     'image_seed' => 'demo-wardrobe-prime',
+                    'base_price' => 189900,
                     'configuration' => [
                         'steps' => [
                             [
@@ -604,6 +612,7 @@ return [
                     'description' => 'Komoda w stylu skandynawskim z wyborem liczby szuflad i wykończenia uchwytów.',
                     'position' => 3,
                     'image_seed' => 'demo-sideboard-nordic',
+                    'base_price' => 149900,
                     'configuration' => [
                         'steps' => [
                             [

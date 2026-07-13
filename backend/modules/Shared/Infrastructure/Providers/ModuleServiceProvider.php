@@ -6,10 +6,17 @@ namespace Modules\Shared\Infrastructure\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use ReflectionClass;
 
 abstract class ModuleServiceProvider extends ServiceProvider
 {
-    abstract protected function modulePath(): string;
+    protected function modulePath(): string
+    {
+        return dirname(
+            (new ReflectionClass($this))->getFileName(),
+            3,
+        );
+    }
 
     public function boot(): void
     {

@@ -17,11 +17,6 @@ use Modules\Users\Presentation\Filament\Resources\UserResource;
 
 final class UsersServiceProvider extends ModuleServiceProvider
 {
-    protected function modulePath(): string
-    {
-        return dirname(__DIR__, 2);
-    }
-
     public function register(): void
     {
         $this->app->bind(UserRepositoryInterface::class, EloquentUserRepository::class);

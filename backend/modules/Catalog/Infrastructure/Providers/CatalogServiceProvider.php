@@ -21,11 +21,6 @@ use Modules\Shared\Presentation\Filament\Enums\PanelName;
 
 final class CatalogServiceProvider extends ModuleServiceProvider
 {
-    protected function modulePath(): string
-    {
-        return dirname(__DIR__, 2);
-    }
-
     public function register(): void
     {
         $this->app->bind(CategoryRepositoryInterface::class, EloquentCategoryRepository::class);

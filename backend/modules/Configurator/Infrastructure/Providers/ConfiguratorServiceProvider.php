@@ -36,11 +36,6 @@ use Modules\Shared\Presentation\Filament\ProductRelationRegistrar;
 
 final class ConfiguratorServiceProvider extends ModuleServiceProvider
 {
-    protected function modulePath(): string
-    {
-        return dirname(__DIR__, 2);
-    }
-
     public function register(): void
     {
         $this->app->singleton(ProductRelationRegistrar::class);

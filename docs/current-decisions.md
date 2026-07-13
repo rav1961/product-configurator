@@ -102,6 +102,7 @@ Base Price + Modifiers + Overrides. Wszystkie kwoty wewnętrznie jako **grosze**
 - **Persistencja / payload:** klucz `amount` (int, grosze); modyfikatory przez `MoneyAdjustment` + `operation` (`add` | `subtract`).
 - **API RulesEngine (efekty):** `amountMinor` + `amount` (decimal display) + `operation` — szczegóły dla SPA.
 - **API Pricing (wynik):** `basePrice` + `total` (int, grosze) + `hasOverride` — bez pól display; formatowanie po stronie klienta.
+- **Admin:** base prices managed in standalone `ProductPriceResource` (**Pricing** navigation group), not as a tab on `ProductResource`.
 
 ## Configurator
 

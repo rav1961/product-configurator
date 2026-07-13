@@ -7,6 +7,7 @@ namespace Modules\Users\Infrastructure\Providers;
 use Filament\Panel;
 use Illuminate\Support\Facades\Gate;
 use Modules\Shared\Infrastructure\Providers\ModuleServiceProvider;
+use Modules\Shared\Presentation\Filament\Enums\PanelName;
 use Modules\Users\Domain\Contracts\UserRepositoryInterface;
 use Modules\Users\Domain\Models\User;
 use Modules\Users\Infrastructure\Notifications\AuthNotificationConfigurator;
@@ -26,7 +27,7 @@ final class UsersServiceProvider extends ModuleServiceProvider
         $this->app->bind(UserRepositoryInterface::class, EloquentUserRepository::class);
 
         Panel::configureUsing(static function (Panel $panel): void {
-            if ($panel->getId() !== 'admin') {
+            if ($panel->getId() !== PanelName::Admin->value) {
                 return;
             }
 

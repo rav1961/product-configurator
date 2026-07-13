@@ -116,12 +116,13 @@ Osobne endpointy — czysta granica modułów. Szczegóły modifierów (etykiety
 
 ## Admin (Filament)
 
-Na produkcie konfigurowalnym: zakładka **Cena bazowa** (`ProductPriceRelationManager`).
+Navigation group **Pricing** → **Base prices** (`ProductPriceResource`).
 
-- Pole kwoty: `MoneyAmountInput` (Shared)
-- Zapis: `amount` (int, grosze)
-- Max 1 rekord per produkt (UNIQUE `product_id`)
-- Dostęp: role `admin`, `manager` (`PricingManagementPolicy` — jak katalog)
+- List: product, SKU, amount (display), configurable flag
+- Create: configurable product without an existing price + `MoneyAmountInput` (Shared)
+- Edit: product read-only, amount editable
+- Persist: `amount` (int, minor units); max 1 row per product (UNIQUE `product_id`)
+- Access: roles `admin`, `manager` (`PricingManagementPolicy` — same as catalog)
 
 ## Demo data
 
@@ -138,6 +139,8 @@ Seed: `DemoPricingSeeder` (po `DemoRulesSeeder`), idempotentny po `product.slug`
 **Unit — `PricingCalculatorTest`:** base only; base + add; base + subtract; override zastępuje wszystko; precedencja override po `position`; floor `total` przy 0.
 
 **Feature — `PricingApiTest`:** guest 401; happy path; `hasOverride: true`; brak `ProductPrice` → 422; produkt niekonfigurowalny → 422.
+
+**Feature — `PricingPolicyTest` (P1):** admin/manager allow; sales deny (panel role without catalog management).
 
 ## Kolejność implementacji
 

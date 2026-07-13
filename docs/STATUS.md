@@ -101,12 +101,13 @@ tool, not a web shop.
 - [x] Module complete (domain, API, admin, demo data, 252 testów w `composer check`).
 
 ### 6. Pricing
-- [x] **Porcja P0 — moduł + `ProductPrice` + `PricingCalculator` + API `price/calculate`.**
-- [x] Admin: cena bazowa per produkt (Filament; admin/manager).
-- [x] Integracja: `CalculatePriceAction` + `EvaluateRulesAction`; response `basePrice` + `total` (int, grosze).
-- [x] Demo: `base_price` w `demo-catalog.php` + `DemoPricingSeeder`.
-- [x] Testy: kalkulator (base / modifier / override / floor) + API (happy path, 422 bez ceny).
-- [ ] Poza P0: ceny per atrybut, VAT, eventy, breakdown w API.
+- [x] **Slice P0 — module + `ProductPrice` + `PricingCalculator` + `price/calculate` API.**
+- [x] Integration: `CalculatePriceAction` + `EvaluateRulesAction`; response `basePrice` + `total` (int, minor units).
+- [x] Demo: `base_price` in `demo-catalog.php` + module `DemoPricingSeeder`.
+- [x] Tests: calculator (base / modifier / override / floor) + API (happy path, 422 without price).
+- [x] **Slice P1 — admin:** `ProductPriceResource` in **Pricing** navigation group; `ProductPriceRelationManager` removed from `ProductResource`.
+- [x] **Slice P1 — policy test:** `PricingPolicyTest` (admin/manager allow; sales deny — panel role without catalog management).
+- [ ] Beyond P1: per-attribute prices, VAT, domain events, price breakdown in API.
 
 ### 7. Cart
 - [ ] Domain: cart + line items built from a saved configuration.

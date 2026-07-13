@@ -25,6 +25,7 @@ use Modules\RulesEngine\Presentation\Filament\RelationManagers\RulesRelationMana
 use Modules\RulesEngine\Presentation\Filament\Resources\RuleGroupResource;
 use Modules\RulesEngine\Presentation\Filament\Resources\RuleResource;
 use Modules\Shared\Infrastructure\Providers\ModuleServiceProvider;
+use Modules\Shared\Presentation\Filament\Enums\PanelName;
 use Modules\Shared\Presentation\Filament\ProductRelationRegistrar;
 
 final class RulesEngineServiceProvider extends ModuleServiceProvider
@@ -43,7 +44,7 @@ final class RulesEngineServiceProvider extends ModuleServiceProvider
         $this->app->bind(RuleGraphRepositoryInterface::class, EloquentRuleGraphRepository::class);
 
         Panel::configureUsing(static function (Panel $panel) {
-            if ($panel->getId() !== 'admin') {
+            if ($panel->getId() !== PanelName::Admin->value) {
                 return;
             }
 

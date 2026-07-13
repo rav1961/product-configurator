@@ -4,9 +4,15 @@ declare(strict_types=1);
 
 return [
     'navigation' => [
-        'base_price' => 'Cena bazowa',
+        'group' => 'Cennik',
+        'label' => 'Ceny bazowe',
+    ],
+    'label' => [
+        'singular' => 'Cena bazowa',
+        'plural' => 'Ceny bazowe',
     ],
     'fields' => [
+        'product' => 'Produkt',
         'amount' => 'Cena bazowa',
         'actions' => 'Akcje',
     ],

@@ -17,6 +17,7 @@ use Modules\Catalog\Presentation\Filament\Policies\ProductPolicy;
 use Modules\Catalog\Presentation\Filament\Resources\CategoryResource;
 use Modules\Catalog\Presentation\Filament\Resources\ProductResource;
 use Modules\Shared\Infrastructure\Providers\ModuleServiceProvider;
+use Modules\Shared\Presentation\Filament\Enums\PanelName;
 
 final class CatalogServiceProvider extends ModuleServiceProvider
 {
@@ -31,7 +32,7 @@ final class CatalogServiceProvider extends ModuleServiceProvider
         $this->app->bind(ProductRepositoryInterface::class, EloquentProductRepository::class);
 
         Panel::configureUsing(static function (Panel $panel): void {
-            if ($panel->getId() !== 'admin') {
+            if ($panel->getId() !== PanelName::Admin->value) {
                 return;
             }
 

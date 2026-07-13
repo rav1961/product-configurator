@@ -31,6 +31,7 @@ use Modules\Configurator\Presentation\Filament\Resources\AttributeCollectionReso
 use Modules\Configurator\Presentation\Filament\Resources\AttributeResource;
 use Modules\Configurator\Presentation\Filament\Resources\StepResource;
 use Modules\Shared\Infrastructure\Providers\ModuleServiceProvider;
+use Modules\Shared\Presentation\Filament\Enums\PanelName;
 use Modules\Shared\Presentation\Filament\ProductRelationRegistrar;
 
 final class ConfiguratorServiceProvider extends ModuleServiceProvider
@@ -52,7 +53,7 @@ final class ConfiguratorServiceProvider extends ModuleServiceProvider
         $this->app->bind(ConfiguratorGraphRepositoryInterface::class, EloquentConfiguratorGraphRepository::class);
 
         Panel::configureUsing(static function (Panel $panel): void {
-            if ($panel->getId() !== 'admin') {
+            if ($panel->getId() !== PanelName::Admin->value) {
                 return;
             }
 

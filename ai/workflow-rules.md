@@ -103,6 +103,14 @@ A slice is done only when:
 
 **Project-wide rule — always, every session, no exceptions.**
 
+### Hard Safety Rule (non-negotiable)
+
+**The assistant must never modify application code in `backend/` or `frontend/` by default.**
+
+- Only apply patches / edits to `backend/` or `frontend/` when the user explicitly requests it using wording like: **apply a patch**, **implement in repo**, **zastosuj zmiany**, **wdróż**, **patch**, **diff**.
+- Requests like **„sprawdź”**, **„napraw”**, **„pokaż kod”**, **„przygotuj kod”** mean: **show the changes in chat** (copy-paste-ready), not edit files.
+- Allowed without explicit confirmation: auto-edit **`docs/` and `ai/` only**.
+
 * Work is delivered in small reviewable batches ("porcja"): plan -> approval -> **code shown in chat**.
 * **Never auto-edit** `backend/` or `frontend/` unless the user explicitly asks to apply a patch,
   implement in the repo, or similar (e.g. „wdróż”, „zastosuj”, „patch”).

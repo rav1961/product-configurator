@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\SavedConfiguration\Application\Actions;
 
-use Modules\Catalog\Application\Actions\GetConfigurableProductAction;
 use Modules\Configurator\Domain\ValueObjects\ConfigurationSelection;
 use Modules\Pricing\Application\Actions\CalculatePriceAction;
-use Modules\RulesEngine\Application\Actions\EvaluateRulesAction;
 use Modules\SavedConfiguration\Application\DTO\SavedConfigurationData;
 use Modules\SavedConfiguration\Domain\Contracts\SavedConfigurationRepositoryInterface;
 use Modules\Users\Domain\Models\User;
@@ -15,10 +13,8 @@ use Modules\Users\Domain\Models\User;
 final readonly class CreateSavedConfigurationAction
 {
     public function __construct(
-        private GetConfigurableProductAction $getConfigurableProduct,
         private CalculatePriceAction $calculatePrice,
-        private EvaluateRulesAction $evaluateRules,
-        private SavedConfigurationRepositoryInterface $savedConfigurationRepository,
+        private SavedConfigurationRepositoryInterface $savedConfigurations,
     ) {}
 
     public function execute(
@@ -26,21 +22,23 @@ final readonly class CreateSavedConfigurationAction
         string $productPublicId,
         ConfigurationSelection $selection,
     ): SavedConfigurationData {
-        $this->getConfigurableProduct->execute($productPublicId);
+        $evaluatedPrice = $this->calculatePrice->executeWithEvaluation(
+            $productPublicId,
+            $selection,
+        );
 
-        $price = $this->calculatePrice->execute($productPublicId, $selection);
-        $evaluation = $this->evaluateRules->execute($productPublicId, $selection);
+        $evaluationData = $evaluatedPrice->evaluation->toResponseArray();
 
-        $savedConfiguration = $this->savedConfigurationRepository->create(
+        $savedConfiguration = $this->savedConfigurations->create(
             user: $user,
             productPublicId: $productPublicId,
             selection: $selection->all(),
-            price: $price->toResponseArray(),
-            effects: $evaluation->toResponseArray()['effects'],
+            price: $evaluatedPrice->price->toResponseArray(),
+            effects: $evaluationData['effects'],
         );
 
         return SavedConfigurationData::fromModel(
-            $savedConfiguration->load('product')
+            $savedConfiguration->load('product'),
         );
     }
 }

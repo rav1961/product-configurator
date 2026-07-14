@@ -11,7 +11,7 @@ tool, not a web shop.
 
 ## Currently working on
 
-- **Cart** — następna porcja po Pricing P0 ✅.
+- **Cart** — projektowanie modułu po ukończeniu Saved Configuration P0 ✅.
 
 ## Conventions in place
 
@@ -88,7 +88,13 @@ tool, not a web shop.
 - [x] PL translations (`resources/lang/pl/configurator.php`).
 - [x] Demo data: `DemoConfiguratorSeeder` + `config/demo-catalog.php` (katalog + konfiguracja produktów demo).
 - [x] Tests: unit (matcher, evaluator, validator, dependency validator) + feature (API, repositories, models, policies, schema action).
-- [ ] Saved configuration session (persistencja wyboru użytkownika) — przed Cart.
+- [x] **Saved Configuration P0:** osobny moduł `SavedConfiguration`; draft należący do użytkownika,
+      częściowa selekcja oraz niezmienne snapshoty ceny i efektów RulesEngine.
+- [x] **Saved Configuration API:** `POST /api/saved-configuration` oraz
+      `GET /api/saved-configuration/{savedConfigurationId}` — `auth:sanctum` + `verified`,
+      ownership ukrywa cudze zasoby przez 404.
+- [x] **Saved Configuration tests:** create/read, walidacja i dostęp, częściowy draft,
+      ownership oraz niezmienność snapshotów po zmianie ceny i reguł.
 - [ ] Pełny CRUD kroków/atrybutów poza relation managers (opcjonalne usprawnienia UX admina).
 
 ### 5. RulesEngine

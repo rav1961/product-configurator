@@ -41,6 +41,10 @@ final class SavedConfigurationFactory extends Factory
     {
         return $this->afterCreating(
             function (SavedConfiguration $savedConfiguration): void {
+                if ($savedConfiguration->price !== []) {
+                    return;
+                }
+
                 $basePrice = fake()->numberBetween(50000, 500000);
 
                 $savedConfiguration->update([

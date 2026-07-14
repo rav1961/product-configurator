@@ -54,6 +54,7 @@ final class SavedConfigurationData extends Data
             'id' => $this->id,
             'productId' => $this->productId,
             'status' => $this->status,
+            'selection' => $this->selection,
             'price' => $this->price,
             'effects' => $this->effects,
             'createdAt' => $this->createdAt,
